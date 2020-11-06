@@ -1,4 +1,4 @@
-package com.says.common
+package com.rain.baselib.common
 
 import android.app.Activity
 import android.content.Context
