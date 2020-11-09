@@ -47,7 +47,6 @@ abstract class BaseActivity :AppCompatActivity(){
         })
         if (variableId != -1 && viewModel != null)	dataBind?.setVariable(variableId, viewModel)
         dataBind?.lifecycleOwner = this
-
     }
 
 
@@ -72,7 +71,6 @@ abstract class BaseActivity :AppCompatActivity(){
             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
 
-    //	open fun isWhiteStateBarText() = true
     open val whiteStateBarText = true
 
     /**

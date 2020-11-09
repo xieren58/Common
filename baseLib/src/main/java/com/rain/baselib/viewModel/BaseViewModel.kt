@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
  *  Create by rain
  *  Date: 2020/11/6
  */
-class BaseViewModel :ViewModel(){
+abstract class BaseViewModel :ViewModel(){
     open fun initModel() = Unit
     private val loadDialogType = MutableLiveData<Boolean>()
     /**

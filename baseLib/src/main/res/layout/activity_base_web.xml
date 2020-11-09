@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="base_web_id"
+            type="com.rain.baselib.viewModel.BaseWebViewModel" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/base_title" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <WebView
+                android:id="@+id/web_base"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:loadUrl="@{base_web_id.url}"
+                app:viewShow="@{base_web_id.isShowWeb}" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:viewShow="@{!base_web_id.isShowWeb}">
+
+                <include layout="@layout/layout_err_view" />
+            </RelativeLayout>
+
+
+            <ProgressBar
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@drawable/my_progressbar"
+                android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+                android:indeterminateOnly="false"
+                android:progress="@{base_web_id.webPro}"
+                android:progressDrawable="@drawable/my_progressbar"
+                app:viewShow="@{base_web_id.proShow}" />
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>

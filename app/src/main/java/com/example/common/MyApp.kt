@@ -1,6 +1,7 @@
 package com.example.common
 
 import android.app.Application
+import com.rain.baselib.BaseLibContext
 import com.says.common.CommonApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ class MyApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = this
+        BaseLibContext.context = this
         initAsyncSdk()
     }
     private fun initAsyncSdk() {

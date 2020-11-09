@@ -14,10 +14,10 @@ import kotlinx.android.extensions.LayoutContainer
  *  Create by rain
  *  Date: 2020/11/6
  */
-abstract class BaseRecHolder<T> private constructor(override val containerView: View, val mContext: Context = containerView.context) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-	abstract val variableId: Int
+abstract class BaseRecHolder<T> private constructor(override val containerView: View, private val variableId: Int, val mContext: Context = containerView.context) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 	
-	constructor(@LayoutRes layoutResId: Int, parent: ViewGroup) : this(DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(parent.context), layoutResId, parent, false).root)
+	constructor(@LayoutRes layoutResId: Int,variableId: Int, parent: ViewGroup)
+			: this(DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(parent.context), layoutResId, parent, false).root,variableId)
 	
 	open fun setData(model: T, position: Int) {
 		val dataBind = DataBindingUtil.getBinding<ViewDataBinding>(itemView)
