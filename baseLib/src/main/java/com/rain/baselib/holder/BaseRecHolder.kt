@@ -22,5 +22,6 @@ abstract class BaseRecHolder<T> private constructor(override val containerView: 
 	open fun setData(model: T, position: Int) {
 		val dataBind = DataBindingUtil.getBinding<ViewDataBinding>(itemView)
 		dataBind?.setVariable(variableId, model)
+		dataBind?.executePendingBindings()
 	}
 }
