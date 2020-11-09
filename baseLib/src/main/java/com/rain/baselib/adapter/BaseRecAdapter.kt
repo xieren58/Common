@@ -132,15 +132,6 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 		bindHolder(holder, position)
 	}
 	
-	
-	/**
-	 * 利用DataBind创建view
-	 */
-	fun <T : ViewDataBinding> createViewId(@LayoutRes layoutId: Int, viewGroup: ViewGroup): View {
-		return DataBindingUtil.inflate<T>(LayoutInflater.from(viewGroup.context), layoutId, viewGroup, false).root
-	}
-	
-	
 	override fun getItemCount() = lists.size
 	
 	abstract fun getViewHolder(viewGroup: ViewGroup, viewType: Int): BaseRecHolder<T>
@@ -153,5 +144,4 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 		onItemLongClickListener?.itemLongClick(position)
 		return true
 	}
-	
 }
