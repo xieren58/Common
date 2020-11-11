@@ -1,4 +1,4 @@
-package com.says.common
+package com.says.common.utils
 
 import android.app.ActivityManager
 import android.content.ActivityNotFoundException
@@ -9,7 +9,6 @@ import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -89,7 +88,7 @@ object Common {
 		if (!file.exists())return null
 		val fileType = getFileType(file.name)
 		when(fileType){
-			MIMECommon.FILE_TYPE_APK->installApk(context,path)
+			MIMECommon.FILE_TYPE_APK-> installApk(context,path)
 			else->{
 				try {
 					val intent = Intent().apply {

@@ -1,11 +1,7 @@
 package com.rain.baselib.adapter
 
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.holder.BaseRecHolder

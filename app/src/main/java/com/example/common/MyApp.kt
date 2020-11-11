@@ -2,7 +2,7 @@ package com.example.common
 
 import android.app.Application
 import com.rain.baselib.BaseLibContext
-import com.says.common.CommonApi
+import com.says.common.file.CommonApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

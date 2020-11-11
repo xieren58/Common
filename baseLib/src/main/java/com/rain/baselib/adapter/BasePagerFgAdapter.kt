@@ -8,7 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
  *  Create by rain
  *  Date: 2020/11/6
  */
-class BasePagerAdapter : FragmentStateAdapter {
+class BasePagerFgAdapter : FragmentStateAdapter {
 
     constructor(fragmentActivity: FragmentActivity) : super(fragmentActivity)
     constructor(fragment: Fragment) : super(fragment)

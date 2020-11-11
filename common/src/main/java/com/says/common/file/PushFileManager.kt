@@ -17,8 +17,7 @@ import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider
 import com.alibaba.sdk.android.oss.internal.OSSAsyncTask
 import com.alibaba.sdk.android.oss.model.PutObjectRequest
 import com.alibaba.sdk.android.oss.model.PutObjectResult
-import com.says.common.Common
-import com.says.common.CommonApi
+import com.says.common.utils.Common
 import com.says.common.file.listener.FilePushResultListener
 import kotlinx.coroutines.*
 import okhttp3.internal.and
