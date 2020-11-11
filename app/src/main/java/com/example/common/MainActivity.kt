@@ -3,9 +3,8 @@ package com.example.common
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.lifecycleScope
+import com.rain.baselib.common.startAc
 import com.says.common.file.PushFileManager
-import com.says.common.startAc
 import com.says.common.ui.singleClick
 import kotlinx.android.synthetic.main.activity_main.*
 

@@ -15,7 +15,7 @@ import com.rain.baselib.holder.BaseRecHolder
  *  Date: 2020/11/6
  */
 abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), View.OnClickListener, View.OnLongClickListener {
-	private val lists: MutableList<T> = mutableListOf()
+	private val adapterList: MutableList<T> = mutableListOf()
 	private var recycler: RecyclerView? = null
 	override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
 		super.onAttachedToRecyclerView(recyclerView)
@@ -24,64 +24,65 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 	
 	open fun setData(list: MutableList<T>?) {
 		if (list.isNullOrEmpty() || recycler?.isComputingLayout == true) return
-		lists.clear()
-		lists.addAll(list)
+		adapterList.clear()
+		adapterList.addAll(list)
 		notifyDataSetChanged()
 	}
 	
 	/**
 	 * 获取集合对象
 	 */
-	fun getLists() = lists
+	fun getLists() = adapterList
 	
 	fun addItemData(data: MutableList<T>?) {
 		if (data.isNullOrEmpty() || recycler?.isComputingLayout == true) return
-		val position = lists.size
-		lists.addAll(position, data)
-		notifyItemRangeInserted(position, data.size)
-		notifyItemRangeChanged(position, lists.size - position)
+		val position = adapterList.size
+		addItemData(position,data)
 	}
 	
 	fun addItemData(position: Int, data: MutableList<T>?) {
 		if (data.isNullOrEmpty() || recycler?.isComputingLayout == true) return
-		lists.addAll(position, data)
+		adapterList.addAll(position, data)
 		notifyItemRangeInserted(position, data.size)
-		notifyItemRangeChanged(position, lists.size - position)
+		notifyItemRangeChanged(position, adapterList.size - position)
 	}
 	
 	fun addItemData(data: T?) {
 		if (data == null || recycler?.isComputingLayout == true) return
-		val position = lists.size
-		lists.add(position, data)
-		notifyItemInserted(position)
-		notifyItemRangeChanged(position, lists.size - position)
+		val position = adapterList.size
+		addItemData(position,data)
 	}
-	
+	fun addItemData(position: Int, data: T?) {
+		if (data == null || recycler?.isComputingLayout == true) return
+		adapterList.add(position, data)
+		notifyItemInserted(position)
+		notifyItemRangeChanged(position, adapterList.size - position)
+	}
 	fun removeItemData(position: Int) {
 		if (recycler?.isComputingLayout == true) return
-		if (lists.isNullOrEmpty() || position < 0 || position >= lists.size) return
-		lists.removeAt(position)
+		if (adapterList.isNullOrEmpty() || position < 0 || position >= adapterList.size) return
+		adapterList.removeAt(position)
 		notifyItemRemoved(position)
-		notifyItemRangeChanged(position, lists.size - position)
+		notifyItemRangeChanged(position, adapterList.size - position)
 	}
 	
 	fun removeItemData(data: T?) {
 		if (recycler?.isComputingLayout == true) return
-		if (lists.isNullOrEmpty() || data == null) return
-		val position = lists.indexOf(data)
-		lists.remove(data)
+		if (adapterList.isNullOrEmpty() || data == null) return
+		val position = adapterList.indexOf(data)
+		adapterList.remove(data)
 		notifyItemRemoved(position)
-		notifyItemRangeChanged(position, lists.size - position)
+		notifyItemRangeChanged(position, adapterList.size - position)
 	}
 	
 	
 	fun getItemData(position: Int): T? {
-		return if (position < lists.size && position >= 0) lists[position] else null
+		return if (position < adapterList.size && position >= 0) adapterList[position] else null
 	}
 	
 	fun updateItemData(data: T?) {
-		if (data == null || lists.isNullOrEmpty()) return
-		val indexOf = lists.indexOf(data)
+		if (data == null || adapterList.isNullOrEmpty()) return
+		val indexOf = adapterList.indexOf(data)
 		if (indexOf >= 0) notifyItemChanged(indexOf)
 	}
 	
@@ -128,11 +129,11 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 	
 	override fun onBindViewHolder(holder: BaseRecHolder<T>, position: Int) {
 		holder.itemView.tag = position
-		holder.setData(lists[position], position)
+		holder.setData(adapterList[position], position)
 		bindHolder(holder, position)
 	}
 	
-	override fun getItemCount() = lists.size
+	override fun getItemCount() = adapterList.size
 	
 	abstract fun getViewHolder(viewGroup: ViewGroup, viewType: Int): BaseRecHolder<T>
 	

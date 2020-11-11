@@ -147,15 +147,14 @@ object Common {
 		Log.d("downTag", "file:${file.path}")
 		if (!file.exists()) return
 		Log.i("downTag","安装路径==$downloadApk")
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-			val apkUri: Uri = FileProvider.getUriForFile(context, "${context.packageName }.fileProvider", file)
+		val apkUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-			intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
+			FileProvider.getUriForFile(context, "${context.packageName }.fileProvider", file)
 		} else {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-			val uri: Uri = Uri.fromFile(file)
-			intent.setDataAndType(uri, "application/vnd.android.package-archive")
+			Uri.fromFile(file)
 		}
+		intent.setDataAndType(apkUri, "application/vnd.android.package-archive")
 		context.startActivity(intent)
 	}
 	
