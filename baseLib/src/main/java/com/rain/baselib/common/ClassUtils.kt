@@ -1,5 +1,6 @@
 package com.rain.baselib.common
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,10 +19,13 @@ import java.lang.reflect.*
  */
 @Suppress("UNCHECKED_CAST")
 fun <T : ViewBinding> AppCompatActivity.conversionViewBind() : T? {
-	val superclass = javaClass.genericSuperclass
-	val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
 	try {
+		val superclass = javaClass.genericSuperclass
+		Log.d("superclassTag","superclass:$superclass")
+		val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+		Log.d("superclassTag","aClass:$aClass")
 		val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
+		Log.d("superclassTag","method:$method")
 		return  method.invoke(null, layoutInflater) as T
 	} catch (e: NoSuchMethodException) {
 		e.printStackTrace()
@@ -35,27 +39,11 @@ fun <T : ViewBinding> AppCompatActivity.conversionViewBind() : T? {
 
 @Suppress("UNCHECKED_CAST")
 fun <T : ViewBinding> Fragment.conversionViewBind(inflater: LayoutInflater, container: ViewGroup?) :T?{
-	val superclass = javaClass.genericSuperclass
-	val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
 	try {
+		val superclass = javaClass.genericSuperclass
+		val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
 		val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
 		return  method.invoke(null, inflater, container, false) as T
-	} catch (e: NoSuchMethodException) {
-		e.printStackTrace()
-	} catch (e: IllegalAccessException) {
-		e.printStackTrace()
-	} catch (e: InvocationTargetException) {
-		e.printStackTrace()
-	}
-    return null
-}
-@Suppress("UNCHECKED_CAST")
-fun <T : ViewBinding> ViewGroup.conversionViewBind(inflater: LayoutInflater) :T?{
-	val superclass = javaClass.genericSuperclass
-	val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
-	try {
-		val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
-		return  method.invoke(null, inflater, this, false) as T
 	} catch (e: NoSuchMethodException) {
 		e.printStackTrace()
 	} catch (e: IllegalAccessException) {
