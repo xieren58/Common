@@ -2,7 +2,11 @@ package com.rain.baselib.adapter
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
+import com.rain.baselib.common.getBindIdView
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.holder.BaseRecHolder
 
@@ -10,7 +14,7 @@ import com.rain.baselib.holder.BaseRecHolder
  *  Create by rain
  *  Date: 2020/11/6
  */
-abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), View.OnClickListener, View.OnLongClickListener {
+abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(), View.OnClickListener, View.OnLongClickListener {
 	private val adapterList: MutableList<T> = mutableListOf()
 	private var recycler: RecyclerView? = null
 	override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -33,7 +37,7 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 	fun addItemData(data: MutableList<T>?) {
 		if (data.isNullOrEmpty() || recycler?.isComputingLayout == true) return
 		val position = adapterList.size
-		addItemData(position,data)
+		addItemData(position, data)
 	}
 	
 	fun addItemData(position: Int, data: MutableList<T>?) {
@@ -46,14 +50,16 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 	fun addItemData(data: T?) {
 		if (data == null || recycler?.isComputingLayout == true) return
 		val position = adapterList.size
-		addItemData(position,data)
+		addItemData(position, data)
 	}
+	
 	fun addItemData(position: Int, data: T?) {
 		if (data == null || recycler?.isComputingLayout == true) return
 		adapterList.add(position, data)
 		notifyItemInserted(position)
 		notifyItemRangeChanged(position, adapterList.size - position)
 	}
+	
 	fun removeItemData(position: Int) {
 		if (recycler?.isComputingLayout == true) return
 		if (adapterList.isNullOrEmpty() || position < 0 || position >= adapterList.size) return
@@ -116,14 +122,14 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 	}
 	
 	
-	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecHolder<T> {
-		val viewHolder = getViewHolder(parent, viewType)
-		viewHolder.itemView.singleClick(this)
-		viewHolder.itemView.setOnLongClickListener(this)
-		return viewHolder
+	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecHolder<T, *> {
+		val holder = createHolder(parent, viewType)
+		holder.itemView.singleClick(this)
+		holder.itemView.setOnLongClickListener(this)
+		return holder
 	}
 	
-	override fun onBindViewHolder(holder: BaseRecHolder<T>, position: Int) {
+	override fun onBindViewHolder(holder: BaseRecHolder<T, *>, position: Int) {
 		holder.itemView.tag = position
 		holder.setData(adapterList[position], position)
 		bindHolder(holder, position)
@@ -131,10 +137,20 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T>>(), Vie
 	
 	override fun getItemCount() = adapterList.size
 	
-	abstract fun getViewHolder(viewGroup: ViewGroup, viewType: Int): BaseRecHolder<T>
+	private fun createHolder(parent: ViewGroup, viewType: Int): BaseRecHolder<T, *> {
+		return createHolder(parent.getBindIdView(getLayoutResId(viewType)), viewType, getVariableId(viewType))
+	}
+	
+	@LayoutRes
+	abstract fun getLayoutResId(viewType: Int): Int
+	abstract fun getVariableId(viewType: Int): Int //綁定的id 為-1時表示不綁定
+	
+	open fun createHolder(view: View, viewType: Int, variableId: Int): BaseRecHolder<T, *> {
+		return BaseRecHolder<T, ViewDataBinding>(view, variableId)
+	}
 	
 	
-	open fun bindHolder(viewHolder: BaseRecHolder<T>, i: Int) {}
+	open fun bindHolder(viewHolder: BaseRecHolder<T, *>, i: Int) {}
 	override fun onLongClick(v: View?): Boolean {
 		val tag = v?.tag ?: return false
 		val position = tag as Int

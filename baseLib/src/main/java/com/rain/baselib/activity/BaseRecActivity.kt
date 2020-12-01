@@ -3,34 +3,35 @@ package com.rain.baselib.activity
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
 import com.rain.baselib.adapter.BaseRecAdapter
 import com.rain.baselib.common.singleClick
+import com.rain.baselib.databinding.*
 import com.rain.baselib.viewModel.BaseRecViewModel
-import kotlinx.android.synthetic.main.base_title.*
-import kotlinx.android.synthetic.main.layout_data_view.*
-import kotlinx.android.synthetic.main.layout_empty_view.*
-import kotlinx.android.synthetic.main.layout_err_view.*
-import kotlinx.android.synthetic.main.layout_loading_view.*
 
 /**
  *  Create by rain
  *  Date: 2020/11/9
  */
-abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
-	override val layoutResId = R.layout.activity_base_rec
-	abstract override val viewModel: BaseRecViewModel<*>
+abstract class BaseRecActivity<T:ViewBinding> : BaseActivity<T>(), View.OnClickListener {
 	
+	abstract override val viewModel: BaseRecViewModel<*>
 	protected open val loadMoreEnable = true
 	protected open val loadRefreshEnable = true
 	
-	
+	private val loadHolderView by lazy { LayoutLoadingViewBinding.bind(viewBind.root) }
+	private val dataHolderView by lazy { LayoutDataViewBinding.bind(viewBind.root) }
+	private val errHolderView by lazy { LayoutErrViewBinding.bind(viewBind.root) }
+	private val emptyHolderView by lazy { LayoutEmptyViewBinding.bind(viewBind.root) }
+	private val titleBind by lazy { LayoutBaseTitleBinding.bind(viewBind.root) }
+
 	override fun initModelObserve() {
 		viewModel.loadEnd.observe(this, {
 			if (it == null || it) {
-				rv_data?.isNestedScrollingEnabled = true
+				dataHolderView.rvData.isNestedScrollingEnabled = true
 				finishLoad()
-			} else rv_data?.isNestedScrollingEnabled = false
+			} else dataHolderView.rvData.isNestedScrollingEnabled = false
 		})
 		viewModel.uiDataType.observe(this, {
 			if (it != null) showUi(it)
@@ -38,14 +39,10 @@ abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
 	}
 	
 	private fun showUi(value: Int) {
-		rl_loading?.visibility =
-				if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
-		rl_empty?.visibility =
-				if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
-		rl_error?.visibility =
-				if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
-		smart_refresh?.visibility =
-				if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
+		loadHolderView.rlLoading.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
+		emptyHolderView.rlEmpty.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
+		errHolderView.rlError.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
+		dataHolderView.smartRefresh.visibility = if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
 	}
 	
 	@CallSuper
@@ -56,11 +53,11 @@ abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
 	}
 	
 	private fun initRec() {
-		rv_data?.layoutManager = getRecLayoutManager()
+		dataHolderView.rvData.layoutManager = getRecLayoutManager()
 		val itemDecoration = getReItemDecoration()
 		if (itemDecoration != null) {
-			rv_data?.removeItemDecoration(itemDecoration)
-			rv_data?.addItemDecoration(itemDecoration)
+			dataHolderView.rvData.removeItemDecoration(itemDecoration)
+			dataHolderView.rvData.addItemDecoration(itemDecoration)
 		}
 		viewModel.adapter.run {
 			setOnItemClickListener(object : BaseRecAdapter.OnItemClickListener {
@@ -73,7 +70,7 @@ abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
 					itemLong(position)
 				}
 			})
-			rv_data?.adapter = this
+			dataHolderView.rvData.adapter = this
 		}
 	}
 	
@@ -81,8 +78,8 @@ abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
 	abstract fun getRecLayoutManager(): RecyclerView.LayoutManager
 	
 	private fun initSmart() {
-		smart_refresh.bindRecycler(rv_data)
-		smart_refresh?.setLoadRefreshMoreDataListener({
+		dataHolderView.smartRefresh.bindRecycler(dataHolderView.rvData)
+		dataHolderView.smartRefresh.setLoadRefreshMoreDataListener({
 			viewModel.loadStartData(isRefresh = false, isShowLoad = false)
 		}, {
 			viewModel.loadStartData(true, isShowLoad = false)
@@ -91,27 +88,25 @@ abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
 	}
 	
 	private fun initToolbar() {
-		if (tv_title == null || toolbar == null) return
-		
-		tv_title?.text = getTitleContent()
-		toolbar.setNavigationIcon(R.drawable.arrow_left)
-		toolbar.title = ""
-		setSupportActionBar(toolbar)
-		toolbar.setNavigationOnClickListener { finish() }
+		titleBind.tvTitle.text = getTitleContent()
+		titleBind.toolbar.setNavigationIcon(R.drawable.arrow_left)
+		titleBind.toolbar.title = ""
+		setSupportActionBar(titleBind.toolbar)
+		titleBind.toolbar.setNavigationOnClickListener { finish() }
 		
 		val rightIcon = getRightIcon()
 		if (rightIcon == null) {
-			ig_right?.visibility = View.GONE
+			titleBind.igRight.visibility = View.GONE
 		} else {
-			ig_right?.setImageResource(rightIcon)
-			ig_right?.visibility = View.VISIBLE
+			titleBind.igRight.setImageResource(rightIcon)
+			titleBind.igRight.visibility = View.VISIBLE
 		}
 		val rightStr = getRightStr()
 		if (rightStr.isNullOrEmpty()) {
-			tv_right?.visibility = View.GONE
+			titleBind.tvRight.visibility = View.GONE
 		} else {
-			tv_right?.text = rightStr
-			tv_right?.visibility = View.VISIBLE
+			titleBind.tvRight.text = rightStr
+			titleBind.tvRight.visibility = View.VISIBLE
 		}
 	}
 	
@@ -120,28 +115,28 @@ abstract class BaseRecActivity : BaseActivity(), View.OnClickListener {
 	open fun getTitleContent(): String = ""
 	
 	private fun setMoreRefreshEnable() {
-		smart_refresh?.setEnableRefresh(loadRefreshEnable)//启用刷新
-		smart_refresh?.setEnableLoadMore(loadMoreEnable)//启用加载
+		dataHolderView.smartRefresh.setEnableRefresh(loadRefreshEnable)//启用刷新
+		dataHolderView.smartRefresh.setEnableLoadMore(loadMoreEnable)//启用加载
 	}
 	
 	private fun finishLoad() {
-		smart_refresh?.finishRefresh()
-		smart_refresh?.finishLoadMore()
+		dataHolderView.smartRefresh.finishRefresh()
+		dataHolderView.smartRefresh.finishLoadMore()
 	}
 	
 	override fun initEvent() {
 		super.initEvent()
-		ll_empty?.singleClick(this)
-		ig_right?.singleClick(this)
-		tv_right?.singleClick(this)
+		emptyHolderView.llEmpty.singleClick(this)
+		titleBind.igRight.singleClick(this)
+		titleBind.tvRight.singleClick(this)
 	}
 	
 	fun callRefreshView() {
-		if (rv_data?.isComputingLayout == true) return
+		if (dataHolderView.rvData.isComputingLayout) return
 		var isShowLoad = false
 		if (viewModel.isShowDataView()) {
 			if (loadRefreshEnable) {
-				smart_refresh?.autoRefresh()
+				dataHolderView.smartRefresh.autoRefresh()
 				return
 			}
 		} else isShowLoad = true

@@ -1,5 +1,6 @@
 package com.rain.baselib.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
@@ -19,6 +20,10 @@ abstract class BaseViewModel :ViewModel(){
         loadDialogType.value = true
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("viewModelTag","onCleared")
+    }
     /**
      * 隐藏load
      */

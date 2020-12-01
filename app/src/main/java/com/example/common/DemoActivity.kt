@@ -1,66 +1,35 @@
 package com.example.common
 
 import android.content.Intent
-import android.graphics.Color
-import android.os.Bundle
-import android.util.Log
-import android.widget.LinearLayout.HORIZONTAL
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.luck.picture.lib.config.PictureConfig
-import com.luck.picture.lib.decoration.GridSpacingItemDecoration
-import com.says.common.ui.UICommon
-import com.yqritc.recyclerviewflexibledivider.HorizontalDividerItemDecoration
-import kotlinx.android.synthetic.main.activity_demo.*
+import androidx.recyclerview.widget.RecyclerView
+import com.luck.picture.lib.config.PictureConfig.CHOOSE_REQUEST
+import com.rain.baselib.activity.BaseRecActivity
+import com.rain.baselib.databinding.ActivityBaseRecBinding
 
 /**
  *  Create by rain
  *  Date: 2020/11/2
  */
-class DemoActivity : AppCompatActivity() {
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_demo)
-		initView()
+class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
+	override val viewModel by  lazy { ViewModelProvider(this).get(DemoListViewModel::class.java) }
+
+	override fun getRecLayoutManager(): RecyclerView.LayoutManager {
+		return GridLayoutManager(this,4)
+	}
+
+	override fun clickRecItem(position: Int) {
+		val itemData = viewModel.getItemData(position)?:return
+		if (itemData.itemType == PhotoWeightAdapter.ADD_TYPE){
+			PictureUtils.onPickFromGallery(this)
+		}
 	}
 	
 	override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 		super.onActivityResult(requestCode, resultCode, data)
-		if (requestCode == PictureConfig.CHOOSE_REQUEST) {
-			if (resultCode == RESULT_OK && data != null) {
-				val takeImages = PictureUtils.getTakeImages(data)
-				if (takeImages.isNullOrEmpty())return
-				val updatePicList :MutableList<UpdatePic> = mutableListOf()
-				takeImages.forEach {
-					updatePicList.add(UpdatePic(it))
-				}
-				adapter.addItemData(updatePicList)
-			}
+		if (requestCode == CHOOSE_REQUEST&& resultCode == RESULT_OK && data!=null){
+			viewModel.addPhoto(PictureUtils.getTakeImages(data))
 		}
-	}
-	private val adapter by lazy { PhotoWeightAdapter() }
-	private fun initView(){
-		rec_bottom.layoutManager = LinearLayoutManager(this)
-		rec_bottom?.addItemDecoration(HorizontalDividerItemDecoration.Builder(this).size(10).colorResId(R.color.teal_200).build())
-		adapter.run {
-			setPhotoItemClickListener(object : PhotoWeightAdapter.PhotoItemClickListener {
-				override fun itemAdd() {
-					PictureUtils.onPickFromGallery(this@DemoActivity,isSingle = false,maxSize = 9)
-				}
-				
-				override fun itemClick(position: Int) {
-					Log.d("photoClickTag","position:$position")
-				}
-				
-				override fun itemDelete(position: Int) {
-					adapter.removeItemData(position)
-				}
-			})
-			rec_bottom.adapter = this
-		}
-		adapter.setData(null)
 	}
 }

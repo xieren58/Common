@@ -8,35 +8,36 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
+import com.rain.baselib.common.conversionViewBind
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
  *  Create by rain
  *  Date: 2020/11/6
  */
-abstract class BaseFragment : Fragment() {
-    @get:LayoutRes
-    protected abstract val layoutResId: Int
-
+abstract class BaseFragment<T:ViewBinding> : Fragment() {
+    
     protected open val variableId: Int = -1
     protected abstract val viewModel: BaseViewModel?
+    protected lateinit var viewBind: T
 
-    private var dataBind: ViewDataBinding? = null
-
+    abstract fun getViewBindLayout(inflater: LayoutInflater, container: ViewGroup?):ViewBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initIntent()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        dataBind = DataBindingUtil.inflate(inflater, layoutResId, container, false)
-        return dataBind!!.root
+        val conversionViewBind = conversionViewBind<T>(inflater,container) ?: return null
+        viewBind = conversionViewBind
+        if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
+        return viewBind.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,8 +52,10 @@ abstract class BaseFragment : Fragment() {
             if (it == null) return@setLoadDialogObserve
             if (it) showDialogLoad() else dismissDialogLoad()
         })
-        if (variableId != -1 && viewModel != null)	dataBind?.setVariable(variableId, viewModel)
-        dataBind?.lifecycleOwner = this
+        (viewBind as? ViewDataBinding)?.run {
+            if (variableId != -1 && viewModel != null) setVariable(variableId, viewModel)
+            lifecycleOwner = this@BaseFragment
+        }
     }
 
     open fun initModelObserve() = Unit

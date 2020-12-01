@@ -1,7 +1,6 @@
 package com.rain.baselib.activity
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -16,25 +15,33 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
+import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
+import com.rain.baselib.common.conversionViewBind
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
  *  Create by rain
  *  Date: 2020/11/6
  */
-abstract class BaseActivity :AppCompatActivity(){
-    @get:LayoutRes
-    protected abstract val layoutResId: Int //佈局id
-    protected open val variableId: Int = -1 //佈局内的id设置null代表不需要dataBind，可随意输入T泛型
-    private var dataBind: ViewDataBinding? = null
+abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
+    protected open val variableId: Int = -1 //佈局内的id设置null代表不需要dataBind
 
+    protected lateinit var viewBind: T
     protected abstract val viewModel: BaseViewModel?
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         stateBarTextColor()
-        dataBind = DataBindingUtil.setContentView(this, layoutResId)
+        val conversionViewBind = conversionViewBind<T>()
+        if (conversionViewBind == null) {
+            finish()
+            return
+        }
+        viewBind = conversionViewBind
+
+        if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
+        setContentView(viewBind.root)
         initViewDataBinding()
         initIntent()
         init(savedInstanceState)
@@ -45,8 +52,10 @@ abstract class BaseActivity :AppCompatActivity(){
             if (it == null) return@setLoadDialogObserve
             if (it) showDialogLoad() else dismissDialogLoad()
         })
-        if (variableId != -1 && viewModel != null)	dataBind?.setVariable(variableId, viewModel)
-        dataBind?.lifecycleOwner = this
+        (viewBind as? ViewDataBinding)?.run {
+            if (variableId != -1 && viewModel != null) setVariable(variableId, viewModel)
+            lifecycleOwner = this@BaseActivity
+        }
     }
 
 

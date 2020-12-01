@@ -1,30 +1,36 @@
 package com.rain.baselib.fragment
 
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
 import com.rain.baselib.adapter.BaseRecAdapter
 import com.rain.baselib.common.singleClick
+import com.rain.baselib.databinding.*
 import com.rain.baselib.viewModel.BaseRecViewModel
-import kotlinx.android.synthetic.main.layout_data_view.*
-import kotlinx.android.synthetic.main.layout_empty_view.*
-import kotlinx.android.synthetic.main.layout_err_view.*
-import kotlinx.android.synthetic.main.layout_loading_view.*
 
 /**
  *  Create by rain
  *  Date: 2020/7/7
  */
-abstract class BaseRecFragment : BaseFragment(), View.OnClickListener {
-	override val layoutResId = R.layout.layout_rec_view
+abstract class BaseRecFragment<VB:ViewBinding> : BaseFragment<VB>(), View.OnClickListener {
 	abstract override val viewModel: BaseRecViewModel<*>
-	
+	private val loadHolderView by lazy { LayoutLoadingViewBinding.bind(viewBind.root) }
+	private val dataHolderView by lazy { LayoutDataViewBinding.bind(viewBind.root) }
+	private val errHolderView by lazy { LayoutErrViewBinding.bind(viewBind.root) }
+	private val emptyHolderView by lazy { LayoutEmptyViewBinding.bind(viewBind.root) }
+
+	override fun getViewBindLayout(inflater: LayoutInflater, container: ViewGroup?): ViewBinding {
+		return  LayoutRecViewBinding.inflate(inflater,container,false)
+	}
 	override fun initModelObserve() {
 		viewModel.loadEnd.observe(this, {
 			if (it == null || it) {
-				rv_data?.isNestedScrollingEnabled = true
+				dataHolderView.rvData.isNestedScrollingEnabled = true
 				finishLoad()
-			} else rv_data?.isNestedScrollingEnabled = false
+			} else dataHolderView.rvData.isNestedScrollingEnabled = false
 		})
 		viewModel.uiDataType.observe(this, {
 			if (it != null) showUi(it)
@@ -37,11 +43,11 @@ abstract class BaseRecFragment : BaseFragment(), View.OnClickListener {
 	}
 	
 	private fun initRec() {
-		rv_data?.layoutManager = getRecLayoutManager()
+		dataHolderView.rvData.layoutManager = getRecLayoutManager()
 		val itemDecoration = recItemDecoration
 		if (itemDecoration != null) {
-			rv_data?.removeItemDecoration(itemDecoration)
-			rv_data?.addItemDecoration(itemDecoration)
+			dataHolderView.rvData.removeItemDecoration(itemDecoration)
+			dataHolderView.rvData.addItemDecoration(itemDecoration)
 		}
 		viewModel.adapter.run {
 			setOnItemClickListener(object : BaseRecAdapter.OnItemClickListener {
@@ -54,7 +60,7 @@ abstract class BaseRecFragment : BaseFragment(), View.OnClickListener {
 					itemLong(position)
 				}
 			})
-			rv_data?.adapter = this
+			dataHolderView.rvData.adapter = this
 		}
 	}
 	
@@ -62,10 +68,10 @@ abstract class BaseRecFragment : BaseFragment(), View.OnClickListener {
 	abstract fun getRecLayoutManager(): RecyclerView.LayoutManager
 	
 	private fun initSmart() {
-		smart_refresh.bindRecycler(rv_data)
-		smart_refresh?.setLoadRefreshMoreDataListener({
+		dataHolderView.smartRefresh.bindRecycler(dataHolderView.rvData)
+		dataHolderView.smartRefresh.setLoadRefreshMoreDataListener({
 			viewModel.loadStartData(isRefresh = false, isShowLoad = false)
-		},{
+		}, {
 			viewModel.loadStartData(true, isShowLoad = false)
 		})
 		setMoreRefreshEnable()
@@ -81,25 +87,25 @@ abstract class BaseRecFragment : BaseFragment(), View.OnClickListener {
 	open fun itemLong(position: Int) = Unit
 	
 	private fun setMoreRefreshEnable() {
-		smart_refresh?.setEnableRefresh(loadRefreshEnable)//启用刷新
-		smart_refresh?.setEnableLoadMore(loadMoreEnable)//启用加载
+		dataHolderView.smartRefresh.setEnableRefresh(loadRefreshEnable)//启用刷新
+		dataHolderView.smartRefresh.setEnableLoadMore(loadMoreEnable)//启用加载
 	}
 	
 	private fun finishLoad() {
-		smart_refresh?.finishRefresh()
-		smart_refresh?.finishLoadMore()
+		dataHolderView.smartRefresh.finishRefresh()
+		dataHolderView.smartRefresh.finishLoadMore()
 	}
 	
 	private fun showUi(value: Int) {
-		rl_loading?.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
-		rl_empty?.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
-		rl_error?.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
-		smart_refresh?.visibility = if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
+		loadHolderView.rlLoading.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
+		emptyHolderView.rlEmpty.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
+		errHolderView.rlError.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
+		dataHolderView.smartRefresh.visibility = if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
 	}
 	
 	override fun initEvent() {
 		super.initEvent()
-		ll_empty?.singleClick(this)
+		emptyHolderView.llEmpty.singleClick(this)
 	}
 	
 	override fun onClick(v: View?) {
@@ -109,15 +115,14 @@ abstract class BaseRecFragment : BaseFragment(), View.OnClickListener {
 	}
 	
 	fun callRefreshView() {
-		if (rv_data?.isComputingLayout == true)return
+		if (dataHolderView.rvData.isComputingLayout) return
 		var isShowLoad = false
 		if (viewModel.isShowDataView()) {
 			if (loadRefreshEnable) {
-				smart_refresh?.autoRefresh()
+				dataHolderView.smartRefresh.autoRefresh()
 				return
 			}
 		} else isShowLoad = true
-		
 		viewModel.loadStartData(isRefresh = true, isShowLoad = isShowLoad)
 	}
 }

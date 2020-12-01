@@ -19,7 +19,7 @@ object PictureUtils {
 	
 	private var mPictureParameterStyle: PictureParameterStyle? = null
 
-	fun getTakeImages(data: Intent): MutableList<String>? {
+	fun getTakeImages(data: Intent): MutableList<String> {
 		// 图片选择结果回调
 		val obtainMultipleResult = PictureSelector.obtainMultipleResult(data)
 		val paths: MutableList<String> = mutableListOf()

@@ -1,25 +1,26 @@
 package com.example.common
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
+import com.example.common.databinding.ActivityMainBinding
+import com.rain.baselib.activity.BaseActivity
+import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
 import com.says.common.file.PushFileManager
-import com.says.common.ui.singleClick
-import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-		setContentView(R.layout.activity_main)
-		tv_start.singleClick {
-			startAc<DemoActivity>()
-		}
-	}
-	
-	override fun onResume() {
-		super.onResume()
-		val pushMap = PushFileManager.pushMap
-		Log.d("pushTag","pushMap:${pushMap.size}")
-	}
+class MainActivity : BaseActivity<ActivityMainBinding>() {
+    override val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+    override val variableId = BR.mainId
+    override fun onResume() {
+        super.onResume()
+        val pushMap = PushFileManager.pushMap
+        Log.d("pushTag", "pushMap:${pushMap.size}")
+    }
+
+    override fun initEvent() {
+        super.initEvent()
+        viewBind.tvStart.singleClick {
+            startAc<DemoActivity>()
+        }
+    }
 }
