@@ -39,9 +39,8 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
             return
         }
         viewBind = conversionViewBind
-
-        if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
         setContentView(viewBind.root)
+        if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
         initViewDataBinding()
         initIntent()
         init(savedInstanceState)

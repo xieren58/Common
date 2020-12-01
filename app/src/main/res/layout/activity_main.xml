@@ -3,7 +3,7 @@
     <data>
         <variable
             name="mainId"
-            type="com.example.common.MainViewModel" />
+            type="com.example.common.viewModel.MainViewModel" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"

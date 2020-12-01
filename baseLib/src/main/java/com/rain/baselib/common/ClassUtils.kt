@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import java.lang.Exception
 import java.lang.reflect.*
 
 
@@ -20,18 +21,12 @@ import java.lang.reflect.*
 @Suppress("UNCHECKED_CAST")
 fun <T : ViewBinding> AppCompatActivity.conversionViewBind() : T? {
 	try {
-		val superclass = javaClass.genericSuperclass
-		Log.d("superclassTag","superclass:$superclass")
-		val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+		val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
 		Log.d("superclassTag","aClass:$aClass")
 		val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
 		Log.d("superclassTag","method:$method")
 		return  method.invoke(null, layoutInflater) as T
-	} catch (e: NoSuchMethodException) {
-		e.printStackTrace()
-	} catch (e: IllegalAccessException) {
-		e.printStackTrace()
-	} catch (e: InvocationTargetException) {
+	} catch (e: Exception) {
 		e.printStackTrace()
 	}
     return null
@@ -40,15 +35,12 @@ fun <T : ViewBinding> AppCompatActivity.conversionViewBind() : T? {
 @Suppress("UNCHECKED_CAST")
 fun <T : ViewBinding> Fragment.conversionViewBind(inflater: LayoutInflater, container: ViewGroup?) :T?{
 	try {
-		val superclass = javaClass.genericSuperclass
-		val aClass = (superclass as ParameterizedType).actualTypeArguments[0] as Class<*>
-		val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
-		return  method.invoke(null, inflater, container, false) as T
-	} catch (e: NoSuchMethodException) {
-		e.printStackTrace()
-	} catch (e: IllegalAccessException) {
-		e.printStackTrace()
-	} catch (e: InvocationTargetException) {
+		val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
+		Log.d("superclassTag","fg-aClass:$aClass")
+		val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java,ViewGroup::class.java,Boolean::class.java)
+		Log.d("superclassTag","fg-method:$method")
+		return  method.invoke(null, inflater,container,false) as T
+	} catch (e: Exception) {
 		e.printStackTrace()
 	}
     return null

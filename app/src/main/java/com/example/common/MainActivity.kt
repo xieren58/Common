@@ -3,6 +3,7 @@ package com.example.common
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import com.example.common.databinding.ActivityMainBinding
+import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.activity.BaseActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
@@ -20,7 +21,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
-            startAc<DemoActivity>()
+            startAc<Demo2Activity>()
         }
     }
 }

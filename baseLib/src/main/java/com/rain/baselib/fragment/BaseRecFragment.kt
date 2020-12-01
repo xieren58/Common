@@ -22,9 +22,6 @@ abstract class BaseRecFragment<VB:ViewBinding> : BaseFragment<VB>(), View.OnClic
 	private val errHolderView by lazy { LayoutErrViewBinding.bind(viewBind.root) }
 	private val emptyHolderView by lazy { LayoutEmptyViewBinding.bind(viewBind.root) }
 
-	override fun getViewBindLayout(inflater: LayoutInflater, container: ViewGroup?): ViewBinding {
-		return  LayoutRecViewBinding.inflate(inflater,container,false)
-	}
 	override fun initModelObserve() {
 		viewModel.loadEnd.observe(this, {
 			if (it == null || it) {

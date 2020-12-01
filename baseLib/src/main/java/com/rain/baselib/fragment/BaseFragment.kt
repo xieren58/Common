@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,7 +28,6 @@ abstract class BaseFragment<T:ViewBinding> : Fragment() {
     protected abstract val viewModel: BaseViewModel?
     protected lateinit var viewBind: T
 
-    abstract fun getViewBindLayout(inflater: LayoutInflater, container: ViewGroup?):ViewBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initIntent()

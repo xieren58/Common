@@ -45,4 +45,6 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:4.11.0"
 
     implementation "com.yqritc:recyclerview-flexibledivider:1.4.0"
+
+    implementation 'com.github.hackware1993:MagicIndicator:1.7.0'
 }
