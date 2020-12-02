@@ -1,8 +1,6 @@
 package com.rain.baselib.fragment
 
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
@@ -12,8 +10,9 @@ import com.rain.baselib.databinding.*
 import com.rain.baselib.viewModel.BaseRecViewModel
 
 /**
- *  Create by rain
- *  Date: 2020/7/7
+ *  RecyclerView的基类，默认传入[ActivityBaseRecBinding]，[ActivityBaseRecBinding]
+ *  必须存在布局
+ *   [LayoutLoadingViewBinding],[LayoutDataViewBinding],[LayoutErrViewBinding],[LayoutEmptyViewBinding]
  */
 abstract class BaseRecFragment<VB:ViewBinding> : BaseFragment<VB>(), View.OnClickListener {
 	abstract override val viewModel: BaseRecViewModel<*>

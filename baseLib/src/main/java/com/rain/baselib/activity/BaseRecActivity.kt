@@ -11,10 +11,11 @@ import com.rain.baselib.databinding.*
 import com.rain.baselib.viewModel.BaseRecViewModel
 
 /**
- *  Create by rain
- *  Date: 2020/11/9
+ *  RecyclerView的基类，默认传入[ActivityBaseRecBinding]，[ActivityBaseRecBinding]
+ *	必须存在布局
+ *  [LayoutLoadingViewBinding],[LayoutDataViewBinding],[LayoutErrViewBinding],[LayoutEmptyViewBinding],[LayoutBaseTitleBinding]
  */
-abstract class BaseRecActivity<T:ViewBinding> : BaseActivity<T>(), View.OnClickListener {
+abstract class BaseRecActivity<T:ViewBinding > : BaseActivity<T>(), View.OnClickListener {
 	
 	abstract override val viewModel: BaseRecViewModel<*>
 	protected open val loadMoreEnable = true

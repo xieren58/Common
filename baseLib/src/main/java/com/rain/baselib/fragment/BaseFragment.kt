@@ -19,8 +19,8 @@ import com.rain.baselib.common.conversionViewBind
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
- *  Create by rain
- *  Date: 2020/11/6
+ * base基类 - t为viewBind。可输入dataBind，dataBind情况下绑定viewModel。
+ * 根据viewBind自动设置布局
  */
 abstract class BaseFragment<T:ViewBinding> : Fragment() {
     
@@ -34,8 +34,7 @@ abstract class BaseFragment<T:ViewBinding> : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val conversionViewBind = conversionViewBind<T>(inflater,container) ?: return null
-        viewBind = conversionViewBind
+        viewBind = conversionViewBind(inflater,container)
         if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
         return viewBind.root
     }

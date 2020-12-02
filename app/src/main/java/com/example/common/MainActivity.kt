@@ -21,7 +21,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
-            startAc<Demo2Activity>()
+            startAc<DemoActivity>()
         }
     }
 }

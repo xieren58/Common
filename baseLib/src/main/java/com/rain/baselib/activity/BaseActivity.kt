@@ -21,8 +21,8 @@ import com.rain.baselib.common.conversionViewBind
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
- *  Create by rain
- *  Date: 2020/11/6
+ * base基类 - t为[ViewBinding]。可输入[ViewDataBinding]，[ViewDataBinding]情况下绑定[BaseViewModel]。
+ * 根据viewBind自动设置布局
  */
 abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     protected open val variableId: Int = -1 //佈局内的id设置null代表不需要dataBind
@@ -33,12 +33,7 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         stateBarTextColor()
-        val conversionViewBind = conversionViewBind<T>()
-        if (conversionViewBind == null) {
-            finish()
-            return
-        }
-        viewBind = conversionViewBind
+        viewBind = conversionViewBind()
         setContentView(viewBind.root)
         if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
         initViewDataBinding()
