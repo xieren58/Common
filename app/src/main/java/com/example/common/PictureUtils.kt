@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.config.PictureConfig
 import com.luck.picture.lib.config.PictureMimeType
+import com.luck.picture.lib.entity.LocalMedia
+import com.luck.picture.lib.listener.OnResultCallbackListener
 import com.luck.picture.lib.style.PictureParameterStyle
 
 object PictureUtils {
@@ -41,7 +43,7 @@ object PictureUtils {
 	/**
 	 * 拍照-fragment
 	 */
-	fun onPickFromCapture(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, requestCode: Int = PictureConfig.CHOOSE_REQUEST) {
+	fun onPickFromCapture(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, blockResultBlock:(MutableList<String>?)->Unit) {
 		PictureSelector.create(fragment)
 				.openCamera(PictureMimeType.ofImage()) // 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
 				.imageEngine(GlideEngine.createGlideEngine()) // 外部传入图片加载引擎，必传项
@@ -60,13 +62,29 @@ object PictureUtils {
 				.showCropGrid(isGridCut)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
 				.isDragFrame(true)// 是否可拖动裁剪框(固定)
 				.withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
-				.forResult(requestCode) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 拍照-activity
 	 */
-	fun onPickFromCapture(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = true, requestCode: Int = PictureConfig.CHOOSE_REQUEST) {
+	fun onPickFromCapture(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = true,  blockResultBlock:(MutableList<String>?)->Unit) {
 		PictureSelector.create(activity)
 				.openCamera(PictureMimeType.ofImage()) // 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
 				.imageEngine(GlideEngine.createGlideEngine()) // 外部传入图片加载引擎，必传项
@@ -85,13 +103,29 @@ object PictureUtils {
 				.isAndroidQTransform(false)
 				.isDragFrame(true)// 是否可拖动裁剪框(固定)
 				.withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
-				.forResult(requestCode) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 相冊選擇-fragment
 	 */
-	fun onPickFromGallery(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1) {
+	fun onPickFromGallery(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1,blockResultBlock:(MutableList<String>?)->Unit) {
 		getDefaultStyle()
 		// 进入相册 以下是例子：不需要的api可以不写
 		PictureSelector.create(fragment)
@@ -123,13 +157,29 @@ object PictureUtils {
 				.circleDimmedLayer(!isGridCut)
 				.showCropFrame(isCut)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
 				.showCropGrid(isCut)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
-				.forResult(PictureConfig.CHOOSE_REQUEST) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 相冊選擇-activity
 	 */
-	fun onPickFromGallery(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1) {
+	fun onPickFromGallery(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1,blockResultBlock:(MutableList<String>?)->Unit) {
 		getDefaultStyle()
 		// 进入相册 以下是例子：不需要的api可以不写
 		PictureSelector.create(activity)
@@ -161,13 +211,29 @@ object PictureUtils {
 				.cutOutQuality(CUT_SIZE) // 裁剪输出质量 默认100
 				.isAndroidQTransform(false)
 				.setPictureStyle(mPictureParameterStyle)
-				.forResult(PictureConfig.CHOOSE_REQUEST) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 拍摄视频-fragment
 	 */
-	fun onPickFromVideoCapture(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, requestCode: Int = PictureConfig.CHOOSE_REQUEST) {
+	fun onPickFromVideoCapture(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, blockResultBlock:(MutableList<String>?)->Unit) {
 		PictureSelector.create(fragment)
 				.openCamera(PictureMimeType.ofVideo()) // 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
 				.imageEngine(GlideEngine.createGlideEngine()) // 外部传入图片加载引擎，必传项
@@ -188,13 +254,29 @@ object PictureUtils {
 				.circleDimmedLayer(isGridCut)
 				.isDragFrame(true)// 是否可拖动裁剪框(固定)
 				.withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
-				.forResult(requestCode) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 拍摄视频-activity
 	 */
-	fun onPickFromVideoCapture(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, requestCode: Int = PictureConfig.CHOOSE_REQUEST) {
+	fun onPickFromVideoCapture(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, blockResultBlock:(MutableList<String>?)->Unit) {
 		PictureSelector.create(activity)
 				.openCamera(PictureMimeType.ofVideo()) // 全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()、音频.ofAudio()
 				.imageEngine(GlideEngine.createGlideEngine()) // 外部传入图片加载引擎，必传项
@@ -215,13 +297,29 @@ object PictureUtils {
 				.circleDimmedLayer(isGridCut)
 				.isDragFrame(true)// 是否可拖动裁剪框(固定)
 				.withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
-				.forResult(requestCode) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 选择视频-fragment
 	 */
-	fun onPickFromAll(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1) {
+	fun onPickFromAll(fragment: Fragment, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1,blockResultBlock:(MutableList<String>?)->Unit) {
 		getDefaultStyle()
 		// 进入相册 以下是例子：不需要的api可以不写
 		PictureSelector.create(fragment)
@@ -254,13 +352,29 @@ object PictureUtils {
 				.circleDimmedLayer(!isGridCut)
 				.showCropFrame(isCut)// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
 				.showCropGrid(isCut)// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
-				.forResult(PictureConfig.CHOOSE_REQUEST) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	/**
 	 * 选择视频-activity
 	 */
-	fun onPickFromAll(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1) {
+	fun onPickFromAll(activity: Activity, isCut: Boolean = false, isGridCut: Boolean = true, isCompress: Boolean = false, isSingle: Boolean = true, maxSize: Int = 1,blockResultBlock:(MutableList<String>?)->Unit) {
 		getDefaultStyle()
 		// 进入相册 以下是例子：不需要的api可以不写
 		PictureSelector.create(activity)
@@ -294,7 +408,23 @@ object PictureUtils {
 				.cutOutQuality(CUT_SIZE) // 裁剪输出质量 默认100
 				.isAndroidQTransform(false)
 				.setPictureStyle(mPictureParameterStyle)
-				.forResult(PictureConfig.CHOOSE_REQUEST) //结果回调onActivityResult code
+				.forResult(object : OnResultCallbackListener<LocalMedia> {
+					override fun onResult(result: MutableList<LocalMedia>?) {
+						val paths: MutableList<String> = mutableListOf()
+						result?.forEach {
+							val path: String = if (it.isCut && !it.isCompressed) it.cutPath //裁剪后的路径
+							else if (it.isCompressed) it.compressPath //压缩后的路径
+							else if (!it.realPath.isNullOrEmpty()) it.realPath //真实路径
+							else if (!it.androidQToPath.isNullOrEmpty()) it.androidQToPath //androidQ复制路径
+							else it.path //原图路径
+							
+							paths.add(path)
+						}
+						blockResultBlock(paths)
+					}
+					
+					override fun onCancel()=blockResultBlock(null)
+				}) //结果回调onActivityResult code
 	}
 	
 	private fun getDefaultStyle(): PictureParameterStyle {

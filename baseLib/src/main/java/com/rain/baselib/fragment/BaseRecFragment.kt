@@ -14,13 +14,12 @@ import com.rain.baselib.viewModel.BaseRecViewModel
  *  必须存在布局
  *   [LayoutLoadingViewBinding],[LayoutDataViewBinding],[LayoutErrViewBinding],[LayoutEmptyViewBinding]
  */
-abstract class BaseRecFragment<VB:ViewBinding> : BaseFragment<VB>(), View.OnClickListener {
-	abstract override val viewModel: BaseRecViewModel<*>
+abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : BaseFragment<VB, VM>(), View.OnClickListener {
 	private val loadHolderView by lazy { LayoutLoadingViewBinding.bind(viewBind.root) }
 	private val dataHolderView by lazy { LayoutDataViewBinding.bind(viewBind.root) }
 	private val errHolderView by lazy { LayoutErrViewBinding.bind(viewBind.root) }
 	private val emptyHolderView by lazy { LayoutEmptyViewBinding.bind(viewBind.root) }
-
+	
 	override fun initModelObserve() {
 		viewModel.loadEnd.observe(this, {
 			if (it == null || it) {
@@ -106,7 +105,7 @@ abstract class BaseRecFragment<VB:ViewBinding> : BaseFragment<VB>(), View.OnClic
 	
 	override fun onClick(v: View?) {
 		when (v?.id) {
-			R.id.ll_empty-> callRefreshView()
+			R.id.ll_empty -> callRefreshView()
 		}
 	}
 	

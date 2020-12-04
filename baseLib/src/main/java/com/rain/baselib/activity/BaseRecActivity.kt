@@ -15,9 +15,8 @@ import com.rain.baselib.viewModel.BaseRecViewModel
  *	必须存在布局
  *  [LayoutLoadingViewBinding],[LayoutDataViewBinding],[LayoutErrViewBinding],[LayoutEmptyViewBinding],[LayoutBaseTitleBinding]
  */
-abstract class BaseRecActivity<T:ViewBinding > : BaseActivity<T>(), View.OnClickListener {
+abstract class BaseRecActivity<T:ViewBinding,VM:BaseRecViewModel<*> > : BaseActivity<T,VM>(), View.OnClickListener {
 	
-	abstract override val viewModel: BaseRecViewModel<*>
 	protected open val loadMoreEnable = true
 	protected open val loadRefreshEnable = true
 	

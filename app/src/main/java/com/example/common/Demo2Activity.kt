@@ -22,8 +22,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorT
  *  Create by rain
  *  Date: 2020/11/2
  */
-class Demo2Activity : BaseActivity<ActivityDemoBinding>() {
-    override val viewModel by lazy { ViewModelProvider(this).get(Demo2ViewModel::class.java) }
+class Demo2Activity : BaseActivity<ActivityDemoBinding,Demo2ViewModel>() {
     override val variableId = BR.demo2Id
 
     override fun initView() {

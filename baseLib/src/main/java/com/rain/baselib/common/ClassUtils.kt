@@ -9,7 +9,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.rain.baselib.viewModel.BaseViewModel
 import java.lang.Exception
 import java.lang.reflect.*
 
@@ -19,22 +22,36 @@ import java.lang.reflect.*
  *  Date: 2020/12/1
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : ViewBinding> AppCompatActivity.conversionViewBind() : T {
+fun <T : ViewBinding> AppCompatActivity.conversionViewBind(): T {
 	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<T>
-	Log.d("superclassTag","aClass:$aClass")
+	Log.d("superclassTag", "aClass:$aClass")
 	val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java)
-	Log.d("superclassTag","method:$method")
-	return  method.invoke(null, layoutInflater) as T
+	Log.d("superclassTag", "method:$method")
+	return method.invoke(null, layoutInflater) as T
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T : ViewBinding> Fragment.conversionViewBind(inflater: LayoutInflater, container: ViewGroup?) :T{
+fun <T : ViewBinding> Fragment.conversionViewBind(inflater: LayoutInflater, container: ViewGroup?): T {
 	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[0] as Class<*>
-	Log.d("superclassTag","fg-aClass:$aClass")
-	val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java,ViewGroup::class.java,Boolean::class.java)
-	Log.d("superclassTag","fg-method:$method")
-	return  method.invoke(null, inflater,container,false) as T
+	Log.d("superclassTag", "fg-aClass:$aClass")
+	val method = aClass.getDeclaredMethod("inflate", LayoutInflater::class.java, ViewGroup::class.java, Boolean::class.java)
+	Log.d("superclassTag", "fg-method:$method")
+	return method.invoke(null, inflater, container, false) as T
 }
+
 fun ViewGroup.getBindIdView(@LayoutRes layoutResId: Int): View {
-    return DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(context), layoutResId, this, false).root
+	return DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(context), layoutResId, this, false).root
+}
+
+@Suppress("UNCHECKED_CAST")
+fun <T : ViewModel> AppCompatActivity.conversionViewModel() : T {
+	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<T>
+	Log.d("superclassTag","aClass:$aClass")
+	return  ViewModelProvider(this).get(aClass)
+}
+@Suppress("UNCHECKED_CAST")
+fun <T : ViewModel> Fragment.conversionViewModel() : T {
+	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<T>
+	Log.d("superclassTag","aClass:$aClass")
+	return  ViewModelProvider(this).get(aClass)
 }

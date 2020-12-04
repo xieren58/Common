@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorRes
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -18,17 +17,18 @@ import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
 import com.rain.baselib.common.conversionViewBind
+import com.rain.baselib.common.conversionViewModel
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
  * base基类 - t为[ViewBinding]。可输入[ViewDataBinding]，[ViewDataBinding]情况下绑定[BaseViewModel]。
  * 根据viewBind自动设置布局
  */
-abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
+abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivity() {
     protected open val variableId: Int = -1 //佈局内的id设置null代表不需要dataBind
 
     protected lateinit var viewBind: T
-    protected abstract val viewModel: BaseViewModel?
+    protected open  val viewModel :VM by lazy { conversionViewModel() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,12 +42,12 @@ abstract class BaseActivity<T : ViewBinding> : AppCompatActivity() {
     }
 
     private fun initViewDataBinding() {
-        viewModel?.setLoadDialogObserve(this, {
+        viewModel.setLoadDialogObserve(this, {
             if (it == null) return@setLoadDialogObserve
             if (it) showDialogLoad() else dismissDialogLoad()
         })
         (viewBind as? ViewDataBinding)?.run {
-            if (variableId != -1 && viewModel != null) setVariable(variableId, viewModel)
+            if (variableId != -1) setVariable(variableId, viewModel)
             lifecycleOwner = this@BaseActivity
         }
     }

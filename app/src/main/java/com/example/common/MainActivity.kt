@@ -7,10 +7,10 @@ import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.activity.BaseActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
+import com.rain.baselib.viewModel.BaseViewModel
 import com.says.common.file.PushFileManager
 
-class MainActivity : BaseActivity<ActivityMainBinding>() {
-    override val viewModel by lazy { ViewModelProvider(this).get(MainViewModel::class.java) }
+class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
     override val variableId = BR.mainId
     override fun onResume() {
         super.onResume()
