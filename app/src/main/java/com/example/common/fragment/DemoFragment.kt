@@ -1,10 +1,6 @@
 package com.example.common.fragment
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.example.common.BR
 import com.example.common.databinding.FgDemoBinding
 import com.example.common.viewModel.FgDemoViewModel

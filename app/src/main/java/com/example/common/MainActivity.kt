@@ -1,13 +1,11 @@
 package com.example.common
 
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.activity.BaseActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
-import com.rain.baselib.viewModel.BaseViewModel
 import com.says.common.file.PushFileManager
 
 class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {

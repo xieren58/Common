@@ -58,7 +58,7 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
         initView()
         initEvent()
         initModelObserve()
-        viewModel?.initModel()
+	    viewModel.initModel()
         initData()
     }
 

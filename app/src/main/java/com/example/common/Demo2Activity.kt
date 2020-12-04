@@ -3,14 +3,12 @@ package com.example.common
 import android.content.Context
 import android.util.Log
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.databinding.ActivityDemoBinding
 import com.example.common.viewModel.Demo2ViewModel
 import com.rain.baselib.activity.BaseActivity
 import com.rain.baselib.adapter.BasePagerFgAdapter
 import com.says.common.ui.singleClick
-import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
