@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,15 +19,24 @@ import com.rain.baselib.common.conversionViewModel
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
- * base基类 - t为viewBind。可输入dataBind，dataBind情况下绑定viewModel。
+ *  * base基类 - T为[ViewBinding]。可输入[ViewDataBinding]，[ViewDataBinding]情况下绑定[BaseViewModel]。
+ * VM为[BaseViewModel] 根据泛型类型，自动获取viewModel对象，并在[variableId]不为-1的情况下进行[ViewDataBinding]和[BaseViewModel]的绑定
+ * 在子类不需要viewModel时，泛型传入[BaseViewModel]即可
  * 根据viewBind自动设置布局
  */
 abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
-	
+	/**
+	 * 布局中设置的绑定的id
+	 */
 	protected open val variableId: Int = -1
+	/**
+	 * viewBind的对象
+	 */
 	protected open val viewModel: VM by lazy { conversionViewModel() }
+	/**
+	 * viewModel对象
+	 */
 	protected lateinit var viewBind: T
-	
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		initIntent()
@@ -46,7 +54,9 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 		initModelObserve()
 		init(savedInstanceState)
 	}
-	
+	/**
+	 * 初始化绑定viewDataBind
+	 */
 	private fun initViewDataBinding() {
 		viewModel.setLoadDialogObserve(this, {
 			if (it == null) return@setLoadDialogObserve
@@ -58,17 +68,32 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 		}
 	}
 	
+	/**
+	 * 初始化绑定model中的LiveData
+	 */
 	open fun initModelObserve() = Unit
-	open fun initView() = Unit
-	open fun initData() = Unit
+	/**
+	 * 初始化获取intent传递的数据
+	 */
 	open fun initIntent() = Unit
+	/**
+	 * 初始化点击事件
+	 */
 	open fun initEvent() = Unit
+	/**
+	 * 初始化View
+	 */
+	open fun initView() = Unit
+	/**
+	 * 初始化数据
+	 */
+	open fun initData() = Unit
 	
 	@CallSuper
 	open fun init(savedInstanceState: Bundle?) {
 		initView()
 		initEvent()
-		viewModel?.initModel()
+		viewModel.initModel()
 		initData()
 	}
 	
