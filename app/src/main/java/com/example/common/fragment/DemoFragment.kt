@@ -14,7 +14,7 @@ import com.rain.baselib.fragment.BaseFragment
  *  Create by rain
  *  Date: 2020/12/1
  */
-class DemoFragment : BaseFragment<FgDemoBinding>() {
+class DemoFragment : BaseFragment<FgDemoBinding, FgDemoViewModel>() {
 	companion object {
 		fun getInstance(index: Int): DemoFragment {
 			return DemoFragment().apply {
@@ -25,7 +25,6 @@ class DemoFragment : BaseFragment<FgDemoBinding>() {
 		}
 	}
 	
-	override val viewModel by lazy { ViewModelProvider(this).get(FgDemoViewModel::class.java) }
 	override val variableId = BR.fgDemoId
 	override fun initModelObserve() {
 		super.initModelObserve()
