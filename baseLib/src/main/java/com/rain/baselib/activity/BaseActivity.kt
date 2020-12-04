@@ -31,6 +31,7 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
      * 布局中设置的绑定的id
      */
     protected open val variableId: Int = -1 //佈局内的id设置null代表不需要dataBind
+    
     /**
      * viewBind的对象
      */
