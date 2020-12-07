@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Parcelable
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import java.io.Serializable
@@ -24,12 +23,6 @@ inline fun <reified T : Activity> Fragment.startAc(vararg params: Pair<String, A
 inline fun <reified T : Activity> Context.startAc(vararg params: Pair<String, Any?>) =
 		AnkoInternals.internalStartActivity(this, T::class.java, params)
 
-
-//inline fun <reified T : Activity> Activity.startAcResult(requestCode: Int, vararg params: Pair<String, Any?>) =
-//		AnkoInternals.internalStartActivityForResult(this, T::class.java, requestCode, params)
-//
-//inline fun <reified T : Activity> Fragment.startAcResult(requestCode: Int, vararg params: Pair<String, Any?>) =
-//		startActivityForResult(AnkoInternals.createIntent(requireContext(), T::class.java, params), requestCode)
 
 inline fun <reified T : Any> Context.intentFor(vararg params: Pair<String, Any?>): Intent =
 		AnkoInternals.createIntent(this, T::class.java, params)
@@ -100,14 +93,14 @@ object AnkoInternals {
 	}
 }
 
-class InternalStartContract(val activity: Class<out Activity>) : ActivityResultContract<Array<out Pair<String, Any?>>, Intent>() {
+class InternalStartContract(private val activity: Class<out Activity>) : ActivityResultContract<Array<out Pair<String, Any?>>, Intent>() {
 	override fun createIntent(context: Context, input: Array<out Pair<String, Any?>>) = AnkoInternals.createIntent(context, activity, input)
 	override fun parseResult(resultCode: Int, intent: Intent?): Intent? {
 		return if (resultCode == Activity.RESULT_OK) intent else null
 	}
 }
 
-class InternalStartNoIntentContract(val activity: Class<out Activity>) : ActivityResultContract<Array<out Pair<String, Any?>>, Boolean>() {
+class InternalStartNoIntentContract(private val activity: Class<out Activity>) : ActivityResultContract<Array<out Pair<String, Any?>>, Boolean>() {
 	override fun createIntent(context: Context, input: Array<out Pair<String, Any?>>) = AnkoInternals.createIntent(context, activity, input)
 	override fun parseResult(resultCode: Int, intent: Intent?): Boolean {
 		return resultCode == Activity.RESULT_OK

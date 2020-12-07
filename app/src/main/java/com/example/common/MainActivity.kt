@@ -4,8 +4,10 @@ import android.util.Log
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.activity.BaseActivity
+import com.rain.baselib.common.createRegisterForActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
+import com.rain.baselib.common.startAcResult
 import com.says.common.file.PushFileManager
 
 class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
@@ -16,10 +18,13 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
         Log.d("pushTag", "pushMap:${pushMap.size}")
     }
 
+    private val startDemoResult = createRegisterForActivity<DemoActivity>{
+        Log.d("resultTag","it:${it?.getStringExtra("demo")}")
+    }
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
-            startAc<DemoActivity>()
+            startDemoResult.startAcResult("requestData" to "111")
         }
     }
 }

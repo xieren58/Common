@@ -48,8 +48,8 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
         setContentView(viewBind.root)
         if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
         initViewDataBinding()
-        initIntent()
-        init(savedInstanceState)
+        initIntent(savedInstanceState)
+        init()
     }
     /**
      * 初始化绑定viewDataBind
@@ -67,7 +67,7 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
 
 
     @CallSuper
-    open fun init(savedInstanceState: Bundle?) {
+    open fun init() {
         initView()
         initEvent()
         initModelObserve()
@@ -81,7 +81,7 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
     /**
      * 初始化获取intent传递的数据
      */
-    open fun initIntent() = Unit
+    open fun initIntent(savedInstanceState: Bundle?) = Unit
     /**
      * 初始化点击事件
      */

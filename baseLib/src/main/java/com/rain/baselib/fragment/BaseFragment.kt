@@ -39,7 +39,7 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 	protected lateinit var viewBind: T
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
-		initIntent()
+		initIntent(savedInstanceState)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -52,7 +52,7 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 		super.onViewCreated(view, savedInstanceState)
 		initViewDataBinding()
 		initModelObserve()
-		init(savedInstanceState)
+		init()
 	}
 	/**
 	 * 初始化绑定viewDataBind
@@ -75,7 +75,7 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 	/**
 	 * 初始化获取intent传递的数据
 	 */
-	open fun initIntent() = Unit
+	open fun initIntent(savedInstanceState: Bundle?) = Unit
 	/**
 	 * 初始化点击事件
 	 */
@@ -90,7 +90,7 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 	open fun initData() = Unit
 	
 	@CallSuper
-	open fun init(savedInstanceState: Bundle?) {
+	open fun init() {
 		initView()
 		initEvent()
 		viewModel.initModel()

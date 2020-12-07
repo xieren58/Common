@@ -12,8 +12,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
-import com.rain.baselib.viewModel.BaseViewModel
-import java.lang.Exception
 import java.lang.reflect.*
 
 
@@ -44,14 +42,16 @@ fun ViewGroup.getBindIdView(@LayoutRes layoutResId: Int): View {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun <T : ViewModel> AppCompatActivity.conversionViewModel() : T {
+fun <T : ViewModel> AppCompatActivity.conversionViewModel(): T {
 	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<T>
-	Log.d("superclassTag","aClass:$aClass")
-	return  ViewModelProvider(this).get(aClass)
+	Log.d("superclassTag", "aClass:$aClass")
+	return ViewModelProvider(this).get(aClass)
 }
+
 @Suppress("UNCHECKED_CAST")
-fun <T : ViewModel> Fragment.conversionViewModel() : T {
+fun <T : ViewModel> Fragment.conversionViewModel(): T {
 	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<T>
-	Log.d("superclassTag","aClass:$aClass")
-	return  ViewModelProvider(this).get(aClass)
+	Log.d("superclassTag", "aClass:$aClass")
+	return ViewModelProvider(this).get(aClass)
 }
+
