@@ -1,38 +1,35 @@
 package com.example.common
 
-import android.content.Context
+import android.graphics.Color
 import android.util.Log
-import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.databinding.ActivityDemoBinding
 import com.example.common.viewModel.Demo2ViewModel
+import com.google.android.material.tabs.TabLayout
 import com.rain.baselib.activity.BaseActivity
 import com.rain.baselib.adapter.BasePagerFgAdapter
-import com.says.common.ui.singleClick
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.ColorTransitionPagerTitleView
 
 /**
  *  Create by rain
  *  Date: 2020/11/2
  */
-class Demo2Activity : BaseActivity<ActivityDemoBinding,Demo2ViewModel>() {
+class Demo2Activity : BaseActivity<ActivityDemoBinding, Demo2ViewModel>() {
     override val variableId = BR.demo2Id
 
     override fun initView() {
         super.initView()
-        initIndicator()
         initPager()
     }
 
     override fun initModelObserve() {
         super.initModelObserve()
         viewModel.mTitleDataList.observe(this, {
-            viewBind.magicIndicator.navigator.notifyDataSetChanged()
+            it.forEach { str ->
+                val tab = viewBind.tabDemo.newTab().setText(str)
+                tab.view.setBackgroundColor(Color.YELLOW)
+                viewBind.tabDemo.addTab(tab)
+            }
+
         })
         viewModel.mPgDataList.observe(this, {
             Log.d("indexTag", "it:${it.isNullOrEmpty()}")
@@ -46,40 +43,26 @@ class Demo2Activity : BaseActivity<ActivityDemoBinding,Demo2ViewModel>() {
 
     private fun initPager() {
         fgAdapter = BasePagerFgAdapter(this)
-        viewBind.pgHome.adapter =fgAdapter
+        viewBind.pgHome.adapter = fgAdapter
         viewBind.pgHome.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                viewBind.magicIndicator.onPageSelected(position)
+                viewBind.tabDemo.selectTab(viewBind.tabDemo.getTabAt(position))
+            }
+        })
+        viewBind.tabDemo.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                tab.view.setBackgroundColor(Color.LTGRAY)
+                viewBind.pgHome.currentItem = tab.position
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab) {
+                tab.view.setBackgroundColor(Color.YELLOW)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
     }
 
-    private fun initIndicator() {
-        viewBind.magicIndicator.navigator = CommonNavigator(this).apply {
-            adapter = object : CommonNavigatorAdapter() {
-                override fun getCount(): Int {
-                    return viewModel.mTitleDataList.value?.size ?: 0
-                }
-
-                override fun getTitleView(context: Context?, index: Int): IPagerTitleView {
-                    return ColorTransitionPagerTitleView(context).apply {
-                        normalColor = ContextCompat.getColor(this@Demo2Activity, R.color.black_33)
-                        selectedColor = ContextCompat.getColor(this@Demo2Activity, R.color.teal_200)
-                        text = viewModel.mTitleDataList.value?.get(index) ?: ""
-                        singleClick {
-                            viewBind.pgHome.currentItem = index
-                        }
-                    }
-                }
-
-                override fun getIndicator(context: Context?): IPagerIndicator {
-                    return LinePagerIndicator(context).apply {
-                        mode = LinePagerIndicator.MODE_WRAP_CONTENT
-                    }
-                }
-            }
-        }
-        viewBind.magicIndicator.navigator.notifyDataSetChanged()
-    }
 }

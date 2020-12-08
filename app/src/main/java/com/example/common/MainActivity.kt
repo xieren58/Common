@@ -18,13 +18,10 @@ class MainActivity : BaseActivity<ActivityMainBinding,MainViewModel>() {
         Log.d("pushTag", "pushMap:${pushMap.size}")
     }
 
-    private val startDemoResult = createRegisterForActivity<DemoActivity>{
-        Log.d("resultTag","it:${it?.getStringExtra("demo")}")
-    }
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
-            startDemoResult.startAcResult("requestData" to "111")
+            startAc<Demo2Activity>()
         }
     }
 }
