@@ -52,11 +52,11 @@ dependencies {
     //协程-viewModel-scope
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9"
 
-    api "androidx.exifinterface:exifinterface:1.3.1"
+    api "androidx.exifinterface:exifinterface:1.3.2"
 
     api project(path: ':library')
 
     //activity类
-    implementation 'androidx.activity:activity-ktx:1.2.0-beta01'
-    implementation 'androidx.fragment:fragment-ktx:1.3.0-beta01'
+    implementation 'androidx.activity:activity-ktx:1.2.0-beta02'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0-beta02'
 }

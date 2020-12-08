@@ -2,7 +2,9 @@ package com.example.common.viewModel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.rain.baselib.viewModel.BaseViewModel
+import kotlinx.coroutines.launch
 
 /**
  *  Create by rain
@@ -14,5 +16,8 @@ class FgDemoViewModel :BaseViewModel() {
     fun setIndexData(index:Int){
         Log.d("indexTag","index:$index")
         indexLiveData.value = index.toString()
+        viewModelScope.launch {
+
+        }
     }
 }

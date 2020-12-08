@@ -1,5 +1,6 @@
 package com.example.common.http
 
+import android.util.Log
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okio.Buffer
@@ -12,6 +13,7 @@ class LoggingInterceptor : Interceptor {
 		val newRequest = addParams(chain.request())
 		val build = newRequest.build()
 		val body = getRequestBody(build.body)
+		Log.d("httpTag","body:$body")
 		return chain.proceed(build)
 	}
 

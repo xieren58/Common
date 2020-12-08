@@ -16,7 +16,7 @@ class Demo2ViewModel : BaseViewModel() {
         super.initModel()
         val titleList = mutableListOf<String>()
         val titleFgList = mutableListOf<Fragment>()
-        for (i in 0..20) {
+        for (i in 0..1) {
             titleList.add("$i$i$i")
             titleFgList.add(DemoFragment.getInstance(i))
         }
