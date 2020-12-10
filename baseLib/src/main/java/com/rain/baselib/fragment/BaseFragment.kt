@@ -8,14 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
-import com.rain.baselib.common.conversionViewBind
-import com.rain.baselib.common.conversionViewModel
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
@@ -24,7 +23,7 @@ import com.rain.baselib.viewModel.BaseViewModel
  * 在子类不需要viewModel时，泛型传入[BaseViewModel]即可
  * 根据viewBind自动设置布局
  */
-abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
+abstract class BaseFragment<VB : ViewDataBinding> : Fragment() {
 	/**
 	 * 布局中设置的绑定的id
 	 */
@@ -32,19 +31,25 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 	/**
 	 * viewBind的对象
 	 */
-	protected open val viewModel: VM by lazy { conversionViewModel() }
+	protected abstract val viewModel: BaseViewModel?
 	/**
 	 * viewModel对象
 	 */
-	protected lateinit var viewBind: T
+	protected lateinit var viewBind: VB
+
+	/**
+	 * 布局id
+	 */
+	@get:LayoutRes
+	protected abstract val layoutResId: Int
+
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		initIntent(savedInstanceState)
 	}
 	
 	override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-		viewBind = conversionViewBind(inflater, container)
-		if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
+		viewBind = DataBindingUtil.inflate(inflater,layoutResId,container,false)
 		return viewBind.root
 	}
 	
@@ -58,12 +63,12 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 	 * 初始化绑定viewDataBind
 	 */
 	private fun initViewDataBinding() {
-		viewModel.setLoadDialogObserve(this, {
+		viewModel?.setLoadDialogObserve(this, {
 			if (it == null) return@setLoadDialogObserve
 			if (it) showDialogLoad() else dismissDialogLoad()
 		})
-		(viewBind as? ViewDataBinding)?.run {
-			if (variableId != -1) setVariable(variableId, viewModel)
+		viewBind.run {
+			if (variableId != -1 && viewModel!=null) setVariable(variableId, viewModel)
 			lifecycleOwner = this@BaseFragment
 		}
 	}
@@ -93,7 +98,7 @@ abstract class BaseFragment<T : ViewBinding, VM : BaseViewModel> : Fragment() {
 	open fun init() {
 		initView()
 		initEvent()
-		viewModel.initModel()
+		viewModel?.initModel()
 		initData()
 	}
 	

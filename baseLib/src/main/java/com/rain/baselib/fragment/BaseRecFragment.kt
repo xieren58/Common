@@ -1,50 +1,62 @@
 package com.rain.baselib.fragment
 
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
 import com.rain.baselib.adapter.BaseRecAdapter
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.databinding.*
 import com.rain.baselib.viewModel.BaseRecViewModel
+import com.rain.baselib.weight.ScrollOtherRefreshLayout
 
 /**
- *  RecyclerView的基类，默认传入[ActivityBaseRecBinding]，[ActivityBaseRecBinding]
- *  必须存在布局
- *   [LayoutLoadingViewBinding],[LayoutDataViewBinding],[LayoutErrViewBinding],[LayoutEmptyViewBinding]
- *
- *   VM:子类必须继承自[BaseRecViewModel]以便进行数据绑定已经设置数据
+ *  RecyclerView的基类
+ *  在默认的布局 [R.layout.layout_rec_view] 下传入[LayoutRecViewBinding]
+ *  重写 [layoutResId] 必须设置相对的viewDataBinding
  */
-abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : BaseFragment<VB, VM>(), View.OnClickListener {
+abstract class BaseRecFragment<VB : ViewDataBinding> : BaseFragment<VB>(), View.OnClickListener {
+	override val layoutResId = R.layout.layout_rec_view
+	/**
+	 *  是否打开上拉加载更多
+	 */
+	protected open val loadMoreEnable = true
+	abstract override val viewModel: BaseRecViewModel<*>
 	
-	/// 子类传入布局必须包含下列四种布局，否则报错
+	/**
+	 *  是否打开下拉刷新
+	 */
+	protected open val loadRefreshEnable = true
+	
 	/**
 	 * 加载中布局
 	 */
-	private val loadHolderView by lazy { LayoutLoadingViewBinding.bind(viewBind.root) }
+	private val loadingView: View? by lazy { viewBind.root.findViewById(R.id.rl_loading) }
 	
 	/**
 	 * 数据集合布局
 	 */
-	private val dataHolderView by lazy { LayoutDataViewBinding.bind(viewBind.root) }
+	private val recData: RecyclerView? by lazy {viewBind.root. findViewById(R.id.rv_data) }
+	private val smartRefresh: ScrollOtherRefreshLayout? by lazy { viewBind.root.findViewById(R.id.smart_refresh) }
 	
 	/**
 	 * 错误布局
 	 */
-	private val errHolderView by lazy { LayoutErrViewBinding.bind(viewBind.root) }
+	private val errView: View? by lazy {viewBind.root. findViewById(R.id.rl_error) }
 	
 	/**
 	 * 空布局
 	 */
-	private val emptyHolderView by lazy { LayoutEmptyViewBinding.bind(viewBind.root) }
+	private val emptyView: View? by lazy {viewBind.root. findViewById(R.id.rl_empty) }
+	private val emptyClickView: View? by lazy { viewBind.root.findViewById(R.id.ll_empty) }
+	
 	
 	override fun initModelObserve() {
 		viewModel.loadEnd.observe(this, {
 			if (it == null || it) {
-				dataHolderView.rvData.isNestedScrollingEnabled = true
+				recData?.isNestedScrollingEnabled = true
 				finishLoad()
-			} else dataHolderView.rvData.isNestedScrollingEnabled = false
+			} else recData?.isNestedScrollingEnabled = false
 		})
 		viewModel.uiDataType.observe(this, {
 			if (it != null) showUi(it)
@@ -60,11 +72,10 @@ abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : Bas
 	 * 初始化recyclerView
 	 */
 	private fun initRec() {
-		dataHolderView.rvData.layoutManager = getRecLayoutManager()
-		val itemDecoration = recItemDecoration
-		if (itemDecoration != null) {
-			dataHolderView.rvData.removeItemDecoration(itemDecoration)
-			dataHolderView.rvData.addItemDecoration(itemDecoration)
+		recData?.layoutManager = getRecLayoutManager()
+		recItemDecoration?.run {
+			recData?.removeItemDecoration(this)
+			recData?.addItemDecoration(this)
 		}
 		viewModel.adapter.run {
 			setOnItemClickListener(object : BaseRecAdapter.OnItemClickListener {
@@ -77,7 +88,7 @@ abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : Bas
 					itemLong(position)
 				}
 			})
-			dataHolderView.rvData.adapter = this
+			recData?.adapter = this
 		}
 	}
 	
@@ -95,23 +106,14 @@ abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : Bas
 	 * 初始化下拉刷新控件
 	 */
 	private fun initSmart() {
-		dataHolderView.smartRefresh.bindRecycler(dataHolderView.rvData)
-		dataHolderView.smartRefresh.setLoadRefreshMoreDataListener({
+		smartRefresh?.bindRecycler(recData)
+		smartRefresh?.setLoadRefreshMoreDataListener({
 			viewModel.loadStartData(isRefresh = false, isShowLoad = false)
 		}, {
 			viewModel.loadStartData(true, isShowLoad = false)
 		})
 		setMoreRefreshEnable()
 	}
-	
-	/**
-	 *  是否打开上拉加载更多
-	 */
-	protected open val loadMoreEnable = true
-	/**
-	 *  是否打开下拉刷新
-	 */
-	protected open val loadRefreshEnable = true
 	
 	/**
 	 * recycler的item点击事件
@@ -127,31 +129,31 @@ abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : Bas
 	 * 设置下拉刷新和上拉加载开关
 	 */
 	private fun setMoreRefreshEnable() {
-		dataHolderView.smartRefresh.setEnableRefresh(loadRefreshEnable)//启用刷新
-		dataHolderView.smartRefresh.setEnableLoadMore(loadMoreEnable)//启用加载
+		smartRefresh?.setEnableRefresh(loadRefreshEnable)//启用刷新
+		smartRefresh?.setEnableLoadMore(loadMoreEnable)//启用加载
 	}
 	
 	/**
 	 * 结束下拉刷新
 	 */
 	private fun finishLoad() {
-		dataHolderView.smartRefresh.finishRefresh()
-		dataHolderView.smartRefresh.finishLoadMore()
+		smartRefresh?.finishRefresh()
+		smartRefresh?.finishLoadMore()
 	}
 	
 	/**
 	 * 设置展示的view
 	 */
 	private fun showUi(value: Int) {
-		loadHolderView.rlLoading.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
-		emptyHolderView.rlEmpty.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
-		errHolderView.rlError.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
-		dataHolderView.smartRefresh.visibility = if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
+		loadingView?.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
+		emptyView?.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
+		errView?.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
+		smartRefresh?.visibility = if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
 	}
 	
 	override fun initEvent() {
 		super.initEvent()
-		emptyHolderView.llEmpty.singleClick(this)
+		emptyClickView?.singleClick(this)
 	}
 	
 	override fun onClick(v: View?) {
@@ -164,11 +166,11 @@ abstract class BaseRecFragment<VB : ViewBinding, VM : BaseRecViewModel<*>> : Bas
 	 * 提供子类调用刷新页面，重新请求数据的方法
 	 */
 	fun callRefreshView() {
-		if (dataHolderView.rvData.isComputingLayout) return
+		if (recData?.isComputingLayout == true) return
 		var isShowLoad = false
 		if (viewModel.isShowDataView()) {
 			if (loadRefreshEnable) {
-				dataHolderView.smartRefresh.autoRefresh()
+				smartRefresh?.autoRefresh()
 				return
 			}
 		} else isShowLoad = true

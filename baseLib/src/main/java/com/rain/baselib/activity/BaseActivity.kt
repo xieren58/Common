@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.CallSuper
 import androidx.annotation.ColorRes
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -16,8 +17,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.viewbinding.ViewBinding
 import com.rain.baselib.R
-import com.rain.baselib.common.conversionViewBind
-import com.rain.baselib.common.conversionViewModel
 import com.rain.baselib.viewModel.BaseViewModel
 
 /**
@@ -26,41 +25,48 @@ import com.rain.baselib.viewModel.BaseViewModel
  * 在子类不需要viewModel时，泛型传入[BaseViewModel]即可
  * 根据viewBind自动设置布局
  */
-abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivity() {
+abstract class BaseActivity<VB : ViewDataBinding> : AppCompatActivity() {
     /**
      * 布局中设置的绑定的id
      */
     protected open val variableId: Int = -1 //佈局内的id设置null代表不需要dataBind
-    
+
     /**
      * viewBind的对象
      */
-    protected lateinit var viewBind: T
+    protected lateinit var viewBind: VB
+
+
     /**
      * viewModel对象
      */
-    protected open  val viewModel :VM by lazy { conversionViewModel() }
+    protected abstract val viewModel: BaseViewModel?
+
+    /**
+     * 布局id
+     */
+    @get:LayoutRes
+    protected abstract val layoutResId: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         stateBarTextColor()
-        viewBind = conversionViewBind()
-        setContentView(viewBind.root)
-        if (viewBind is ViewDataBinding) DataBindingUtil.bind<ViewDataBinding>(viewBind.root)
+        viewBind = DataBindingUtil.setContentView(this, layoutResId)
         initViewDataBinding()
         initIntent(savedInstanceState)
         init()
     }
+
     /**
      * 初始化绑定viewDataBind
      */
     private fun initViewDataBinding() {
-        viewModel.setLoadDialogObserve(this, {
+        viewModel?.setLoadDialogObserve(this, {
             if (it == null) return@setLoadDialogObserve
             if (it) showDialogLoad() else dismissDialogLoad()
         })
-        (viewBind as? ViewDataBinding)?.run {
-            if (variableId != -1) setVariable(variableId, viewModel)
+        viewBind.run {
+            if (variableId != -1 && viewModel != null) setVariable(variableId, viewModel)
             lifecycleOwner = this@BaseActivity
         }
     }
@@ -71,29 +77,35 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
         initView()
         initEvent()
         initModelObserve()
-	    viewModel.initModel()
+        viewModel?.initModel()
         initData()
     }
+
     /**
      * 初始化绑定model中的LiveData
      */
     open fun initModelObserve() = Unit
+
     /**
      * 初始化获取intent传递的数据
      */
     open fun initIntent(savedInstanceState: Bundle?) = Unit
+
     /**
      * 初始化点击事件
      */
     open fun initEvent() = Unit
+
     /**
      * 初始化View
      */
     open fun initView() = Unit
+
     /**
      * 初始化数据
      */
     open fun initData() = Unit
+
     /**
      * 设置标题栏文字颜色 白色和黑色
      */
@@ -102,6 +114,7 @@ abstract class BaseActivity<T : ViewBinding,VM:BaseViewModel> : AppCompatActivit
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && whiteStateBarText) window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
     }
+
     /**
      * 是否是白色标题栏
      */

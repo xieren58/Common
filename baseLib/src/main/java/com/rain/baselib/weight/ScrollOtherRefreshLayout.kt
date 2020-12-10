@@ -18,7 +18,7 @@ class ScrollOtherRefreshLayout constructor(context: Context?, attrs: AttributeSe
 	constructor(context: Context?) : this(context, null)
 	
 	private var recyclerChild: WeakReference<RecyclerView> by Delegates.notNull()
-	fun bindRecycler(recycler: RecyclerView) {
+	fun bindRecycler(recycler: RecyclerView?) {
 		recyclerChild = WeakReference(recycler)
 	}
 	
