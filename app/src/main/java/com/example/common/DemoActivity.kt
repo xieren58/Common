@@ -13,35 +13,50 @@ import com.says.common.utils.JsonManagerHelper
  *  Date: 2020/11/2
  */
 class DemoActivity : BaseRecActivity<ActivityBaseRecBinding, DemoListViewModel>() {
-	override fun getRecLayoutManager() = GridLayoutManager(this, 4)
-	override val loadRefreshEnable: Boolean
-		get() = false
-	override val loadMoreEnable: Boolean
-		get() = false
-	
-	override fun clickRecItem(position: Int) {
-		val itemData = viewModel.getItemData(position) ?: return
-		if (itemData.itemType == PhotoWeightAdapter.ADD_TYPE) {
-			PictureUtils.onPickFromGallery(this) {
-				if (!it.isNullOrEmpty()) viewModel.addPhoto(it)
-			}
-		}
-	}
-	
-	override fun getRightStr(): String? {
-		return "确认"
-	}
-	
-	override fun rightTvClick() {
-		setResult(RESULT_OK, Intent().apply {
-			putExtra("demo",JsonManagerHelper.getHelper().objToStr(viewModel.getLists()))
-		})
-		finish()
-	}
-	
-	override fun initIntent(savedInstanceState: Bundle?) {
-		super.initIntent(savedInstanceState)
-		val requestData = intent?.getStringExtra("requestData")
-		Log.d("resultTag", "requestData:$requestData")
-	}
+    override fun getRecLayoutManager() = GridLayoutManager(this, 4)
+    override val loadRefreshEnable: Boolean
+        get() = false
+    override val loadMoreEnable: Boolean
+        get() = false
+
+    override fun clickRecItem(position: Int) {
+
+    }
+
+    override fun getRightStr(): String {
+        return "确认"
+    }
+
+    override fun rightTvClick() {
+        setResult(RESULT_OK, Intent().apply {
+            putExtra("demo", JsonManagerHelper.getHelper().objToStr(viewModel.getLists()))
+        })
+        finish()
+    }
+
+    override fun initIntent(savedInstanceState: Bundle?) {
+        super.initIntent(savedInstanceState)
+        val requestData = intent?.getStringExtra("requestData")
+        Log.d("resultTag", "requestData:$requestData")
+    }
+
+    override fun initEvent() {
+        super.initEvent()
+        viewModel.adapter.setPhotoItemClickListener(object : PhotoWeightAdapter.PhotoItemClickListener {
+            override fun itemAdd() {
+                val lists = viewModel.getPhotoList()
+                if (lists.size >= 4) return
+                PictureUtils.onPickFromGallery(this@DemoActivity, isSingle = false, maxSize = 4 - lists.size) {
+                    if (!it.isNullOrEmpty()) viewModel.addPhoto(it)
+                }
+            }
+
+            override fun itemClick(position: Int) {
+            }
+
+            override fun itemDelete(position: Int) {
+                viewModel.adapter.removeItemData(position)
+            }
+        })
+    }
 }
