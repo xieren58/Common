@@ -7,14 +7,14 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.common.databinding.ActivityDemoBinding
 import com.example.common.viewModel.Demo2ViewModel
 import com.google.android.material.tabs.TabLayout
-import com.rain.baselib.activity.BaseActivity
+import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.adapter.BasePagerFgAdapter
 
 /**
  *  Create by rain
  *  Date: 2020/11/2
  */
-class Demo2Activity : BaseActivity<ActivityDemoBinding>() {
+class Demo2DataBindActivity : BaseDataBindActivity<ActivityDemoBinding>() {
 	override val viewModel by lazy { ViewModelProvider(this).get(Demo2ViewModel::class.java) }
 	override val variableId = BR.demo2Id
 	

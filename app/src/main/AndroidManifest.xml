@@ -21,7 +21,7 @@
             android:name=".DemoActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Demo2Activity"
+            android:name=".Demo2DataBindActivity"
             android:screenOrientation="portrait" />
     </application>
 

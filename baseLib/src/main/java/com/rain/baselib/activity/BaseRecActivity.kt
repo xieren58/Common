@@ -18,7 +18,7 @@ import com.rain.baselib.weight.ScrollOtherRefreshLayout
  *  在默认的布局 [R.layout.activity_base_rec] 下传入[ActivityBaseRecBinding]
  *  重写 [layoutResId] 必须设置相对的viewDataBinding
  */
-abstract class BaseRecActivity<VB : ViewDataBinding> : BaseActivity<VB>(), View.OnClickListener {
+abstract class BaseRecActivity<VB : ViewDataBinding> : BaseDataBindActivity<VB>(), View.OnClickListener {
 	override val layoutResId = R.layout.activity_base_rec
 	
 	/**
