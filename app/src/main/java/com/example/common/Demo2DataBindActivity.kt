@@ -2,6 +2,7 @@ package com.example.common
 
 import android.graphics.Color
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.common.databinding.ActivityDemoBinding
@@ -15,7 +16,7 @@ import com.rain.baselib.adapter.BasePagerFgAdapter
  *  Date: 2020/11/2
  */
 class Demo2DataBindActivity : BaseDataBindActivity<ActivityDemoBinding>() {
-	override val viewModel by lazy { ViewModelProvider(this).get(Demo2ViewModel::class.java) }
+	override val viewModel by viewModels<Demo2ViewModel>()
 	override val variableId = BR.demo2Id
 	
 	override fun initView() {

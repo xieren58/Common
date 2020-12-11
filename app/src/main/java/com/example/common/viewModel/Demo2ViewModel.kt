@@ -16,12 +16,11 @@ class Demo2ViewModel : BaseViewModel() {
         super.initModel()
         val titleList = mutableListOf<String>()
         val titleFgList = mutableListOf<Fragment>()
-        for (i in 0..1) {
+        for (i in 0..10) {
             titleList.add("$i$i$i")
             titleFgList.add(DemoDataBindFragment.getInstance(i))
         }
         mTitleDataList.value = titleList
         mPgDataList.value = titleFgList
-
     }
 }

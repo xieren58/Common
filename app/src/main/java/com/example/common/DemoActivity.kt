@@ -3,6 +3,7 @@ package com.example.common
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.rain.baselib.activity.BaseRecActivity
@@ -14,7 +15,8 @@ import com.says.common.utils.JsonManagerHelper
  *  Date: 2020/11/2
  */
 class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
-    override val viewModel by lazy { ViewModelProvider(this).get(DemoListViewModel::class.java) }
+    override val viewModel by viewModels<DemoListViewModel>()
+
     override fun getRecLayoutManager() = GridLayoutManager(this, 4)
     override val loadRefreshEnable: Boolean
         get() = false

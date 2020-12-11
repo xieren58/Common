@@ -17,7 +17,11 @@ class FgDemoViewModel :BaseViewModel() {
         Log.d("indexTag","index:$index")
         indexLiveData.value = index.toString()
         viewModelScope.launch {
-
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("fgDemoTag","onCleared")
     }
 }
