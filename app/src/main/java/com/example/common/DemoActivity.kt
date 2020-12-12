@@ -14,7 +14,7 @@ import com.says.common.utils.JsonManagerHelper
  *  Create by rain
  *  Date: 2020/11/2
  */
-class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
+class DemoActivity : BaseRecActivity() {
     override val viewModel by viewModels<DemoListViewModel>()
 
     override fun getRecLayoutManager() = GridLayoutManager(this, 4)
