@@ -1,5 +1,7 @@
 package com.example.common
 
+import android.util.Log
+import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -16,4 +18,9 @@ fun setImageShow(view: ImageView, url: String?) {
 	}else{
 		Glide.with(view.context).load(url).error(R.drawable.default_icon)
 	}.into(view)
+}
+@BindingAdapter("viewShow")
+fun setViewShow(view: View, isShowRec: Boolean) {
+	Log.d("recShowTag", "view:${view},isShowRec:$isShowRec")
+	view.visibility = if (isShowRec) View.VISIBLE else View.GONE
 }

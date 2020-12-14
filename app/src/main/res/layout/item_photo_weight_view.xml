@@ -6,33 +6,41 @@
 
         <variable
             name="updatePicId"
-            type="com.example.common.UpdatePic" />
+            type="com.example.common.model.CityModel" />
     </data>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:background="@drawable/patient_photo_visit_shape">
+            android:layout_height="50dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:text="@{updatePicId.name}"
+                android:textColor="@color/black_33"
+                android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/iv_pushImage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                app:imageShow="@{updatePicId.url}" />
-
-            <ImageView
-                android:id="@+id/iv_delete"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_margin="2dp"
-                android:src="@drawable/delete" />
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="20dp"
+                android:src="@{updatePicId.isOpen?@drawable/arrow_open:@drawable/arrow_close}" />
         </RelativeLayout>
-    </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rec_child"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:viewShow="@{updatePicId.isOpen}" />
+    </LinearLayout>
 </layout>
 

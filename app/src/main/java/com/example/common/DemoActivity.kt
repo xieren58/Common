@@ -4,10 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.rain.baselib.activity.BaseRecActivity
-import com.rain.baselib.databinding.ActivityBaseRecBinding
 import com.says.common.utils.JsonManagerHelper
 
 /**
@@ -17,7 +16,7 @@ import com.says.common.utils.JsonManagerHelper
 class DemoActivity : BaseRecActivity() {
     override val viewModel by viewModels<DemoListViewModel>()
 
-    override fun getRecLayoutManager() = GridLayoutManager(this, 4)
+    override fun getRecLayoutManager() = LinearLayoutManager(this)
     override val loadRefreshEnable: Boolean
         get() = false
     override val loadMoreEnable: Boolean
@@ -27,6 +26,10 @@ class DemoActivity : BaseRecActivity() {
 
     }
     
+    override fun init() {
+        setBarColor(R.color.white)
+        super.init()
+    }
     override val rightStr = "确认"
 
     override fun rightTvClick() {
@@ -35,7 +38,7 @@ class DemoActivity : BaseRecActivity() {
         })
         finish()
     }
-
+    
     override fun initIntent(savedInstanceState: Bundle?) {
         super.initIntent(savedInstanceState)
         val requestData = intent?.getStringExtra("requestData")
@@ -44,21 +47,6 @@ class DemoActivity : BaseRecActivity() {
 
     override fun initEvent() {
         super.initEvent()
-        viewModel.adapter.setPhotoItemClickListener(object : PhotoWeightAdapter.PhotoItemClickListener {
-            override fun itemAdd() {
-                val lists = viewModel.getPhotoList()
-                if (lists.size >= 4) return
-                PictureUtils.onPickFromGallery(this@DemoActivity, isSingle = false, maxSize = 4 - lists.size) {
-                    if (!it.isNullOrEmpty()) viewModel.addPhoto(it)
-                }
-            }
-
-            override fun itemClick(position: Int) {
-            }
-
-            override fun itemDelete(position: Int) {
-                viewModel.adapter.removeItemData(position)
-            }
-        })
+        viewModel.adapter.setPhotoItemClickListener()
     }
 }
