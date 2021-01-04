@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.common.adapter.PhotoWeightAdapter
 import com.rain.baselib.activity.BaseRecActivity
+import com.says.common.file.enum.PushFromTypeEnum
+import com.says.common.file.listener.FilePushResultListener
+import com.says.common.file.utils.FilePushManager
 import com.says.common.utils.JsonManagerHelper
 
 /**
@@ -15,17 +18,69 @@ import com.says.common.utils.JsonManagerHelper
  */
 class DemoActivity : BaseRecActivity() {
     override val viewModel by viewModels<DemoListViewModel>()
-
-    override fun getRecLayoutManager() = LinearLayoutManager(this)
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setBarColor(R.color.white)
+        super.onCreate(savedInstanceState)
+    }
+    override fun getRecLayoutManager() = GridLayoutManager(this,4)
     override val loadRefreshEnable: Boolean
         get() = false
     override val loadMoreEnable: Boolean
         get() = false
 
     override fun clickRecItem(position: Int) {
-
+        val cityModel = viewModel.getItemData(position) ?: return
+        if (cityModel.itemType == PhotoWeightAdapter.ADD_TYPE){
+            PictureUtils.onPickFromAll(this,isSingle = false,maxSize = 9,blockResultBlock = {
+              pushFileData(it)
+            })
+        }
     }
+    private fun pushFileData(list: MutableList<String>?){
+        if (list.isNullOrEmpty())return
+        val picList: MutableList<UpdatePic> = mutableListOf()
+        list.forEach {
+            picList.add( UpdatePic().apply {
+                this.url = it
+                this.process = 0
+            })
+        }
+        viewModel.adapter.addItemData(picList)
+        pushFile()
+    }
+    private fun pushFile(){
+        val lists = viewModel.getLists()
+        lists.forEach {
+            if (it.itemType == PhotoWeightAdapter.ADD_TYPE)return@forEach
+            if (it.url.isNullOrEmpty()||it.status ==1 ||it.status == 2)return@forEach
+            
+            it.status = 1
+            it.process = 0
+            viewModel.adapter.updateItemData(it)
     
+            FilePushManager.uploadFile(this,it.url,object : FilePushResultListener {
+                override fun pushSuccess(path: String) {
+                    it.url = path
+                    it.status = 2
+                    it.process = 100
+                    viewModel.adapter.updateItemData(it)
+                }
+    
+                override fun pushFail() {
+                    it.status = 3
+                    it.process = 0
+                    viewModel.adapter.updateItemData(it)
+                }
+    
+                override fun pushProgress(progress: Int) {
+                    it.status = 1
+                    it.process = progress
+                    viewModel.adapter.updateItemData(it)
+                }
+            }, false, PushFromTypeEnum.PUSH_FILE_TO_ALI)
+        }
+    }
     override fun init() {
         setBarColor(R.color.white)
         super.init()
@@ -43,10 +98,5 @@ class DemoActivity : BaseRecActivity() {
         super.initIntent(savedInstanceState)
         val requestData = intent?.getStringExtra("requestData")
         Log.d("resultTag", "requestData:$requestData")
-    }
-
-    override fun initEvent() {
-        super.initEvent()
-        viewModel.adapter.setPhotoItemClickListener()
     }
 }

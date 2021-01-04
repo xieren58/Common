@@ -1,5 +1,4 @@
 package com.says.common.file.listener
-import com.says.common.file.PushCommon
 
 
 /**
@@ -8,6 +7,6 @@ import com.says.common.file.PushCommon
  */
 interface FilePushResultListener {
 	fun pushSuccess(path: String)
-	fun pushFail(type: PushCommon, message: String?)
+	fun pushFail()
 	fun pushProgress(progress: Int)
 }

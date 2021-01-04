@@ -6,41 +6,33 @@
 
         <variable
             name="updatePicId"
-            type="com.example.common.model.CityModel" />
+            type="com.example.common.UpdatePic" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="80dp"
+        android:background="@drawable/patient_photo_visit_shape">
 
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/ig_push_image"
             android:layout_width="match_parent"
-            android:layout_height="50dp">
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_icon"
+            app:imageShow="@{updatePicId.url}" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="20dp"
-                android:text="@{updatePicId.name}"
-                android:textColor="@color/black_33"
-                android:textSize="16sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="20dp"
-                android:src="@{updatePicId.isOpen?@drawable/arrow_open:@drawable/arrow_close}" />
-        </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rec_child"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/tv_tips"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:viewShow="@{updatePicId.isOpen}" />
-    </LinearLayout>
+            android:layout_centerInParent="true"
+            android:text="@{String.valueOf(updatePicId.process)}"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:viewShow="@{updatePicId.status == 1}" />
+
+    </RelativeLayout>
+
 </layout>
 

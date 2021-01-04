@@ -40,7 +40,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.2.1'
 
     //ali-oss
-    api "com.aliyun.dpa:oss-android-sdk:2.9.3"
+    api "com.aliyun.dpa:oss-android-sdk:2.9.4"
     //okHttp
     api "com.squareup.okhttp3:okhttp:4.9.0"
 

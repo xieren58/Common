@@ -26,7 +26,6 @@ import java.util.regex.Pattern
  */
 object Common {
 
-
 	/**
 	 * 应用是否在上层
 	 */
