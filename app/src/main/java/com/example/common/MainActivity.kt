@@ -14,7 +14,8 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override fun initEvent() {
 		super.initEvent()
 		viewBind.tvStart.singleClick {
-			startAc<DemoActivity>()
+//			startAc<DemoActivity>()
+			viewModel.updateLevel()
 		}
 		viewBind.tvEnd.singleClick {
 			startAc<Demo2DataBindActivity>()

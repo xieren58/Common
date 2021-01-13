@@ -3,6 +3,7 @@ package com.example.common.viewModel
 import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.common.Logger
+import com.example.common.http.Api
 import com.example.common.http.RetrofitFac
 import com.example.common.model.DemoModel
 import com.rain.baselib.viewModel.BaseViewModel
@@ -17,6 +18,7 @@ class MainViewModel : BaseViewModel() {
 	
 	fun updateLevel() {
 		showLoadDialog()
+		Log.d("ApiPropertiesTag", "BASE_URL:${Api.BASE_URL}")
 		viewModelScope.launch {
 			runCatching {
 				RetrofitFac.iData.loadDemo("v1.1.38", 1.0, false, "android", 5, 1, "2020-12-21")

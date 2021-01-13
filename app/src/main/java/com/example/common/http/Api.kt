@@ -1,11 +1,29 @@
 package com.example.common.http
 
+import android.util.Log
+import com.example.common.MyApp
+import java.util.*
+
 
 /**
  *  Create by rain
  *  Date: 2020/1/16
  */
 object Api {
-	const val BASE_URL  = "http://114.255.226.165:50692/"
-	const val base_url_mdffx  = "http://092.168.1.100:9999/"
+	var BASE_URL = ""
+	
+	init {
+		val properties = Properties()
+		val open = MyApp.context.assets.open("url.properties")
+//		Log.d("ApiPropertiesTag","open:$open")
+//		val resource = Api.javaClass.classLoader?.getResource("url.properties")
+		Log.d("ApiPropertiesTag", "classLoader:${ Api.javaClass.classLoader}")
+		Log.d("ApiPropertiesTag", "getResource:${ 	Api.javaClass.getResource("url.properties")}")
+		val resourceAsStream = Api.javaClass.getResourceAsStream("url.properties")
+		Log.d("ApiPropertiesTag", "resourceAsStream:${ resourceAsStream}")
+		properties.load(open)
+		BASE_URL = properties.getProperty("BASE_URL")
+		
+		Log.d("ApiPropertiesTag", "BASE_URL:$BASE_URL")
+	}
 }
