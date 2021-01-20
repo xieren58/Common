@@ -26,7 +26,7 @@ fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, suc
 		failBlock(ResultThrowable("请检查网络连接"))
 		return
 	}
-	val launch = launch(Dispatchers.Main) {
+	launch(Dispatchers.Main) {
 		kotlin.runCatching {
 			block()
 		}.onSuccess {
@@ -41,7 +41,6 @@ fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, suc
 			)
 		}
 	}
-	launch.isCompleted
 }
 
 class ResultThrowable(val code: Int = -1, resultMessage: String?) : Throwable(resultMessage) {
