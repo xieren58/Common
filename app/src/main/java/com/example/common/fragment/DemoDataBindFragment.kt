@@ -1,16 +1,11 @@
 package com.example.common.fragment
 
 import android.os.Bundle
-import android.util.Log
-import androidx.activity.viewModels
-import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import com.example.common.BR
 import com.example.common.R
 import com.example.common.databinding.FgDemoBinding
 import com.example.common.viewModel.FgDemoViewModel
-import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.fragment.BaseDataBindFragment
 
 /**
