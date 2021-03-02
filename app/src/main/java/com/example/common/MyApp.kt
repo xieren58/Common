@@ -3,10 +3,6 @@ package com.example.common
 import android.app.Application
 import com.rain.baselib.BaseLibContext
 import com.says.common.CommonContext
-import com.says.common.file.CommonApi
-import com.says.common.file.utils.FilePushManager
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 
 /**
@@ -26,11 +22,11 @@ class MyApp : Application() {
         initAsyncSdk()
     }
     private fun initAsyncSdk() {
-        GlobalScope.launch {
-            CommonApi.initStsTokenUrl("http://alists.ashermed.cn/api/sts")
-                .initEndPoint("http://oss-cn-shanghai.aliyuncs.com")
-                .initBucketName("91trial")
-                .initObjectName("91trial")
-        }
+//        GlobalScope.launch {
+//            CommonApi.initStsTokenUrl("")
+//                .initEndPoint("")
+//                .initBucketName("")
+//                .initObjectName("")
+//        }
     }
 }
