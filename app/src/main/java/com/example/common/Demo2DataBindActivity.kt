@@ -34,6 +34,7 @@ class Demo2DataBindActivity : BaseDataBindActivity<ActivityDemoBinding>() {
 			}
 		})
 		
+		
 		viewModel.mPgDataList.observe(this, {
 			Log.d("indexTag", "it:${it.isNullOrEmpty()}")
 			fgAdapter?.setData(it)
