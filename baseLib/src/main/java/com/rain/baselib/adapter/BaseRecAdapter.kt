@@ -87,10 +87,16 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(), 
 		if (indexOf >= 0) notifyItemChanged(indexOf)
 	}
 	
+	fun updateItemData(data: T?, payloads: Any) {
+		if (data == null || adapterList.isNullOrEmpty()) return
+		val indexOf = adapterList.indexOf(data)
+		if (indexOf >= 0) notifyItemChanged(indexOf, payloads)
+	}
+	
 	override fun onClick(view: View) {
 		val tag = view.tag ?: return
 		if (recycler?.isComputingLayout == true) return
-		val position = tag as? Int ?:return
+		val position = tag as? Int ?: return
 		itemClickListener?.itemClick(position)
 	}
 	
@@ -133,6 +139,13 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(), 
 		holder.setData(adapterList[position], position)
 		bindHolder(holder, position)
 	}
+	override fun onBindViewHolder(holder: BaseRecHolder<T, *>, position: Int, payloads: MutableList<Any>) {
+		if (payloads.isEmpty()){
+			onBindViewHolder(holder,position)
+			return
+		}
+		holder.updateData(adapterList[position], position,payloads[0])
+	}
 	
 	override fun getItemCount() = adapterList.size
 	
@@ -152,7 +165,7 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(), 
 	open fun bindHolder(viewHolder: BaseRecHolder<T, *>, i: Int) {}
 	override fun onLongClick(v: View?): Boolean {
 		val tag = v?.tag ?: return false
-		val position = tag as? Int ?:return false
+		val position = tag as? Int ?: return false
 		onItemLongClickListener?.itemLongClick(position)
 		return true
 	}
