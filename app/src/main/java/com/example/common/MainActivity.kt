@@ -22,20 +22,20 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val viewModel by viewModels<MainViewModel>()
     override val variableId = BR.mainId
     private var accuracy = 3
-    override fun initView() {
-        super.initView()
-        viewBind.flContent.addView(CreateChildView.getChildView(this,true))
-    }
+//    override fun initView() {
+//        super.initView()
+//        viewBind.flContent.addView(CreateChildView.getChildView(this,true))
+//    }
 
     override fun initEvent() {
         super.initEvent()
-//		viewBind.tvStart.singleClick {
-////			startAc<DemoActivity>()
+		viewBind.tvStart.singleClick {
+			startAc<DemoActivity>()
 //			viewModel.updateLevel()
-//		}
-//		viewBind.tvEnd.singleClick {
-//			startAc<Demo2DataBindActivity>()
-//		}
+		}
+		viewBind.tvEnd.singleClick {
+			startAc<Demo2DataBindActivity>()
+		}
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()
         }

@@ -13,7 +13,7 @@ import retrofit2.HttpException
  *  Date: 2020/6/29
  *  网络请求 协程扩展类
  */
-fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlock: (T?) -> Unit, failBlock: (e: ResultThrowable) -> Unit) {
+inline fun <T> CoroutineScope.launchUI(crossinline block: suspend () -> BaseResponse<T>,crossinline successBlock: (T?) -> Unit,crossinline failBlock: (e: ResultThrowable) -> Unit) {
 	launchMessageUI(block, { _, data ->
 		successBlock(data)
 	}, {
@@ -21,7 +21,7 @@ fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlo
 	})
 }
 
-fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?) -> Unit, failBlock: (e: ResultThrowable) -> Unit) {
+inline fun <T> CoroutineScope.launchMessageUI(crossinline block: suspend () -> BaseResponse<T>,crossinline successBlock: (String?, T?) -> Unit,crossinline failBlock: (e: ResultThrowable) -> Unit) {
 	if (!NetWorkUtils.isNetConnected()) {
 		failBlock(ResultThrowable("请检查网络连接"))
 		return
@@ -47,7 +47,7 @@ class ResultThrowable(val code: Int = -1, resultMessage: String?) : Throwable(re
 	constructor(resultMessage: String?) : this(-1, resultMessage)
 }
 
-fun <T> BaseResponse<T>.resultData(block: (String?, T?) -> Unit, failBlock: (e: ResultThrowable) -> Unit) {
+inline fun <T> BaseResponse<T>.resultData(crossinline block: (String?, T?) -> Unit,crossinline failBlock: (e: ResultThrowable) -> Unit) {
 	Log.d("launchTag", "status:${status},code:$code,data:$data")
 	if (status != 1) {
 		failBlock(ResultThrowable(status, message))
