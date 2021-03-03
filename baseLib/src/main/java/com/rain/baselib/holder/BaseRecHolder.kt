@@ -23,10 +23,7 @@ open class BaseRecHolder<T, DB : ViewDataBinding>(containerView: View, val varia
 	 * 由adapter.onBindViewHolder(RecyclerView.ViewHolder holder, int position)回調
 	 */
 	open fun setData(model: T, position: Int) {
-		if (variableId != -1) {
-			dataBind?.setVariable(variableId, model)
-			dataBind?.executePendingBindings()
-		}
+		initBindModel(model)
 	}
 	
 	/**
@@ -34,6 +31,16 @@ open class BaseRecHolder<T, DB : ViewDataBinding>(containerView: View, val varia
 	 * 由adapter.onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads)回調
 	 */
 	open fun updateData(model: T, position: Int, payloads: Any) {
-		setData(model, position)
+		initBindModel(model)
+	}
+	
+	/**
+	 * dataBind更新数据方法
+	 */
+	private fun initBindModel(model: T){
+		if (variableId != -1) {
+			dataBind?.setVariable(variableId, model)
+			dataBind?.executePendingBindings()
+		}
 	}
 }
