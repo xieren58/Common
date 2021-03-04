@@ -16,7 +16,6 @@ import com.example.common.databinding.ViewSocialShareBinding
 class SocialItemShareView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : FrameLayout(context, attrs, defStyleAttr) {
 	
 	private val parent by lazy { DataBindingUtil.inflate<ViewSocialShareBinding>(LayoutInflater.from(context), R.layout.view_social_share, this, false) }
-	
 	init {
 		addView(parent.root, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
 	}

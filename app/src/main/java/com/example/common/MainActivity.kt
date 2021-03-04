@@ -6,6 +6,7 @@ import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
@@ -16,26 +17,25 @@ import com.example.common.weight.TestViewGroup
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val layoutResId = R.layout.activity_main
     override val viewModel by viewModels<MainViewModel>()
     override val variableId = BR.mainId
     private var accuracy = 3
-//    override fun initView() {
-//        super.initView()
-//        viewBind.flContent.addView(CreateChildView.getChildView(this,true))
-//    }
 
     override fun initEvent() {
         super.initEvent()
-		viewBind.tvStart.singleClick {
-			startAc<DemoActivity>()
-//			viewModel.updateLevel()
-		}
-		viewBind.tvEnd.singleClick {
-			startAc<Demo2DataBindActivity>()
-		}
+        viewBind.tvStart.singleClick {
+//            startAc<AddressFlutterActivity>()
+//            startAc<DemoActivity>()
+			viewModel.updateLevel()
+        }
+        viewBind.tvEnd.singleClick {
+            startAc<Demo2DataBindActivity>()
+        }
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()
         }
@@ -56,7 +56,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         )
     }
 
-    fun setEndLabelStr(view: TextView, str: String?, haveCh: Boolean, haveEn: Boolean) {
+    private fun setEndLabelStr(view: TextView, str: String?, haveCh: Boolean, haveEn: Boolean) {
         val content = str ?: ""
         val stringBuilder = SpannableStringBuilder(content)
         if (haveCh) appendTextSpan("中", Color.parseColor("#005FA2"), stringBuilder)
@@ -66,7 +66,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 
     }
 
-    fun appendTextSpan(str: String, color: Int, stringBuilder: SpannableStringBuilder) {
+    private fun appendTextSpan(str: String, color: Int, stringBuilder: SpannableStringBuilder) {
         stringBuilder.append(" ")
         stringBuilder.append(str)
         stringBuilder.setSpan(

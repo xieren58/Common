@@ -2,8 +2,13 @@ package com.example.common.viewModel
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.common.fragment.DemoDataBindFragment
 import com.rain.baselib.viewModel.BaseViewModel
+import com.says.common.utils.DataStoreCommon
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  *  Create by rain
@@ -22,5 +27,11 @@ class Demo2ViewModel : BaseViewModel() {
         }
         mTitleDataList.value = titleList
         mPgDataList.value = titleFgList
+
+
+        viewModelScope.launch {
+            val otherValue = DataStoreCommon.getOtherValue("test", 0)
+            DataStoreCommon.putValue("test", otherValue + 1)
+        }
     }
 }

@@ -1,11 +1,9 @@
 package com.says.common
 
+import android.annotation.SuppressLint
 import android.content.Context
 
-/**
- *  Create by rain
- *  Date: 2021/1/4
- */
+@SuppressLint("StaticFieldLeak")
 object CommonContext {
-	lateinit var mContext: Context
+    lateinit var context: Context
 }
