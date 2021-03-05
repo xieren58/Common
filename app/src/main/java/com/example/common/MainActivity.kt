@@ -1,24 +1,16 @@
 package com.example.common
 
 import android.graphics.Color
-import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.util.Log
-import android.util.TypedValue
-import android.view.View
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
-import com.example.common.weight.CreateChildView
-import com.example.common.weight.TestViewGroup
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
-import io.flutter.embedding.android.FlutterActivity
-import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val layoutResId = R.layout.activity_main

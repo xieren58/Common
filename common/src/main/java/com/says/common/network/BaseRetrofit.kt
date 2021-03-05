@@ -1,6 +1,5 @@
 package com.says.common.network
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -34,7 +33,6 @@ abstract class BaseRetrofit(baseUrl:String,vararg interceptor: Interceptor) {
             baseUrl(baseUrl)
             client(builder.build())
             addConverterFactory(GsonConverterFactory.create())
-            addCallAdapterFactory(CoroutineCallAdapterFactory.invoke())
         }.build()
     }
 }
