@@ -7,6 +7,7 @@ import com.example.common.http.Api
 import com.example.common.http.RetrofitFac
 import com.example.common.model.DemoModel
 import com.rain.baselib.viewModel.BaseViewModel
+import com.says.common.ui.isNull
 import com.says.common.utils.DataStoreCommon
 import com.says.common.utils.JsonManagerHelper
 import kotlinx.coroutines.launch
@@ -18,37 +19,25 @@ import kotlinx.coroutines.launch
 class MainViewModel : BaseViewModel() {
 
     fun updateLevel() {
-//        showLoadDialog()
-
         Log.d("ApiPropertiesTag", "BASE_URL:${Api.BASE_URL}")
         viewModelScope.launch {
-            val otherValue = DataStoreCommon.getOtherValue("test", 0)
-            Log.d("dataStoreTag", "otherValue:$otherValue")
-//            runCatching {
-//                RetrofitFac.iData.loadDemo("v1.1.38", 1.0, false, "android", 5, 1, "2020-12-21")
-//            }.onSuccess {
-//                dismissDialog()
-//                val mutableList = it.Data ?: return@launch
-//                mutableList.forEach { tableIt ->
-//                    tableIt.Level = if (tableIt.ParentId == patientGroupId) {
-//                        1
-//                    } else {
-//                        val mutableLevel = getMutableLevel(mutableList, tableIt.ParentId)
-//                        if (mutableLevel == 1) -1 else mutableLevel
-//                    }
-//                    Log.d("levelTag", "mutableLevel:${tableIt.Level}")
-//                }
-//                Logger.d(
-//                    "levelTag",
-//                    "mutableList:${JsonManagerHelper.getHelper().objToStr(mutableList)}"
-//                )
-//            }.onFailure {
-//                dismissDialog()
-//            }
-
+            val str:String?=null
+            val i = str.isNull {
+                Log.d("ApiPropertiesTag", "isNull")
+            }
+            Log.d("ApiPropertiesTag", "i:$i")
+//            DataStoreCommon.putValue()
+//            DataStoreCommon.putValue("test" to 10000, "test2" to "hha")
         }
 
+    }
 
+    fun queryLevel() {
+        viewModelScope.launch {
+            val otherValue = DataStoreCommon.getOtherValue("test", 0)
+            val test2 = DataStoreCommon.getOtherValue("test2", "")
+            Log.d("dataStoreTag", "otherValue:$otherValue,test2:$test2")
+        }
     }
 
     private val patientGroupId = 49

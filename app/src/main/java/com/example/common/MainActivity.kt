@@ -10,7 +10,6 @@ import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
-import com.rain.baselib.common.startAc
 
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val layoutResId = R.layout.activity_main
@@ -23,10 +22,11 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         viewBind.tvStart.singleClick {
 //            startAc<AddressFlutterActivity>()
 //            startAc<DemoActivity>()
-			viewModel.updateLevel()
+            viewModel.updateLevel()
         }
         viewBind.tvEnd.singleClick {
-            startAc<Demo2DataBindActivity>()
+//            startAc<Demo2DataBindActivity>()
+            viewModel.queryLevel()
         }
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()
