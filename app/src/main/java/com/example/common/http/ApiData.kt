@@ -3,17 +3,21 @@ package com.example.common.http
 import com.example.common.model.BaseResponse
 import com.example.common.model.ConfigResultModel
 import com.example.common.model.DemoModel
-import retrofit2.http.GET
-import retrofit2.http.Query
+import com.example.common.model.TeachBaseModel
+import retrofit2.http.*
 
 /**
  *  Create by rain
  *  Date: 2020/11/2
  */
 interface ApiData {
-
-    @GET("kenya/public/index.php/config")
-    suspend fun loadConfig(): BaseResponse<ConfigResultModel>
+    
+    /**
+     * 获取首页患教列表
+     */
+    @FormUrlEncoded
+    @POST("apt/api/portal/suffering/list")
+    suspend fun getTeachHomeList(@Field("pageIndex") pageIndex: Int?): BaseResponse<TeachBaseModel>
     
     @GET("knowledge/category/childlist")
     suspend fun loadDemo(@Query("AppVersion")AppVersion:String,

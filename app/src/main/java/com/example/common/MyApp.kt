@@ -21,7 +21,6 @@ class MyApp : Application() {
         CommonContext.context = this
         initAsyncSdk()
     }
-
     private fun initAsyncSdk() {
 //        GlobalScope.launch {
 //            CommonApi.initStsTokenUrl("")

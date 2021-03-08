@@ -13,52 +13,35 @@ import retrofit2.HttpException
  *  Date: 2020/6/29
  *  网络请求 协程扩展类
  */
-inline fun <T> CoroutineScope.launchUI(crossinline block: suspend () -> BaseResponse<T>,crossinline successBlock: (T?) -> Unit,crossinline failBlock: (e: ResultThrowable) -> Unit) {
-	launchMessageUI(block, { _, data ->
-		successBlock(data)
-	}, {
-		failBlock(it)
-	})
-}
+fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlock: (T?) -> Unit, failBlock: (message: String?) -> Unit) =
+		launchMessageUI(block, { _, data ->
+			Log.d("testLaunchTag", "launchUI-Line--successBlock:$data")
+			successBlock(data)
+		}, {
+			Log.d("testLaunchTag", "launchUI-Line--failBlock:$it")
+			failBlock(it)
+		})
 
-inline fun <T> CoroutineScope.launchMessageUI(crossinline block: suspend () -> BaseResponse<T>,crossinline successBlock: (String?, T?) -> Unit,crossinline failBlock: (e: ResultThrowable) -> Unit) {
+fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?) -> Unit, failBlock: (message: String?) -> Unit) = launch(Dispatchers.Main) {
+	Log.d("testLaunchTag", "launchMessageUI-Line-:$this")
 	if (!NetWorkUtils.isNetConnected()) {
-		failBlock(ResultThrowable("请检查网络连接"))
-		return
+		failBlock("请检查网络连接")
+		Log.d("testLaunchTag", "launchMessageUI-Line--failBlock:$this")
+		return@launch
 	}
-	launch(Dispatchers.Main) {
-		kotlin.runCatching {
-			block()
-		}.onSuccess {
-			it.resultData({ message, data ->
-				successBlock(message, data)
-			}, { failIt ->
-				failBlock(failIt)
-			})
-		}.onFailure {
-			if (it is HttpException) failBlock(ResultThrowable(it.code(), "服务器连接异常，请稍候重试")) else failBlock(
-				ResultThrowable("服务器连接异常，请稍候重试")
-			)
-		}
-	}
-}
-
-class ResultThrowable(val code: Int = -1, resultMessage: String?) : Throwable(resultMessage) {
-	constructor(resultMessage: String?) : this(-1, resultMessage)
-}
-
-inline fun <T> BaseResponse<T>.resultData(crossinline block: (String?, T?) -> Unit,crossinline failBlock: (e: ResultThrowable) -> Unit) {
-	Log.d("launchTag", "status:${status},code:$code,data:$data")
-	if (status != 1) {
-		failBlock(ResultThrowable(status, message))
-	} else {
-		block(message, data)
+	Log.d("testLaunchTag", "launchMessageUI-Line--launch:$this")
+	kotlin.runCatching {
+		block()
+	}.onSuccess {
+		if (it.code != 1) failBlock(it.msg) else successBlock(it.msg, it.data)
+	}.onFailure {
+		if (it is HttpException) failBlock(it.message()) else failBlock(it.message)
 	}
 }
 
 fun <T> BaseResponse<T>?.resultData(): T? {
 	if (this == null) return null
-	if (status != 1) {
+	if (code != 1) {
 		return null
 	}
 	return data
@@ -66,13 +49,5 @@ fun <T> BaseResponse<T>?.resultData(): T? {
 
 fun <T> BaseResponse<T>?.resultSuccess(): Boolean {
 	if (this == null) return false
-	return status == 1
-}
-
-fun <T, K> BaseResponse<T>.createErrResponse(): BaseResponse<K> {
-	return BaseResponse<K>().apply {
-		status = this@createErrResponse.status
-		data = null
-		message = this@createErrResponse.message
-	}
+	return code == 1
 }
