@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
  *  Create by rain
  *  Date: 2020/11/6
  */
-open class BaseRecHolder<T, DB : ViewDataBinding>(containerView: View, val variableId: Int = -1) : RecyclerView.ViewHolder(containerView) {
-	protected val dataBind by lazy { DataBindingUtil.getBinding<DB>(itemView) }
+open class BaseRecHolder<T, DB : ViewDataBinding>(val dataBind: DB, val variableId: Int = -1) : RecyclerView.ViewHolder(dataBind.root) {
 	protected val mContext: Context = itemView.context
 	
 	/**
@@ -37,10 +36,10 @@ open class BaseRecHolder<T, DB : ViewDataBinding>(containerView: View, val varia
 	/**
 	 * dataBind更新数据方法
 	 */
-	private fun initBindModel(model: T){
+	private fun initBindModel(model: T) {
 		if (variableId != -1) {
-			dataBind?.setVariable(variableId, model)
-			dataBind?.executePendingBindings()
+			dataBind.setVariable(variableId, model)
+			dataBind.executePendingBindings()
 		}
 	}
 }

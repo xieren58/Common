@@ -41,6 +41,8 @@ fun ViewGroup.getBindIdView(@LayoutRes layoutResId: Int): View {
 	return DataBindingUtil.inflate<ViewDataBinding>(LayoutInflater.from(context), layoutResId, this, false).root
 }
 
+fun <VB : ViewDataBinding> ViewGroup.getBind(@LayoutRes layoutResId: Int): VB = DataBindingUtil.inflate(LayoutInflater.from(context), layoutResId, this, false)
+
 @Suppress("UNCHECKED_CAST")
 fun <T : ViewModel> AppCompatActivity.conversionViewModel(): T {
 	val aClass = (javaClass.genericSuperclass as ParameterizedType).actualTypeArguments[1] as Class<T>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_start_home"
+    app:startDestination="@id/fg_splash_id">
+    <fragment
+        android:id="@+id/fg_splash_id"
+        android:name="com.example.common.fragment.SplashFragment"
+        android:label="SplashFragment"
+        tools:layout="@layout/fg_splash_home">
+        <action
+            android:id="@+id/splash_start_main"
+            app:destination="@+id/main_ac" />
+        <action
+            android:id="@+id/splash_start_login"
+            app:destination="@+id/fg_login_id" />
+    </fragment>
+    <fragment
+        android:id="@+id/fg_login_id"
+        android:name="com.example.common.fragment.LoginFragment"
+        android:label="LoginFragment"
+        tools:layout="@layout/fg_login_home">
+        <action
+            android:id="@+id/login_start_main"
+            app:destination="@+id/main_ac" />
+    </fragment>
+    <activity
+        android:id="@+id/main_ac"
+        android:name="com.example.common.MainActivity"
+        android:label="MainActivity"
+        tools:layout="@layout/activity_main" />
+
+</navigation>

@@ -4,7 +4,6 @@ import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.rain.baselib.R
-import com.rain.baselib.adapter.BaseRecAdapter
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.databinding.*
 import com.rain.baselib.viewModel.BaseRecViewModel
@@ -17,6 +16,7 @@ import com.rain.baselib.weight.ScrollOtherRefreshLayout
  */
 abstract class BaseRecFragment : BaseDataBindFragment<ViewDataBinding>(), View.OnClickListener {
 	override val layoutResId = R.layout.layout_rec_view
+	
 	/**
 	 *  是否打开上拉加载更多
 	 */
@@ -36,18 +36,18 @@ abstract class BaseRecFragment : BaseDataBindFragment<ViewDataBinding>(), View.O
 	/**
 	 * 数据集合布局
 	 */
-	private val recData: RecyclerView? by lazy {viewBind.root. findViewById(R.id.rv_data) }
+	private val recData: RecyclerView? by lazy { viewBind.root.findViewById(R.id.rv_data) }
 	private val smartRefresh: ScrollOtherRefreshLayout? by lazy { viewBind.root.findViewById(R.id.smart_refresh) }
 	
 	/**
 	 * 错误布局
 	 */
-	private val errView: View? by lazy {viewBind.root. findViewById(R.id.rl_error) }
+	private val errView: View? by lazy { viewBind.root.findViewById(R.id.rl_error) }
 	
 	/**
 	 * 空布局
 	 */
-	private val emptyView: View? by lazy {viewBind.root. findViewById(R.id.rl_empty) }
+	private val emptyView: View? by lazy { viewBind.root.findViewById(R.id.rl_empty) }
 	private val emptyClickView: View? by lazy { viewBind.root.findViewById(R.id.ll_empty) }
 	
 	
@@ -55,6 +55,7 @@ abstract class BaseRecFragment : BaseDataBindFragment<ViewDataBinding>(), View.O
 		viewModel.loadEnd.observe(this, {
 			if (it == null || it) {
 				recData?.isNestedScrollingEnabled = true
+				
 				finishLoad()
 			} else recData?.isNestedScrollingEnabled = false
 		})
@@ -78,16 +79,8 @@ abstract class BaseRecFragment : BaseDataBindFragment<ViewDataBinding>(), View.O
 			recData?.addItemDecoration(this)
 		}
 		viewModel.adapter.run {
-			setOnItemClickListener(object : BaseRecAdapter.OnItemClickListener {
-				override fun itemClick(position: Int) {
-					clickRecItem(position)
-				}
-			})
-			setOnItemLongClickListener(object : BaseRecAdapter.OnItemLongClickListener {
-				override fun itemLongClick(position: Int) {
-					itemLong(position)
-				}
-			})
+			setOnItemClickListener { clickRecItem(it) }
+			setOnItemLongClickListener { itemLong(it) }
 			recData?.adapter = this
 		}
 	}

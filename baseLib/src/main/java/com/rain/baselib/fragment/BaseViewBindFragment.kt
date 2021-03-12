@@ -54,10 +54,10 @@ abstract class BaseViewBindFragment<VB:ViewBinding> :Fragment() {
 	 */
 	@CallSuper
 	protected open fun initViewDataBinding() {
-		viewModel?.setLoadDialogObserve(this, {
+		viewModel?.setLoadDialogObserve(this) {
 			if (it == null) return@setLoadDialogObserve
 			if (it) showDialogLoad() else dismissDialogLoad()
-		})
+		}
 	}
 	
 	/**

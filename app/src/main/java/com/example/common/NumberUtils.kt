@@ -1,8 +1,13 @@
 package com.example.common
 
+import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import java.math.BigDecimal
 import java.text.NumberFormat
 
@@ -10,8 +15,10 @@ import java.text.NumberFormat
  *  Create by rain
  *  Date: 2020/3/30
  */
+
+
 object NumberUtils {
-	
+
 	fun getKeepNumberStr(context: Context, numberStr: String?, keep: Int): String? {
 		Log.d("numberTag", "numberStr:$numberStr")
 		Log.d("numberTag", "keep:$keep")
@@ -38,7 +45,7 @@ object NumberUtils {
 		}
 		return numberStr
 	}
-	
+
 	private fun getFormatStr(context: Context, numberStr: String): String? {
 		try {
 			return NumberFormat.getInstance().apply {
@@ -49,7 +56,7 @@ object NumberUtils {
 		}
 		return numberStr
 	}
-	
+
 	private fun getDoubleFormatStr(context: Context, numberStr: String): String? {
 		try {
 			return BigDecimal(numberStr).stripTrailingZeros().toPlainString()
@@ -58,7 +65,7 @@ object NumberUtils {
 		}
 		return numberStr
 	}
-	
+
 	private fun getDoubleFormatStr(context: Context, number: String, keep: Int): String? {
 		var format = number
 		try {
@@ -71,5 +78,5 @@ object NumberUtils {
 		}
 		return format
 	}
-	
+
 }

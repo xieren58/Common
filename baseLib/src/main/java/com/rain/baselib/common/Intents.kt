@@ -9,6 +9,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.Navigation.findNavController
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import java.io.Serializable
 
 /**
@@ -116,14 +120,24 @@ inline fun <reified T : Activity> AppCompatActivity.createRegisterForActivity(cr
 	block(it)
 }
 
-inline fun <reified T : Activity> Fragment.createRegisterNoIntentActivity(crossinline block: (Boolean) -> Unit)= registerForActivityResult(InternalStartNoIntentContract(T::class.java)) {
+inline fun <reified T : Activity> Fragment.createRegisterNoIntentActivity(crossinline block: (Boolean) -> Unit) = registerForActivityResult(InternalStartNoIntentContract(T::class.java)) {
 	block(it)
 }
 
-inline fun <reified T : Activity> AppCompatActivity.createRegisterNoIntentActivity(crossinline block: (Boolean) -> Unit)= registerForActivityResult(InternalStartNoIntentContract(T::class.java)) {
+inline fun <reified T : Activity> AppCompatActivity.createRegisterNoIntentActivity(crossinline block: (Boolean) -> Unit) = registerForActivityResult(InternalStartNoIntentContract(T::class.java)) {
 	block(it)
 }
 
 fun ActivityResultLauncher<Array<out Pair<String, Any?>>>.startAcResult(vararg params: Pair<String, Any?>) {
 	launch(params)
+}
+
+fun Activity.navigationPopUpTo(home_id: Int, navigateId: Int) {
+	val findNavController = findNavController(home_id)
+	findNavController.navigate(navigateId, null, NavOptions.Builder().setPopUpTo(findNavController.graph.id, true).build())
+}
+
+fun Fragment.navigationPopUpTo(navigateId: Int) {
+	val findNavController = findNavController()
+	findNavController.navigate(navigateId, null, NavOptions.Builder().setPopUpTo(findNavController.graph.id, true).build())
 }

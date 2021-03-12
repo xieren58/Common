@@ -1,8 +1,14 @@
 package com.example.common.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 /**
  *  Create by rain
  *  Date: 2020/3/19
  */
-data class TeachBaseModel(var pageIndex: Int = 0,var sufferingList: MutableList<TeachModel>? = null) {
-}
+@Parcelize
+data class TeachBaseModel(
+    val pageIndex: Int = 0,
+    var sufferingList: MutableList<TeachModel>? = null
+) : Parcelable

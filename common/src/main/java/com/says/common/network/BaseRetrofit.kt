@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit
  *  Create by rain
  *  Date: 2020/11/2
  */
-abstract class BaseRetrofit(baseUrl:String,vararg interceptor: Interceptor) {
+abstract class BaseRetrofit(baseUrl: String, vararg interceptor: Interceptor) {
     open val connectTimeOut: Long = 120
     open val readTimeOut: Long = 60
     open val writeTimeOut: Long = 60
@@ -27,7 +27,6 @@ abstract class BaseRetrofit(baseUrl:String,vararg interceptor: Interceptor) {
             retryOnConnectionFailure(true)
         }
     }
-
     val retrofit: Retrofit by lazy {
         Retrofit.Builder().apply {
             baseUrl(baseUrl)
@@ -36,3 +35,4 @@ abstract class BaseRetrofit(baseUrl:String,vararg interceptor: Interceptor) {
         }.build()
     }
 }
+

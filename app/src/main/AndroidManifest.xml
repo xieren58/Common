@@ -10,13 +10,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Common">
-        <activity android:name="com.example.common.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity
+            android:name="com.example.common.MainActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".DemoActivity"
             android:screenOrientation="portrait" />
@@ -24,13 +20,18 @@
             android:name=".Demo2DataBindActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddressFlutterActivity"
-            android:screenOrientation="portrait" />
-<!--        <activity-->
-<!--            android:name="io.flutter.embedding.android.FlutterActivity"-->
-<!--            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"-->
-<!--            android:hardwareAccelerated="true"-->
-<!--            android:windowSoftInputMode="adjustResize" />-->
+            android:name=".activity.StartNavigationActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--        <activity-->
+        <!--            android:name="io.flutter.embedding.android.FlutterActivity"-->
+        <!--            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"-->
+        <!--            android:hardwareAccelerated="true"-->
+        <!--            android:windowSoftInputMode="adjustResize" />-->
     </application>
 
 </manifest>

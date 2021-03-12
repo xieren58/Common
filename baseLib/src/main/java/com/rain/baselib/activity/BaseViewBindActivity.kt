@@ -46,16 +46,17 @@ abstract class BaseViewBindActivity<VB : ViewBinding> : AppCompatActivity() {
 	 */
 	@CallSuper
 	protected open fun initViewDataBinding() {
-		viewModel?.setLoadDialogObserve(this, {
+		viewModel?.setLoadDialogObserve(this) {
 			if (it == null) return@setLoadDialogObserve
 			if (it) showDialogLoad() else dismissDialogLoad()
-		})
+		}
 	}
 	
 	/**
 	 * 初始化布局
 	 */
-	open fun initContentView() :VB = conversionViewBind<VB>().apply { setContentView(root) }
+	open fun initContentView(): VB = conversionViewBind<VB>().apply { setContentView(root) }
+	
 	@CallSuper
 	open fun init() {
 		initView()
@@ -119,6 +120,7 @@ abstract class BaseViewBindActivity<VB : ViewBinding> : AppCompatActivity() {
 			val window = loading?.window
 			window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 			loading?.setCanceledOnTouchOutside(false)
+			loading?.setCancelable(false)
 			if (!loading!!.isShowing) {
 				loading?.show()
 				loading?.setContentView(

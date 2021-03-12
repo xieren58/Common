@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.rain.baselib.R
-import com.rain.baselib.adapter.BaseRecAdapter
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.viewModel.BaseRecViewModel
 import com.rain.baselib.weight.ScrollOtherRefreshLayout
@@ -101,16 +100,12 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 			recData?.addItemDecoration(this)
 		}
 		viewModel.adapter.run {
-			setOnItemClickListener(object : BaseRecAdapter.OnItemClickListener {
-				override fun itemClick(position: Int) {
-					clickRecItem(position)
-				}
-			})
-			setOnItemLongClickListener(object : BaseRecAdapter.OnItemLongClickListener {
-				override fun itemLongClick(position: Int) {
-					itemLong(position)
-				}
-			})
+			setOnItemClickListener {
+				clickRecItem(it)
+			}
+			setOnItemLongClickListener {
+				itemLong(it)
+			}
 			recData?.adapter = this
 		}
 	}
@@ -142,7 +137,7 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	 * 初始化标题栏
 	 */
 	private fun initToolbar() {
-		tvTitle?.text = titleContent ?:""
+		tvTitle?.text = titleContent ?: ""
 		toolbar?.run {
 			setNavigationIcon(R.drawable.arrow_left)
 			title = ""
@@ -153,11 +148,11 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 		igRight?.visibility = rightIcon?.run {
 			igRight?.setImageResource(this)
 			View.VISIBLE
-		}?:View.GONE
+		} ?: View.GONE
 		
-		tvRight?.visibility = 	if (rightStr.isNullOrEmpty()) View.GONE
-		 else {
-			tvRight?.text = rightStr?:""
+		tvRight?.visibility = if (rightStr.isNullOrEmpty()) View.GONE
+		else {
+			tvRight?.text = rightStr ?: ""
 			View.VISIBLE
 		}
 	}
@@ -165,16 +160,17 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	/**
 	 * 设置标题栏右侧图标 id
 	 */
-	open val rightIcon :Int ?=null
+	open val rightIcon: Int? = null
+	
 	/**
 	 * 设置标题栏右侧文字
 	 */
-	open val rightStr:String?=null
+	open val rightStr: String? = null
 	
 	/**
 	 * 设置标题栏文字
 	 */
-	open val titleContent:String? =null
+	open val titleContent: String? = null
 	
 	/**
 	 * 设置下拉刷新和上拉加载开关

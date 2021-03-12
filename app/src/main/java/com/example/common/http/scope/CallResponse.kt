@@ -13,7 +13,7 @@ import retrofit2.HttpException
  *  Date: 2020/6/29
  *  网络请求 协程扩展类
  */
-fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlock: (T?) -> Unit, failBlock: (message: String?) -> Unit) =
+fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlock: (T?) -> Unit = {}, failBlock: (message: String?) -> Unit = {}) =
 		launchMessageUI(block, { _, data ->
 			Log.d("testLaunchTag", "launchUI-Line--successBlock:$data")
 			successBlock(data)
@@ -22,7 +22,7 @@ fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlo
 			failBlock(it)
 		})
 
-fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?) -> Unit, failBlock: (message: String?) -> Unit) = launch(Dispatchers.Main) {
+fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?) -> Unit, failBlock: (message: String?) -> Unit = {}) = launch(Dispatchers.Main) {
 	Log.d("testLaunchTag", "launchMessageUI-Line-:$this")
 	if (!NetWorkUtils.isNetConnected()) {
 		failBlock("请检查网络连接")

@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -45,5 +46,4 @@ dependencies {
     implementation "com.yqritc:recyclerview-flexibledivider:1.4.0"
 
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.6'
-
 }

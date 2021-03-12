@@ -1,7 +1,6 @@
 package com.example.common.http
 
 import com.example.common.model.BaseResponse
-import com.example.common.model.ConfigResultModel
 import com.example.common.model.DemoModel
 import com.example.common.model.TeachBaseModel
 import retrofit2.http.*
