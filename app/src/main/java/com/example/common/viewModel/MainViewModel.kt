@@ -12,6 +12,7 @@ import com.example.common.http.RetrofitFac
 import com.example.common.http.scope.*
 import com.example.common.model.TeachModel
 import com.rain.baselib.viewModel.BaseViewModel
+import com.says.common.utils.DataStoreCommon
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
@@ -32,8 +33,20 @@ class MainViewModel : BaseViewModel() {
 		}
 	}.flow.cachedIn(viewModelScope)
 	
+	fun testBreak() {
+		viewModelScope.launch {
+			Log.d("testBreakTag", "string:${DataStoreCommon.getString("demo")}")
+			DataStoreCommon.putValue("demo" to "test")
+			Log.d("testBreakTag", "string1:${DataStoreCommon.getString("demo")}")
+		}
+	}
+	
 	fun testLaunchNoLine() {
-		Log.d("testLaunchTag", "----------------------------------testLaunchNoLine---------------------------------------------")
+		
+		Log.d(
+				"testLaunchTag",
+				"----------------------------------testLaunchNoLine---------------------------------------------"
+		)
 		val startTestTime = System.currentTimeMillis()
 		Log.d("testLaunchTag", "startTime-noLine-$startTestTime")
 		viewModelScope.launchNoUI({

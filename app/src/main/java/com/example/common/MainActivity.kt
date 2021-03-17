@@ -6,16 +6,10 @@ import android.text.Spanned
 import android.util.Log
 import android.widget.TextView
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
-import com.example.common.activity.StartNavigationActivity
 import com.example.common.databinding.ActivityMainBinding
-import com.example.common.model.TeachModel
 import com.example.common.viewModel.MainViewModel
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
-import com.rain.baselib.common.startAc
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val layoutResId = R.layout.activity_main
@@ -27,8 +21,9 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         viewBind.tvStart.singleClick {
 //            startAc<AddressFlutterActivity>()
 //            startAc<DemoActivity>()
-            startAc<StartNavigationActivity>("loginOut" to true)
-            finish()
+            viewModel.testBreak()
+//            startAc<StartNavigationActivity>("loginOut" to true)
+//            finish()
         }
         viewBind.tvEnd.singleClick {
             viewModel.testLaunchNoLine()

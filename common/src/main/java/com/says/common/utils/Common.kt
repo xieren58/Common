@@ -25,15 +25,16 @@ import java.util.regex.Pattern
  *  Date: 2020/11/2
  */
 object Common {
-
+	
 	/**
 	 * 应用是否在上层
 	 */
+	@JvmStatic
 	fun isTopActivity(context: Context): Boolean {
 		val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
 		val appProcessInfoList = activityManager.runningAppProcesses ?: return false
 		appProcessInfoList.forEach {
-			if (it.processName ==  context.packageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+			if (it.processName == context.packageName && it.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
 				return true
 			}
 		}
@@ -43,25 +44,27 @@ object Common {
 	/**
 	 * 判断WIFI网络是否可用
 	 */
+	@JvmStatic
 	@Suppress("DEPRECATION")
 	fun isNetConnected(context: Context): Boolean {
 		val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 		if (Build.VERSION.SDK_INT >= 29) {
 			val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-							?: return false
+					?: return false
 			return networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
 		} else {
 			val activeNetworkInfo = connectivityManager.activeNetworkInfo
 			return activeNetworkInfo != null && activeNetworkInfo.isConnected
 		}
 	}
-
-
+	
+	
 	/**
 	 * 根据文件后缀名获得对应的MIME类型
 	 * 文件名，需要包含后缀.xml类似这样的
 	 */
-	 fun getMIMEType(fileName: String): String {
+	@JvmStatic
+	fun getMIMEType(fileName: String): String {
 		var type = "*/*"
 		//获取后缀名前的分隔符"."在fName中的位置。
 		val dotIndex = fileName.lastIndexOf(".")
@@ -77,18 +80,19 @@ object Common {
 		}
 		return type
 	}
-
+	
 	/**
 	 * 用系统应用打开文件
 	 */
-	fun openFile(context: Context, path: String,error:()->Unit) :MIMECommon?{
+	@JvmStatic
+	fun openFile(context: Context, path: String, error: () -> Unit): MIMECommon? {
 		val file = File(path)
 		Log.d("fileOpenTag", "file:${file.exists()}")
-		if (!file.exists())return null
+		if (!file.exists()) return null
 		val fileType = getFileType(file.name)
-		when(fileType){
-			MIMECommon.FILE_TYPE_APK-> installApk(context,path)
-			else->{
+		when (fileType) {
+			MIMECommon.FILE_TYPE_APK -> installApk(context, path)
+			else -> {
 				try {
 					val intent = Intent().apply {
 						addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -106,20 +110,22 @@ object Common {
 		}
 		return fileType
 	}
-
+	
 	/**
 	 * 獲取文件的uri
 	 */
-	 fun getUriForFile(context: Context, file: File): Uri {
+	@JvmStatic
+	fun getUriForFile(context: Context, file: File): Uri {
 		return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			FileProvider.getUriForFile(context.applicationContext, "${context.packageName}.fileProvider", file)
 		} else Uri.fromFile(file)
 	}
-
-
+	
+	
 	/**
 	 * 获取打开文件的类型
 	 */
+	@JvmStatic
 	fun getFileType(fileName: String): MIMECommon {
 		var type = MIMECommon.FILE_TYPE_OTHER
 		//获取后缀名前的分隔符"."在fName中的位置。
@@ -135,19 +141,20 @@ object Common {
 		}
 		return type
 	}
-
+	
 	/**
 	 * apk安装
 	 */
-	fun installApk(context: Context,downloadApk: String) {
+	@JvmStatic
+	fun installApk(context: Context, downloadApk: String) {
 		val intent = Intent(Intent.ACTION_VIEW)
 		val file = File(downloadApk)
 		Log.d("downTag", "file:${file.path}")
 		if (!file.exists()) return
-		Log.i("downTag","安装路径==$downloadApk")
+		Log.i("downTag", "安装路径==$downloadApk")
 		val apkUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_ACTIVITY_NEW_TASK)
-			FileProvider.getUriForFile(context, "${context.packageName }.fileProvider", file)
+			FileProvider.getUriForFile(context, "${context.packageName}.fileProvider", file)
 		} else {
 			intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 			Uri.fromFile(file)
@@ -159,6 +166,7 @@ object Common {
 	/**
 	 * 移动到recyclerview的最后一位
 	 */
+	@JvmStatic
 	fun moveToPosition(mRecyclerView: RecyclerView?, n: Int) {
 		if (mRecyclerView == null) return
 		val layoutManager = mRecyclerView.layoutManager as LinearLayoutManager? ?: return
@@ -181,6 +189,7 @@ object Common {
 	 * @param fileS
 	 * @return
 	 */
+	@JvmStatic
 	fun formatFileSize(fileS: Long): String {
 		val df = DecimalFormat("#.00")
 		val wrongSize = "0B"
@@ -192,11 +201,12 @@ object Common {
 			else -> df.format(fileS.toDouble() / 1073741824) + "GB"
 		}
 	}
-
+	
 	/**
 	 * 判断是否是视频文件
 	 */
+	@JvmStatic
 	fun isVideoUrlStr(str: String) =
-		Pattern.matches(".*(.3gp|.mp4|.avi|.rm|.rmvb|.flv|.mpg|.mov|.mkv)$", str)
+			Pattern.matches(".*(.3gp|.mp4|.avi|.rm|.rmvb|.flv|.mpg|.mov|.mkv)$", str)
 	
 }

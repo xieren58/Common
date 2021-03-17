@@ -11,6 +11,7 @@ import java.util.*
  *  Date: 2020/5/7
  */
 object ImageUtil {
+	@JvmStatic
 	fun exifToDegrees(exifOrientation: Int): Int {
 		return when (exifOrientation) {
 			ExifInterface.ORIENTATION_ROTATE_90 -> 90
@@ -22,6 +23,7 @@ object ImageUtil {
 	/**
 	 * 读取图片的旋转的角度
 	 */
+	@JvmStatic
 	 fun getBitmapDegree(url: String): Int {
 		var degree = 0
 		try {
@@ -44,6 +46,7 @@ object ImageUtil {
 		return degree
 	}
 	// Returns the degrees in clockwise. Values are 0, 90, 180, or 270.
+	@JvmStatic
 	fun getOrientation(jpeg: ByteArray?): Int {
 		if (jpeg == null) {
 			return 0
@@ -98,7 +101,7 @@ object ImageUtil {
 		}
 		return 0
 	}
-	
+	@JvmStatic
 	private fun pack(bytes: ByteArray, offsets: Int, lengths: Int, littleEndian: Boolean): Int {
 		var offset = offsets
 		var length = lengths
@@ -114,7 +117,7 @@ object ImageUtil {
 		}
 		return value
 	}
-	
+	@JvmStatic
 	fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
 		// Raw height and width of image
 		val height = options.outHeight
@@ -137,6 +140,7 @@ object ImageUtil {
 	/**
 	 * 保存bitmap
 	 */
+	@JvmStatic
 	fun saveBitmap(b: Bitmap,filePath:String): String {
 		val jpegName = filePath + File.separator + UUID.randomUUID().toString() + ".jpg"
 		return try {

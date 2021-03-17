@@ -20,7 +20,6 @@ class SplashFgViewModel : BaseViewModel() {
     private fun initMainType() {
         viewModelScope.launch {
             delay(1000)
-
             val otherValue = DataStoreCommon.getOtherValue("isLogin", false)
             isMainType.value = otherValue
         }

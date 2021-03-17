@@ -19,6 +19,7 @@ object PermissionUtils {
 	/**
 	 * 初始化权限回调
 	 */
+	@JvmStatic
 	fun initResultPermission(activity: FragmentActivity,block:(MutableMap<String,Boolean>)->Unit): ActivityResultLauncher<Array<String>> {
 	return 	activity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){
 			block(it)
@@ -27,6 +28,7 @@ object PermissionUtils {
 	/**
 	 * 权限请求
 	 */
+	@JvmStatic
 	fun  requestAllPermission(launcher:ActivityResultLauncher<Array<String>>,needPermissions: Array<String>){
 		launcher.launch(needPermissions)
 	}
@@ -35,6 +37,7 @@ object PermissionUtils {
 	 * 判断权限是否已经申请
 	 * 如果没有权限，尝试请求权限
 	 */
+	@JvmStatic
 	fun requestAllPermission(activity: FragmentActivity, needPermissions: Array<String>): Boolean {
 		var isHavePer = true
 		if (Build.VERSION.SDK_INT >= 23 && activity.applicationInfo.targetSdkVersion >= 23) {
@@ -52,6 +55,7 @@ object PermissionUtils {
 	/**
 	 * 判断权限
 	 */
+	@JvmStatic
 	private fun checkPermission(context: Context,needPermissions: String): Boolean {
 		return ContextCompat.checkSelfPermission(context, needPermissions) == PackageManager.PERMISSION_GRANTED
 	}
@@ -59,6 +63,7 @@ object PermissionUtils {
 	/**
 	 * 权限回调
 	 */
+	@JvmStatic
 	private fun requestPermission(activity: Activity, needPermissions: Array<String>) {
 		ActivityCompat.requestPermissions(activity, needPermissions, 0)
 	}

@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.common.adapter.PhotoWeightAdapter
+import com.luck.picture.lib.decoration.GridSpacingItemDecoration
 import com.rain.baselib.activity.BaseRecActivity
 import com.says.common.file.enum.PushFromTypeEnum
 import com.says.common.file.listener.FilePushResultListener
@@ -30,6 +32,7 @@ class DemoActivity : BaseRecActivity() {
 	override val loadMoreEnable: Boolean
 		get() = false
 	
+	override val recItemDecoration = GridSpacingItemDecoration(4, 12, false)
 	override fun clickRecItem(position: Int) {
 		val cityModel = viewModel.getItemData(position) ?: return
 		if (cityModel.itemType == PhotoWeightAdapter.ADD_TYPE) {
@@ -57,8 +60,7 @@ class DemoActivity : BaseRecActivity() {
 	}
 	
 	private fun pushFile() {
-		val lists = viewModel.getLists()
-		lists.forEach {
+		viewModel.getLists()?.forEach {
 			if (it.itemType == PhotoWeightAdapter.ADD_TYPE) return@forEach
 			if (it.url.isNullOrEmpty() || it.status == 1 || it.status == 2) return@forEach
 			it.status = 1

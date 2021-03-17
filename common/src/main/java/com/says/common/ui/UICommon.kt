@@ -20,6 +20,7 @@ object UICommon {
 	/**
 	 * dp转px
 	 */
+	@JvmStatic
 	fun dip2px(context: Context,dpValue: Float): Int {
 		val scale = context.resources.displayMetrics.density
 		return (dpValue * scale + 0.5f).toInt()
@@ -28,6 +29,7 @@ object UICommon {
 	/**
 	 * sp转px
 	 */
+	@JvmStatic
 	fun sp2px(context: Context,sp: Float): Int {
 		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.resources.displayMetrics).toInt()
 	}
@@ -38,6 +40,7 @@ object UICommon {
 	/**
 	 * 关闭输入法
 	 */
+	@JvmStatic
 	fun closeMethod(activity: Activity) {
 		try {
 			val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

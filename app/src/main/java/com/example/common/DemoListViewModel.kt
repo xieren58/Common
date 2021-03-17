@@ -8,14 +8,14 @@ import com.rain.baselib.viewModel.BaseRecViewModel
  *  Date: 2020/12/1
  */
 class DemoListViewModel : BaseRecViewModel<UpdatePic>() {
-	override val adapter by lazy { PhotoWeightAdapter() }
-	
-	
-	override fun loadData() {
-		adapter.addItemData(UpdatePic().apply {
-			itemType = PhotoWeightAdapter.ADD_TYPE
-		})
-		showDataType()
-	}
+    override val adapter by lazy { PhotoWeightAdapter() }
+
+
+    override fun loadData() {
+        adapter.addItemData(UpdatePic().apply {
+            itemType = PhotoWeightAdapter.ADD_TYPE
+        })
+        showDataType()
+    }
 
 }
