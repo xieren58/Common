@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.says.common.utils
+package com.says.common.dataStore
 
 import android.content.Context
 import android.util.Log
@@ -11,15 +11,14 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 /**
- *  Create by rain
- *  Date: 2021/3/4
- */
-/**
  * 委托的方式创建存储dataStore
  */
+private val Context.dataStore by preferencesDataStore(name = "${CommonContext.context.packageName}_store")
 
+/**
+ * 存储dataStore工具类
+ */
 object DataStoreCommon {
-	private val Context.dataStore by preferencesDataStore(name = "${CommonContext.context.packageName}_store")
 	
 	/**
 	 * 懒加载初始化dataStore

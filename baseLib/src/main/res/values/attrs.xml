@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="toolbar_title_style">
+        <attr name="titleStr" format="string" />
+        <attr name="rightIcon" format="reference" />
+        <attr name="rightStr" format="string" />
+        <attr name="leftIcon" format="reference" />
+        <attr name="showViewLine" format="boolean" />
+        <attr name="showRightImage" format="boolean" />
+        <attr name="showRightTv" format="boolean" />
+    </declare-styleable>
+</resources>

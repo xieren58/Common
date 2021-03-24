@@ -1,4 +1,4 @@
-package com.says.common.utils
+package com.says.common.dataStore
 
 import android.content.Context
 import android.content.SharedPreferences

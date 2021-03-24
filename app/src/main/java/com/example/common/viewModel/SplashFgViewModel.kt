@@ -3,7 +3,7 @@ package com.example.common.viewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.rain.baselib.viewModel.BaseViewModel
-import com.says.common.utils.DataStoreCommon
+import com.says.common.dataStore.DataStoreCommon
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 

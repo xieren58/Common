@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:text="请输入药品包装上的验证码"
+            android:textColor="#ff333333"
+            android:textSize="17sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="15dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_tips_one"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:text="您需要输入"
+            android:textColor="#ff999999"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title" />
+
+        <TextView
+            android:id="@+id/tv_tips_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textColor="#333333"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_tips_one"
+            app:layout_constraintStart_toEndOf="@+id/tv_tips_one"
+            app:layout_constraintTop_toTopOf="@+id/tv_tips_one" />
+
+        <TextView
+            android:id="@+id/tv_tips_three"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="个验证码"
+            android:textColor="#ff999999"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_tips_one"
+            app:layout_constraintStart_toEndOf="@+id/tv_tips_two"
+            app:layout_constraintTop_toTopOf="@+id/tv_tips_one" />
+
+        <com.example.common.weight.VerificationCodeEditText
+            android:id="@+id/am_et"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:paddingBottom="2dp"
+            android:cursorVisible="false"
+            android:imeOptions="actionGo"
+            android:inputType="number"
+            android:textColor="@color/black_33"
+            android:textSize="30sp"
+            app:bottomLineNormalColor="@color/transparent"
+            app:bottomLineSelectedColor="@color/transparent"
+            app:figures="5"
+            app:isShowBottomLine="false"
+            app:layout_constraintTop_toBottomOf="@+id/tv_tips_one"
+            app:selectedBackgroundColor="@color/transparent"
+            app:verCodeMargin="17dp" />
+
+        <TextView
+            android:id="@+id/tv_no_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="320dp"
+            android:text="找不到验证码?"
+            android:textColor="#ff00aebd"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/am_et" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

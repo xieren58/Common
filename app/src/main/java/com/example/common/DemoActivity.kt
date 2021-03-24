@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.common.adapter.PhotoWeightAdapter
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration
 import com.rain.baselib.activity.BaseRecActivity

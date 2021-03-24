@@ -50,7 +50,6 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(),
         adapterList?.addAll(position, data)
         Log.d("recAddItemTag", "position:$position,data:${adapterList?.size}")
         notifyItemRangeInserted(position, data.size)
-        notifyItemRangeChanged(position - 1, adapterList?.size ?: 0 - position + 1)
     }
 
     fun addItemData(data: T?) {
@@ -64,7 +63,6 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(),
         if (adapterList == null) adapterList = mutableListOf()
         adapterList?.add(position, data)
         notifyItemInserted(position)
-        notifyItemRangeChanged(position - 1, adapterList?.size ?: 0 - position + 1)
     }
 
     fun removeItemData(position: Int) {
@@ -79,9 +77,7 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>(),
         if (recycler?.isComputingLayout == true) return
         if (adapterList.isNullOrEmpty() || data == null) return
         val position = adapterList?.indexOf(data) ?: 0
-        adapterList?.remove(data)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position - 1, adapterList?.size ?: 0 - position + 1)
+        removeItemData(position)
     }
 
 

@@ -1,16 +1,14 @@
 package com.rain.baselib.activity
 
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.CallSuper
-import androidx.appcompat.widget.Toolbar
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import com.rain.baselib.R
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.viewModel.BaseRecViewModel
 import com.rain.baselib.weight.ScrollOtherRefreshLayout
+import com.rain.baselib.weight.ToolbarLayout
 
 /**
  *  RecyclerView的基类
@@ -31,42 +29,43 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	 */
 	protected open val loadRefreshEnable = true
 	
+	
 	/**
 	 * 加载中布局
 	 */
-	private val loadingView: View? by lazy { findViewById(R.id.rl_loading) }
+	private val rlLoading: View? by lazy { viewBind.root.findViewById(R.id.rl_loading) }
+//	private val loadingView by lazy { LayoutLoadingViewBinding.bind(viewBind.root) }
 	
 	/**
 	 * 数据集合布局
 	 */
-	private val recData: RecyclerView? by lazy { findViewById(R.id.rv_data) }
-	private val smartRefresh: ScrollOtherRefreshLayout? by lazy { findViewById(R.id.smart_refresh) }
+//	private val dataView by lazy { LayoutDataViewBinding.bind(viewBind.root) }
+	private val rvData: RecyclerView? by lazy { viewBind.root.findViewById(R.id.rv_data) }
+	private val smartRefresh: ScrollOtherRefreshLayout? by lazy { viewBind.root.findViewById(R.id.smart_refresh) }
 	
 	/**
 	 * 错误布局
 	 */
-	private val errView: View? by lazy { findViewById(R.id.rl_error) }
+	private val rlError: View? by lazy { viewBind.root.findViewById(R.id.rl_error) }
+//	private val errView by lazy { LayoutErrViewBinding.bind(viewBind.root) }
 	
 	/**
 	 * 空布局
 	 */
-	private val emptyView: View? by lazy { findViewById(R.id.rl_empty) }
-	private val emptyClickView: View? by lazy { findViewById(R.id.ll_empty) }
+//	private val emptyView by lazy { LayoutEmptyViewBinding.bind(viewBind.root) }
+	private val rlEmpty: View? by lazy { viewBind.root.findViewById(R.id.rl_empty) }
+	private val emptyClickView: View? by lazy { viewBind.root.findViewById(R.id.ll_empty) }
 	
 	/**
 	 * 标题栏布局
 	 */
-	private val toolbar: Toolbar? by lazy { findViewById(R.id.toolbar) }
-	private val tvTitle: TextView? by lazy { findViewById(R.id.tv_title) }
-	private val igRight: ImageView? by lazy { findViewById(R.id.ig_right) }
-	private val tvRight: TextView? by lazy { findViewById(R.id.tv_right) }
-	
+	private val toolbar: ToolbarLayout? by lazy { findViewById(R.id.toolbar) }
 	override fun initModelObserve() {
 		viewModel.loadEnd.observe(this, {
-			if (it == null || it) {
-				recData?.isNestedScrollingEnabled = true
+			rvData?.isNestedScrollingEnabled = if (it == null || it) {
 				finishLoad()
-			} else recData?.isNestedScrollingEnabled = false
+				true
+			} else false
 		})
 		viewModel.uiDataType.observe(this, {
 			if (it != null) showUi(it)
@@ -77,9 +76,9 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	 * 设置展示的view
 	 */
 	private fun showUi(value: Int) {
-		loadingView?.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
-		emptyView?.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
-		errView?.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
+		rlLoading?.visibility = if (value == BaseRecViewModel.UI_TYPE_LOAD) View.VISIBLE else View.GONE
+		rlEmpty?.visibility = if (value == BaseRecViewModel.UI_TYPE_EMPTY) View.VISIBLE else View.GONE
+		rlError?.visibility = if (value == BaseRecViewModel.UI_TYPE_ERROR) View.VISIBLE else View.GONE
 		smartRefresh?.visibility = if (value == BaseRecViewModel.UI_TYPE_DATA) View.VISIBLE else View.GONE
 	}
 	
@@ -94,19 +93,15 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	 * 初始化recyclerView
 	 */
 	private fun initRec() {
-		recData?.layoutManager = getRecLayoutManager()
+		rvData?.layoutManager = getRecLayoutManager()
 		recItemDecoration?.run {
-			recData?.removeItemDecoration(this)
-			recData?.addItemDecoration(this)
+			rvData?.removeItemDecoration(this)
+			rvData?.addItemDecoration(this)
 		}
 		viewModel.adapter.run {
-			setOnItemClickListener {
-				clickRecItem(it)
-			}
-			setOnItemLongClickListener {
-				itemLong(it)
-			}
-			recData?.adapter = this
+			setOnItemClickListener { clickRecItem(it) }
+			setOnItemLongClickListener { itemLong(it) }
+			rvData?.adapter = this
 		}
 	}
 	
@@ -124,7 +119,7 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	 * 初始化下拉刷新控件
 	 */
 	private fun initSmart() {
-		smartRefresh?.bindRecycler(recData)
+		smartRefresh?.bindRecycler(rvData)
 		smartRefresh?.setLoadRefreshMoreDataListener({
 			viewModel.loadStartData(isRefresh = false, isShowLoad = false)
 		}, {
@@ -137,24 +132,21 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	 * 初始化标题栏
 	 */
 	private fun initToolbar() {
-		tvTitle?.text = titleContent ?: ""
-		toolbar?.run {
-			setNavigationIcon(R.drawable.arrow_left)
-			title = ""
-			setSupportActionBar(this)
-			setNavigationOnClickListener { finish() }
-		}
+		toolbar?.initToolbar(this)
+		toolbar?.setTitleStr(titleContent)
+		toolbar?.setLeftClickListener { finish() }
+		toolbar?.setShowRightImage(rightIcon?.run {
+			toolbar?.setRightIcon(this)
+			true
+		} ?: false)
 		
-		igRight?.visibility = rightIcon?.run {
-			igRight?.setImageResource(this)
-			View.VISIBLE
-		} ?: View.GONE
-		
-		tvRight?.visibility = if (rightStr.isNullOrEmpty()) View.GONE
+		toolbar?.setShowRightTv(if (rightStr.isNullOrEmpty()) false
 		else {
-			tvRight?.text = rightStr ?: ""
-			View.VISIBLE
-		}
+			toolbar?.setRightStr(rightStr)
+			true
+		})
+		toolbar?.setRightTvClickListener { rightTvClick() }
+		toolbar?.setRightImageClickListener { rightIconClick() }
 	}
 	
 	/**
@@ -191,15 +183,13 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	override fun initEvent() {
 		super.initEvent()
 		emptyClickView?.singleClick(this)
-		igRight?.singleClick(this)
-		tvRight?.singleClick(this)
 	}
 	
 	/**
 	 * 提供子类调用刷新页面，重新请求数据的方法
 	 */
 	fun callRefreshView() {
-		if (recData?.isComputingLayout == true) return
+		if (rvData?.isComputingLayout == true) return
 		var isShowLoad = false
 		if (viewModel.isShowDataView()) {
 			if (loadRefreshEnable) {
@@ -223,8 +213,6 @@ abstract class BaseRecActivity : BaseDataBindActivity<ViewDataBinding>(), View.O
 	override fun onClick(v: View?) {
 		when (v?.id) {
 			R.id.ll_empty -> callRefreshView()
-			R.id.ig_right -> rightIconClick()
-			R.id.tv_right -> rightTvClick()
 		}
 	}
 	

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.common.fragment.DemoDataBindFragment
 import com.rain.baselib.viewModel.BaseViewModel
-import com.says.common.utils.DataStoreCommon
+import com.says.common.dataStore.DataStoreCommon
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
