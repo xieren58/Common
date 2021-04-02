@@ -3,8 +3,6 @@ package com.says.common.signature.weight
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
-import android.os.Bundle
-import android.os.Parcelable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.GestureDetector
@@ -157,27 +155,27 @@ class SignaturePad @JvmOverloads constructor(
 
     fun getIsShowTextAdd() = isShowText
 
-    override fun onSaveInstanceState(): Parcelable {
-        val bundle = Bundle()
-        bundle.putParcelable("superState", super.onSaveInstanceState())
-        if (mHasEditState == null || mHasEditState!!) {
-            mBitmapSavedState = this.getTransparentSignatureBitmap()
-        }
-        bundle.putParcelable("signatureBitmap", mBitmapSavedState)
-        return bundle
-    }
-
-    override fun onRestoreInstanceState(oldState: Parcelable?) {
-        var state = oldState
-        if (state is Bundle) {
-            val bundle = state
-            this.setSignatureBitmap(bundle.getParcelable<Parcelable>("signatureBitmap") as? Bitmap)
-            mBitmapSavedState = bundle.getParcelable("signatureBitmap")
-            state = bundle.getParcelable("superState")
-        }
-        mHasEditState = false
-        super.onRestoreInstanceState(state)
-    }
+//    override fun onSaveInstanceState(): Parcelable {
+//        val bundle = Bundle()
+//        bundle.putParcelable("superState", super.onSaveInstanceState())
+//        if (mHasEditState == null || mHasEditState!!) {
+//            mBitmapSavedState = this.getTransparentSignatureBitmap()
+//        }
+//        bundle.putParcelable("signatureBitmap", mBitmapSavedState)
+//        return bundle
+//    }
+//
+//    override fun onRestoreInstanceState(oldState: Parcelable?) {
+//        var state = oldState
+//        if (state is Bundle) {
+//            val bundle = state
+//            this.setSignatureBitmap(bundle.getParcelable<Parcelable>("signatureBitmap") as? Bitmap)
+//            mBitmapSavedState = bundle.getParcelable("signatureBitmap")
+//            state = bundle.getParcelable("superState")
+//        }
+//        mHasEditState = false
+//        super.onRestoreInstanceState(state)
+//    }
 
     fun setPenColor(color: Int) {
         mPaint.color = color
