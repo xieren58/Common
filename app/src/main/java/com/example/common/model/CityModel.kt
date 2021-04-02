@@ -1,6 +1,11 @@
 package com.example.common.model
 
 import android.os.Parcelable
+import android.util.Log
+import androidx.databinding.BaseObservable
+import androidx.databinding.Bindable
+import com.rain.baselib.BR
+import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -9,10 +14,19 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class CityModel(
-    val name: String? = null,//":"Gatundu South",
+
     val value: String? = null, //":"1003002",
     val level: Int = 0, //":2,
     val parent: String? = null, // ":"1003"
     val isOpen: Boolean = false,
     val childCityList: MutableList<CityModel>? = null
-) : Parcelable
+) : Parcelable, BaseObservable() {
+    @IgnoredOnParcel
+    @Bindable
+    var name: String = ""
+      set(value) {
+          Log.d("cityModelTag","value:$value")
+            field = value
+            notifyPropertyChanged(BR.name)
+        }
+}
