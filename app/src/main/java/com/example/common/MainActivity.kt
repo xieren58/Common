@@ -31,7 +31,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         viewBind.tvStart.singleClick {
 //            startAc<AddressFlutterActivity>()
 //            viewModel.cityModel.name = "修改"
-            startAc<SignatureActivity>()
+            startAc<DemoActivity>()
 //            viewModel.testBreak()
 //            startAc<StartNavigationActivity>("loginOut" to true)
 //            finish()
