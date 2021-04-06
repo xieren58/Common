@@ -25,6 +25,9 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 		recycler = null
 	}
 	
+	/**
+	 * 初始化设置数据
+	 */
 	open fun setData(list: MutableList<T>?) {
 		this.adapterList = list
 		notifyDataSetChanged()
@@ -35,6 +38,9 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 	 */
 	fun getLists() = adapterList
 	
+	/**
+	 * 添加数据
+	 */
 	fun addItemData(data: MutableList<T>?) {
 		if (recycler?.isComputingLayout == true) return
 		val position = adapterList?.size ?: 0
@@ -61,6 +67,9 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 		notifyItemInserted(position)
 	}
 	
+	/**
+	 * 删除数据
+	 */
 	fun removeItemData(position: Int) {
 		if (recycler?.isComputingLayout == true) return
 		if (adapterList.isNullOrEmpty() || position < 0 || position >= adapterList?.size ?: 0) return
@@ -77,6 +86,9 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 	
 	fun getItemData(position: Int) = adapterList?.getOrNull(position)
 	
+	/**
+	 * 更新某条数据
+	 */
 	fun updateItemData(data: T?) {
 		if (data == null || adapterList.isNullOrEmpty()) return
 		val indexOf = adapterList?.indexOf(data) ?: -1
@@ -104,21 +116,14 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 	
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecHolder<T, *> {
 		val holder = createHolder(parent, viewType)
-		Log.d("viewHolderTag","onCreateViewHolder:$holder")
 		holder.itemView.singleClick {
 			val position = holder.adapterPosition
-			Log.d("viewHolderTag","onCreateViewHolder:$position")
-			Log.d("viewHolderTag","holder:$holder")
-			if (position == RecyclerView.NO_POSITION) {
-				return@singleClick
-			}
+			if (position == RecyclerView.NO_POSITION) return@singleClick
 			itemClickListener?.invoke(position)
 		}
 		holder.itemView.setOnLongClickListener {
 			val position = holder.adapterPosition
-			if (position == RecyclerView.NO_POSITION) {
-				return@setOnLongClickListener true
-			}
+			if (position == RecyclerView.NO_POSITION) return@setOnLongClickListener true
 			onItemLongClickListener?.invoke(position)
 			return@setOnLongClickListener true
 		}
@@ -126,7 +131,7 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 	}
 	
 	override fun onBindViewHolder(holder: BaseRecHolder<T, *>, position: Int) {
-		Log.d("viewHolderTag","onBindViewHolder:$holder")
+		Log.d("viewHolderTag", "onBindViewHolder:$holder")
 		val t = adapterList?.getOrNull(position) ?: return
 		holder.setData(t, position)
 		collectHolder(holder, position)
@@ -142,19 +147,36 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 		collectHolder(holder, t, payloads[0])
 	}
 	
+	/**
+	 * 绑定数据
+	 */
 	open fun collectHolder(holder: BaseRecHolder<T, *>, position: Int) {}
+	
+	/**
+	 * 绑定数据，指定更新某些值
+	 */
 	open fun collectHolder(holder: BaseRecHolder<T, *>, model: T, payload: Any) {}
 	
 	override fun getItemCount() = adapterList?.size ?: 0
 	
+	/**
+	 * 获取布局id
+	 */
 	@LayoutRes
 	abstract fun getLayoutResId(viewType: Int): Int
+	
+	/**
+	 * 获取绑定的variableId，为-1时表示不做dataBind联动
+	 */
 	abstract fun getVariableId(viewType: Int): Int //綁定的id 為-1時表示不綁定
 	
 	private fun createHolder(parent: ViewGroup, viewType: Int): BaseRecHolder<T, *> {
 		return createHolder(parent, viewType, getLayoutResId(viewType), getVariableId(viewType))
 	}
 	
+	/**
+	 * 创建viewHolder。默认返回baseRecHolder
+	 */
 	open fun createHolder(parent: ViewGroup, viewType: Int, @LayoutRes layoutResId: Int, variableId: Int): BaseRecHolder<T, *> {
 		return BaseRecHolder(parent.getBind(layoutResId), variableId)
 	}
