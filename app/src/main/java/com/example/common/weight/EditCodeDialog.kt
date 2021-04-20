@@ -33,7 +33,7 @@ class EditCodeDialog(context: Context) : Dialog(context, R.style.inputDialog) {
 	}
 	
 	private fun initView() {
-		viewBind.amEt.setFigures(5)
+		viewBind.amEt.setFigures(4)
 		viewBind.amEt.setOnVerificationCodeChangedListener(object : VerificationAction.OnVerificationCodeChangedListener {
 			override fun onVerCodeChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 				Log.d("scanEditTag", "onVerCodeChanged-s:$s")

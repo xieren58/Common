@@ -11,7 +11,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.AttributeSet
 import android.util.DisplayMetrics
-import android.util.Log
 import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.WindowManager
@@ -21,13 +20,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.content.ContextCompat
 import com.example.common.listener.VerificationAction
 import com.example.common.R
-import com.says.common.ui.UICommon
 import java.util.*
-
-/**
- * 验证码的EditText
- * Created by yj on 2017/6/12.
- */
 
 /**
  * 验证码的EditText
@@ -52,12 +45,14 @@ class VerificationCodeEditText @JvmOverloads constructor(context: Context, attrs
 	private var isShowBottomLine = true
 	private val mSelectedBackgroundPaint by lazy {
 		Paint().apply {
+			strokeWidth = dp2px(1F)
 			color = Color.parseColor("#00AEBD")
 			style = Paint.Style.STROKE
 		}
 	}
 	private val mNormalBackgroundPaint by lazy {
 		Paint().apply {
+			strokeWidth = dp2px(1F)
 			style = Paint.Style.STROKE
 			color = Color.parseColor("#DDE1E2")
 		}
@@ -108,10 +103,10 @@ class VerificationCodeEditText @JvmOverloads constructor(context: Context, attrs
 		mBottomNormalColor = ta.getColor(R.styleable.VerCodeEditText_bottomLineNormalColor,
 				getColor(android.R.color.darker_gray))
 		mBottomLineHeight = ta.getDimension(R.styleable.VerCodeEditText_bottomLineHeight,
-				dp2px(5).toFloat())
+				dp2px(5F))
 		mSelectedBackgroundColor = ta.getColor(R.styleable.VerCodeEditText_selectedBackgroundColor,
 				getColor(android.R.color.darker_gray))
-		mCursorWidth = ta.getDimension(R.styleable.VerCodeEditText_cursorWidth, dp2px(1).toFloat()).toInt()
+		mCursorWidth = ta.getDimension(R.styleable.VerCodeEditText_cursorWidth, dp2px(1F)).toInt()
 		mCursorColor = ta.getColor(R.styleable.VerCodeEditText_cursorColor, getColor(android.R.color.darker_gray))
 		mCursorDuration = ta.getInteger(R.styleable.VerCodeEditText_cursorDuration, DEFAULT_CURSOR_DURATION)
 		isShowBottomLine = ta.getBoolean(R.styleable.VerCodeEditText_isShowBottomLine, true)
@@ -183,22 +178,17 @@ class VerificationCodeEditText @JvmOverloads constructor(context: Context, attrs
 	
 	override fun onDraw(canvas: Canvas) {
 		mCurrentPosition = text?.length ?: 0
+		val strokeWidth = mNormalBackgroundPaint.strokeWidth
+		
 		val width = mEachRectLength - paddingLeft - paddingRight
 		val height = measuredHeight - paddingTop - paddingBottom
-		for (i in 0 until mFigures) {
-			canvas.save()
-			
-		}
+		//画矩形边框
 		for (i in 0 until mFigures) {
 			canvas.save()
 			val start = width * i + i * mVerCodeMargin
 			val end = width + start
-			//画一个矩形
-			if (i <= mCurrentPosition) {//选中的下一个状态
-				canvas.drawRect(start.toFloat(), 0f, end.toFloat(), height.toFloat(), mSelectedBackgroundPaint)
-			} else {
-				canvas.drawRect(start.toFloat(), 0f, end.toFloat(), height.toFloat(), mNormalBackgroundPaint)
-			}
+			val patient = if (i <= mCurrentPosition) mSelectedBackgroundPaint else mNormalBackgroundPaint //是否选中
+			canvas.drawRect(start.toFloat() + strokeWidth, strokeWidth, end.toFloat() - strokeWidth, height - strokeWidth, patient)
 			canvas.restore()
 		}
 		//绘制文字
@@ -309,9 +299,9 @@ class VerificationCodeEditText @JvmOverloads constructor(context: Context, attrs
 	/**
 	 * dp转px
 	 */
-	private fun dp2px(dp: Int): Int {
-		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp.toFloat(),
-				resources.displayMetrics).toInt()
+	private fun dp2px(dp: Float): Float {
+		return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+				resources.displayMetrics)
 	}
 	
 	private fun showKeyBoard(context: Context) {

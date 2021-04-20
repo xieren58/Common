@@ -7,47 +7,77 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import retrofit2.Response
 
 /**
  *  Create by rain
  *  Date: 2020/6/29
  *  网络请求 协程扩展类
  */
-fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlock: (T?) -> Unit = {}, failBlock: (message: String?) -> Unit = {}) =
-		launchMessageUI(block, { _, data ->
-			Log.d("testLaunchTag", "launchUI-Line--successBlock:$data")
-			successBlock(data)
-		}, {
-			Log.d("testLaunchTag", "launchUI-Line--failBlock:$it")
-			failBlock(it)
-		})
+fun <T> CoroutineScope.launchCountUI(block: suspend () -> BaseResponse<T>, successBlock: (T?, Int) -> Unit, failBlock: (e: ResultThrowable) -> Unit) = launchDataUI(block, { _, t, c ->
+	successBlock(t, c)
+}, failBlock)
 
-fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?) -> Unit, failBlock: (message: String?) -> Unit = {}) = launch(Dispatchers.Main) {
-	Log.d("testLaunchTag", "launchMessageUI-Line-:$this")
+fun <T> CoroutineScope.launchUI(block: suspend () -> BaseResponse<T>, successBlock: (T?) -> Unit, failBlock: (e: ResultThrowable) -> Unit) = launchDataUI(block, { _, t, _ ->
+	successBlock(t)
+}, failBlock)
+
+fun <T> CoroutineScope.launchMessageUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?) -> Unit, failBlock: (e: ResultThrowable) -> Unit) = launchDataUI(block, { s, t, _ ->
+	successBlock(s, t)
+}, failBlock)
+
+fun <T> CoroutineScope.launchDataUI(block: suspend () -> BaseResponse<T>, successBlock: (String?, T?, Int) -> Unit, failBlock: (e: ResultThrowable) -> Unit) = launch(Dispatchers.Main) {
 	if (!NetWorkUtils.isNetConnected()) {
-		failBlock("请检查网络连接")
-		Log.d("testLaunchTag", "launchMessageUI-Line--failBlock:$this")
+		failBlock(ResultThrowable("请检查网络连接"))
 		return@launch
 	}
-	Log.d("testLaunchTag", "launchMessageUI-Line--launch:$this")
+	
 	kotlin.runCatching {
 		block()
 	}.onSuccess {
-		if (it.code != 1) failBlock(it.msg) else successBlock(it.msg, it.data)
+		Log.d("errTag", "onSuccess-it:$it")
+		it.resultData({ message, data, count ->
+			successBlock(message, data, count)
+		}, { failIt ->
+			failBlock(failIt)
+		})
 	}.onFailure {
-		if (it is HttpException) failBlock(it.message()) else failBlock(it.message)
+		Log.d("errTag", "onFailure-it:$it")
+		if (it is HttpException) failBlock(ResultThrowable(it.code(), it.message)) else failBlock(ResultThrowable(it.message))
 	}
 }
 
-fun <T> BaseResponse<T>?.resultData(): T? {
+class ResultThrowable(val code: Int = -1, resultMessage: String?) : Throwable(resultMessage) {
+	constructor(resultMessage: String?) : this(-1, resultMessage)
+}
+
+fun <T> BaseResponse<T>.resultData(block: (String?, T?, Int) -> Unit, failBlock: (e: ResultThrowable) -> Unit) {
+	if (result != 1) {
+		failBlock(ResultThrowable(result, errorMsg))
+		return
+	}
+	block(errorMsg, data, totalCount)
+}
+
+fun <T> Response<BaseResponse<T>>?.resultData(): T? {
 	if (this == null) return null
-	if (code != 1) {
+	val bodyChild = body()
+	Log.d("launchTag", "bodyChild:$bodyChild,isSuccessful:$isSuccessful")
+	if (!isSuccessful || bodyChild == null) {
+		return null
+	}
+	val data = bodyChild.data
+	Log.d("launchTag", "code:${bodyChild.result},data:$data")
+	if (bodyChild.result != 1 || data == null) {
 		return null
 	}
 	return data
 }
 
-fun <T> BaseResponse<T>?.resultSuccess(): Boolean {
-	if (this == null) return false
-	return code == 1
+fun <T> BaseResponse<T>?.resultData(): T? {
+	if (this == null) return null
+	if (result != 1 || data == null) {
+		return null
+	}
+	return data
 }

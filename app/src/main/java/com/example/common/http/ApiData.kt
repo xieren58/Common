@@ -26,4 +26,19 @@ interface ApiData {
                          @Query("deviceid")deviceid:Int,
                          @Query("categoryid")categoryid:Int,
                          @Query("Timestamp")Timestamp:String):DemoModel
+    
+    /**
+     * 拉取配置
+     */
+    @GET("Config/ColumnConfig")
+    suspend fun getColumnConfig(
+            @Query("projectId") projectId: String?,
+            @Query("patientId") patientId: String?,
+            @Query("id") moduleId: String?,
+            @Query("userId") userId: String?,
+            @Query("dataId") dataId: String?,
+            @Query("roleId") roleId: String?,
+            @Query("contentRange") contentRange: String,
+            @Query("contentCode") contentCode: String,
+    ): BaseResponse<Any>
 }

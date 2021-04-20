@@ -31,15 +31,15 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         viewBind.tvStart.singleClick {
 //            startAc<AddressFlutterActivity>()
 //            viewModel.cityModel.name = "修改"
-            startAc<DemoActivity>()
-//            viewModel.testBreak()
+//            showScanDialog()
+            viewModel.testBreak()
 //            startAc<StartNavigationActivity>("loginOut" to true)
 //            finish()
 //			showScanDialog()
         }
         viewBind.tvEnd.singleClick {
-//            viewModel.testLaunchNoLine()
-			startAc<Demo2DataBindActivity>()
+            viewModel.testLaunchNoLine()
+//			startAc<Demo2DataBindActivity>()
         }
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()

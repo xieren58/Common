@@ -3,78 +3,76 @@ package com.example.common.http
 import androidx.annotation.NonNull
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okio.Buffer
-import java.nio.charset.Charset
 
 class LoggingInterceptor : Interceptor {
-	private val utf8 = Charset.forName("UTF-8")
-	
 	override fun intercept(@NonNull chain: Interceptor.Chain): Response {
-		val newRequest = addParams(chain.request())
-		val builder = addHeadParams(newRequest)
-		val build = builder.build()
-		return chain.proceed(build)
+		return chain.proceed(addParams(chain.request()).build())
 	}
-	
-	
-	private fun getRequestBody(requestBody: RequestBody?): String? {
-		var body: String? = null
-		if (requestBody != null) {
-			val buffer = Buffer()
-			requestBody.writeTo(buffer)
-			
-			var charset: Charset? = utf8
-			val contentType = requestBody.contentType()
-			if (contentType != null) {
-				charset = contentType.charset(utf8)
-			}
-			if (charset != null)
-				body = buffer.readString(charset)
-		}
-		return body
-	}
-	
-	
-	//添加统一参数
-	private fun addParams(request: Request): Request {
-		val method = request.method
-		val oldUrl = request.url
-		val builder = oldUrl.newBuilder()
-		val body = request.body
-		return if (method == "POST" && body != null && body is FormBody) {
-			val bodyBuilder = FormBody.Builder()
-			for (i in 0 until body.size) {
-				bodyBuilder.add(body.name(i), body.value(i))
-			}
-			bodyBuilder.add("language", "1")
-			request.newBuilder().url(oldUrl).post(bodyBuilder.build()).build()
-		} else {
-			builder.addEncodedQueryParameter("language", "1")
-			request.newBuilder()
-					.url(builder.build())
-					.build()
-		}
-	}
-	
 	
 	/**
-	 * 替换链接
+	 * 添加统一参数
 	 */
-	private fun modifyBaseUrl(oldUrl: HttpUrl, url: String): HttpUrl {
-		val toHttpUrl = url.toHttpUrl()
-		return oldUrl.newBuilder()
-				.scheme(toHttpUrl.scheme)
-				.host(toHttpUrl.host)//更换主机名
-				.port(toHttpUrl.port)//更换端口
-				.build()
+	private fun addParams(request: Request): Request.Builder {
+		return getRequestData(request, request.url)
 	}
 	
+	private fun getRequestData(request: Request, newUrl: HttpUrl): Request.Builder {
+		val method = request.method
+		val body = request.body
+		val requestData = if (method == "POST") {
+			if (body != null && body is FormBody) {
+				val bodyBuilder = FormBody.Builder()
+				for (i in 0 until body.size) {
+					bodyBuilder.add(body.name(i), body.value(i))
+				}
+				bodyBuilder.add("source", "2")
+				bodyBuilder.add("appname", "highrisk")
+				bodyBuilder.add("version", "126.0")
+				bodyBuilder.add("device", "and")
+				bodyBuilder.add("token", "eee3ee56-a04d-11e6-8893-00155d00f055")
+				request.newBuilder().url(newUrl).post(bodyBuilder.build()).build()
+			} else if (body != null && body is MultipartBody) {
+				val oldPartList = body.parts
+				val builder = MultipartBody.Builder()
+				builder.setType(MultipartBody.FORM)
+				for (part in oldPartList) {
+					builder.addPart(part)
+				}
+				builder.addPart(MultipartBody.Part.createFormData("source", "2"))
+				builder.addPart(MultipartBody.Part.createFormData("appname", "highrisk"))
+				builder.addPart(MultipartBody.Part.createFormData("version", "126.0"))
+				builder.addPart(MultipartBody.Part.createFormData("device", "and"))
+				builder.addPart(MultipartBody.Part.createFormData("token", "eee3ee56-a04d-11e6-8893-00155d00f055"))
+				request.newBuilder().post(builder.build()).url(newUrl).build()
+			} else {
+				val builder = newUrl.newBuilder()
+				builder.addEncodedQueryParameter("source", "2")
+				builder.addEncodedQueryParameter("appname", "highrisk")
+				builder.addEncodedQueryParameter("version", "126.0")
+				builder.addEncodedQueryParameter("device", "and")
+				builder.addEncodedQueryParameter("token", "eee3ee56-a04d-11e6-8893-00155d00f055")
+				request.newBuilder().url(builder.build()).build()
+			}
+			
+		} else {
+			val builder = newUrl.newBuilder()
+			builder.addEncodedQueryParameter("source", "2")
+			builder.addEncodedQueryParameter("appname", "highrisk")
+			builder.addEncodedQueryParameter("version", "126.0")
+			builder.addEncodedQueryParameter("device", "and")
+			builder.addEncodedQueryParameter("token", "eee3ee56-a04d-11e6-8893-00155d00f055")
+			request.newBuilder().url(builder.build()).build()
+		}
+		
+		return addHeadParams(requestData)
+	}
+	
+	/**
+	 * 添加请求头
+	 */
 	private fun addHeadParams(request: Request): Request.Builder {
-		val builder = request.newBuilder().url(request.url)
-		builder.addHeader("Authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VySW5mbyI6InVzZXJfMzI2MyJ9.elKLxCOqHptpIv-PvaC-igMPUQ_7KsWDGuJE9XLqtSI")
-		builder.addHeader("version", "18")
-		builder.addHeader("device", "and")
-		return builder
+		return request.newBuilder().url(request.url).apply {
+			addHeader("projectId", "2f36f162-13ee-4edc-8eb4-ecb1c5a5beb7")
+		}
 	}
-	
 }
