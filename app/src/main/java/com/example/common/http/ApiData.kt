@@ -2,6 +2,7 @@ package com.example.common.http
 
 import com.example.common.model.BaseResponse
 import com.example.common.model.DemoModel
+import com.example.common.model.PatientMainModel
 import com.example.common.model.TeachBaseModel
 import retrofit2.http.*
 
@@ -41,4 +42,26 @@ interface ApiData {
             @Query("contentRange") contentRange: String,
             @Query("contentCode") contentCode: String,
     ): BaseResponse<Any>
+    
+    /**
+     * 获取患者列表
+     */
+    @GET("Patient/PatientList")
+    suspend fun loadPatientList(
+            @Query("pageIndex") pageIndex: Int,
+            @Query("pageSize") pageSize: Int,
+            @Query("searchText") searchText: String?,
+            @Query("transformStatus") transformStatus: String? = "",
+            @Query("groupId") groupId: String? = "",
+            @Query("hospital") hospital: String? = "",
+            @Query("patientDataStatus") patientDataStatus: String? = "",
+            @Query("subStatus") subStatus: String? = "",
+            @Query("ordertype") ordertype: String? = "",
+            @Query("tablename") tablename: String? = "",
+            @Query("isInGroup") isInGroup: String? = "",
+            @Query("cureStatus") cureStatus: String? = "",
+            @Query("treatStatus") treatStatus: String? = "",
+            @Query("userId") userId: String = "f7b6387f-42e3-4edd-b9e3-6753b75b500c",
+            @Query("projectId") projectId: String = "9bfc78a8-6d2e-47b9-94cb-c3f40dfd9dc7",
+    ): BaseResponse<MutableList<PatientMainModel>>
 }

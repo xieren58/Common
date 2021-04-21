@@ -12,12 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@{fgDemoId.indexLiveData}"
-            android:textColor="@color/black_33"
-            android:textSize="16sp" />
+      <com.scwang.smart.refresh.layout.SmartRefreshLayout
+          android:id="@+id/smart_refresh"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+          <androidx.recyclerview.widget.RecyclerView
+              android:id="@+id/rec_paging"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" />
+      </com.scwang.smart.refresh.layout.SmartRefreshLayout>
     </RelativeLayout>
 </layout>

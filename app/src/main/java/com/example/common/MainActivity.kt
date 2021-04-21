@@ -38,8 +38,8 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //			showScanDialog()
         }
         viewBind.tvEnd.singleClick {
-            viewModel.testLaunchNoLine()
-//			startAc<Demo2DataBindActivity>()
+//            viewModel.testLaunchNoLine()
+			startAc<Demo2DataBindActivity>()
         }
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()

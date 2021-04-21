@@ -1,8 +1,13 @@
 package com.example.common
 
 import android.app.Application
+import android.content.Context
 import com.rain.baselib.BaseLibContext
 import com.says.common.CommonContext
+import com.scwang.smart.refresh.footer.ClassicsFooter
+import com.scwang.smart.refresh.header.ClassicsHeader
+import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import com.scwang.smart.refresh.layout.api.RefreshLayout
 
 
 /**
@@ -20,6 +25,11 @@ class MyApp : Application() {
         BaseLibContext.context = this
         CommonContext.context = this
         initAsyncSdk()
+        initSmartRefreshLayout()
+    }
+    private fun initSmartRefreshLayout() {
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator { context: Context?, _: RefreshLayout? -> ClassicsHeader(context) }
+        SmartRefreshLayout.setDefaultRefreshFooterCreator { context: Context?, _: RefreshLayout? -> ClassicsFooter(context) }
     }
     private fun initAsyncSdk() {
 //        GlobalScope.launch {

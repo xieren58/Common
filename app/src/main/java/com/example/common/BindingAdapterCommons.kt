@@ -3,6 +3,7 @@ package com.example.common
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 
@@ -23,4 +24,13 @@ fun setImageShow(view: ImageView, url: String?) {
 fun setViewShow(view: View, isShowRec: Boolean) {
 	Log.d("recShowTag", "view:${view},isShowRec:$isShowRec")
 	view.visibility = if (isShowRec) View.VISIBLE else View.GONE
+}
+@BindingAdapter("textStr")
+fun setTextStr(view: TextView, str: String?) {
+	view.text = str ?: ""
+}
+
+@BindingAdapter("textNormalStr")
+fun setTextNormalStr(view: TextView, str: String?) {
+	view.text = if (str.isNullOrEmpty()) "- -" else str
 }

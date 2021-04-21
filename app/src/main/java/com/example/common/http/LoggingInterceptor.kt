@@ -26,7 +26,7 @@ class LoggingInterceptor : Interceptor {
 					bodyBuilder.add(body.name(i), body.value(i))
 				}
 				bodyBuilder.add("source", "2")
-				bodyBuilder.add("appname", "highrisk")
+				bodyBuilder.add("appname", "91trial")
 				bodyBuilder.add("version", "126.0")
 				bodyBuilder.add("device", "and")
 				bodyBuilder.add("token", "eee3ee56-a04d-11e6-8893-00155d00f055")
@@ -39,7 +39,7 @@ class LoggingInterceptor : Interceptor {
 					builder.addPart(part)
 				}
 				builder.addPart(MultipartBody.Part.createFormData("source", "2"))
-				builder.addPart(MultipartBody.Part.createFormData("appname", "highrisk"))
+				builder.addPart(MultipartBody.Part.createFormData("appname", "91trial"))
 				builder.addPart(MultipartBody.Part.createFormData("version", "126.0"))
 				builder.addPart(MultipartBody.Part.createFormData("device", "and"))
 				builder.addPart(MultipartBody.Part.createFormData("token", "eee3ee56-a04d-11e6-8893-00155d00f055"))
@@ -47,7 +47,7 @@ class LoggingInterceptor : Interceptor {
 			} else {
 				val builder = newUrl.newBuilder()
 				builder.addEncodedQueryParameter("source", "2")
-				builder.addEncodedQueryParameter("appname", "highrisk")
+				builder.addEncodedQueryParameter("appname", "91trial")
 				builder.addEncodedQueryParameter("version", "126.0")
 				builder.addEncodedQueryParameter("device", "and")
 				builder.addEncodedQueryParameter("token", "eee3ee56-a04d-11e6-8893-00155d00f055")
@@ -57,13 +57,12 @@ class LoggingInterceptor : Interceptor {
 		} else {
 			val builder = newUrl.newBuilder()
 			builder.addEncodedQueryParameter("source", "2")
-			builder.addEncodedQueryParameter("appname", "highrisk")
-			builder.addEncodedQueryParameter("version", "126.0")
+			builder.addEncodedQueryParameter("appname", "91trial")
+			builder.addEncodedQueryParameter("version", "128.0")
 			builder.addEncodedQueryParameter("device", "and")
 			builder.addEncodedQueryParameter("token", "eee3ee56-a04d-11e6-8893-00155d00f055")
 			request.newBuilder().url(builder.build()).build()
 		}
-		
 		return addHeadParams(requestData)
 	}
 	
