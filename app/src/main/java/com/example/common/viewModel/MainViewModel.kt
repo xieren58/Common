@@ -11,8 +11,8 @@ import com.example.common.http.scope.*
 import com.example.common.model.CityModel
 import com.example.common.model.TeachModel
 import com.rain.baselib.viewModel.BaseViewModel
-import com.says.common.dataStore.DataStoreCommon
 import kotlinx.coroutines.*
+import java.io.IOException
 
 /**
  *  Create by rain
@@ -41,27 +41,17 @@ class MainViewModel : BaseViewModel() {
 			}
 			return field
 		}
-	
-	fun testBreak() {
-		testScope?.launch {
-//			try {
-//				val data = RetrofitFac.iData.getColumnConfig("2f36f162-13ee-4edc-8eb4-ecb1c5a5beb7",
-//						"",
-//						"3f100134-2c74-4927-8581-6b69fee8dfb0",
-//						"f7b6387f-42e3-4edd-b9e3-6753b75b500c",
-//						"", "7440c795-18ce-475e-97c2-1ec3877335d3", "2", "1"
-//				).resultData()
-//				Log.d("testBreakTag", "data:${data == null}")
-//			} catch (e: Exception) {
-//				Log.d("testBreakTag", "e:$e")
-//				e.printStackTrace()
-//			}
-			try {
-				val testSuspend = testSuspend()
-				Log.d("testBreakTag", "testSuspend:$testSuspend")
-			} catch (e: Exception) {
-				Log.d("testBreakTag", "e:$e")
+	@Throws(IOException::class)
+	fun testBreak(str:String?) {
+		Log.d("checkBreakTag","check-start:$str")
+		
+		try {
+			check(!str.isNullOrEmpty()){
+				Log.d("checkBreakTag","check-内容为空")
+				"内容为空"
 			}
+		} catch (e: IOException) {
+		} finally {
 		}
 	}
 	
