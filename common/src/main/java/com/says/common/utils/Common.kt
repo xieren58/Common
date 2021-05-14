@@ -1,5 +1,6 @@
 package com.says.common.utils
 
+import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -8,10 +9,13 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.says.common.CommonContext
+import com.says.common.dataStore.PreferenceManager
 import com.says.common.minType.MIMECommon
 import com.says.common.minType.MimTypeConstants
 import java.io.File
@@ -208,5 +212,30 @@ object Common {
 	@JvmStatic
 	fun isVideoUrlStr(str: String) =
 			Pattern.matches(".*(.3gp|.mp4|.avi|.rm|.rmvb|.flv|.mpg|.mov|.mkv)$", str)
-	
+
+	@SuppressLint("HardwareIds")
+	@JvmStatic
+	fun getDeviceId(): String {
+		val androidId = Settings.Secure.getString(CommonContext.context.contentResolver, Settings.Secure.ANDROID_ID)
+		if (androidId.isNullOrEmpty()) {
+			return getUUID()
+		}
+		return androidId
+	}
+	/**
+	 * 得到全局唯一UUID
+	 */
+	@JvmStatic
+	private fun getUUID(): String {
+		val mShare = PreferenceManager.getString(CommonContext.context,"sysCacheMap", "")
+		var uuid = ""
+		if (!mShare.isNullOrEmpty()) {
+			uuid = mShare
+		}
+		if (uuid.isEmpty()) {
+			uuid = UUID.randomUUID().toString()
+			PreferenceManager.setString(CommonContext.context,"sysCacheMap", uuid)
+		}
+		return uuid
+	}
 }
