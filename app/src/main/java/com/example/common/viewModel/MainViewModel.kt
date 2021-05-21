@@ -12,6 +12,7 @@ import com.example.common.model.CityModel
 import com.example.common.model.TeachModel
 import com.rain.baselib.viewModel.BaseViewModel
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
 import java.io.IOException
 
 /**
@@ -41,16 +42,25 @@ class MainViewModel : BaseViewModel() {
 			}
 			return field
 		}
-	fun testBreak(str:String?) {
-		Log.d("checkBreakTag","check-start:$str")
-		
-		try {
-			check(!str.isNullOrEmpty()){
-				Log.d("checkBreakTag","check-内容为空")
-				"内容为空"
+	
+	fun testBreak(str: String?) {
+		Log.d("checkBreakTag", "check-start:$str")
+		viewModelScope.launch {
+			launchFlow {
+				Log.d("flowCheckTag", "flow-currentThread-launchFlow:${Thread.currentThread().name}")
+				RetrofitFac.iData.loadPatientList(1, 10, "")
+			}.transformIOFlow {
+				Log.d("flowCheckTag", "flow-currentThread-transformIOFlow:${Thread.currentThread().name}")
+				Log.d("flowCheckTag", "flow-transformIOFlow:${it.toString()}")
+				it.isNullOrEmpty()
+			}.resultFail {
+				Log.d("flowCheckTag", "flow-currentThread-resultFail:${Thread.currentThread().name}")
+				Log.d("flowCheckTag", "flow-resultFail:${it.message}")
+			}.resultSuccess {
+				Log.d("flowCheckTag", "flow-currentThread-resultSuccess:${Thread.currentThread().name}")
+				Log.d("flowCheckTag", "flow-resultSuccess:${it}")
 			}
-		} catch (e: Exception) {
-		} finally {
+			
 		}
 	}
 	
