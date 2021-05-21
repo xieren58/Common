@@ -37,7 +37,7 @@ android {
 dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation project(path: ':common')
+    api project(path: ':common')
 
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 

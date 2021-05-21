@@ -41,7 +41,6 @@ class MainViewModel : BaseViewModel() {
 			}
 			return field
 		}
-	@Throws(IOException::class)
 	fun testBreak(str:String?) {
 		Log.d("checkBreakTag","check-start:$str")
 		
@@ -50,7 +49,7 @@ class MainViewModel : BaseViewModel() {
 				Log.d("checkBreakTag","check-内容为空")
 				"内容为空"
 			}
-		} catch (e: IOException) {
+		} catch (e: Exception) {
 		} finally {
 		}
 	}

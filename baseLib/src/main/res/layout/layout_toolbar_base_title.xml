@@ -7,7 +7,7 @@
         android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/base_title_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="#ffffff"
@@ -17,7 +17,7 @@
             app:titleTextAppearance="@style/toolBarTitleTheme">
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/base_title_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -33,7 +33,7 @@
                 tools:ignore="UseCompoundDrawables">
 
                 <TextView
-                    android:id="@+id/tv_right"
+                    android:id="@+id/base_title_tv_right"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
@@ -44,7 +44,7 @@
                     android:textSize="15sp" />
 
                 <ImageView
-                    android:id="@+id/ig_right"
+                    android:id="@+id/base_title_ig_right"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="end|center_vertical"
@@ -55,10 +55,10 @@
         </androidx.appcompat.widget.Toolbar>
 
         <View
-            android:id="@+id/view_line"
+            android:id="@+id/base_title_view_line"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/line_color"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/base_title_toolbar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
