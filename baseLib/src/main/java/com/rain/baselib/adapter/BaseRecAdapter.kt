@@ -117,12 +117,12 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseRecHolder<T, *> {
 		val holder = createHolder(parent, viewType)
 		holder.itemView.singleClick {
-			val position = holder.adapterPosition
+			val position = holder.bindingAdapterPosition
 			if (position == RecyclerView.NO_POSITION) return@singleClick
 			itemClickListener?.invoke(position)
 		}
 		holder.itemView.setOnLongClickListener {
-			val position = holder.adapterPosition
+			val position = holder.bindingAdapterPosition
 			if (position == RecyclerView.NO_POSITION) return@setOnLongClickListener true
 			onItemLongClickListener?.invoke(position)
 			return@setOnLongClickListener true
