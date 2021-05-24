@@ -1,9 +1,6 @@
 package com.example.common.http
 
-import com.example.common.model.BaseResponse
-import com.example.common.model.DemoModel
-import com.example.common.model.PatientMainModel
-import com.example.common.model.TeachBaseModel
+import com.example.common.model.*
 import retrofit2.http.*
 
 /**
@@ -41,7 +38,7 @@ interface ApiData {
             @Query("roleId") roleId: String?,
             @Query("contentRange") contentRange: String,
             @Query("contentCode") contentCode: String,
-    ): BaseResponse<Any>
+    ): BaseResponse<ColumnResultModel>
     
     /**
      * 获取患者列表
