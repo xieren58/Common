@@ -108,6 +108,25 @@ fun <T> Flow<T>.resultMessageFail(failBlock: (message: String?) -> Unit) = catch
 suspend fun <T> Flow<T>.resultSuccess(successBlock: (T?) -> Unit) = collectLatest {
     successBlock(it)
 }
+fun <T> Flow<T?>.resultScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?, failBlock: ((e: ResultThrowable) -> Unit)?) = scope.launch {
+    this@resultScope.catch {cause->
+        when (cause) {
+            is HttpException -> failBlock?.invoke(ResultThrowable(cause.code(), cause.message))
+            is ResultThrowable -> {
+                when (cause.code) {
+                    11 -> failBlock?.invoke(ResultThrowable(cause.code, ""))
+                    else -> failBlock?.invoke(cause)
+                }
+            }
+            else -> failBlock?.invoke(ResultThrowable(cause.message))
+        }
+    }.collectLatest{
+        successBlock?.invoke(it)
+    }
+}
+fun <T> Flow<T?>.resultScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?) = scope.launch {
+    this@resultScope.collectLatest{ successBlock?.invoke(it) }
+}
 
 fun <T> CoroutineScope.launchCountUI(
     block: suspend () -> BaseResponse<T>,

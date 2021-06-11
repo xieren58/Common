@@ -1,13 +1,8 @@
 package com.example.common
 
-import android.app.Activity
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavOptions
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import java.math.BigDecimal
 import java.text.NumberFormat
 

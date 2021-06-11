@@ -2,10 +2,6 @@ package com.example.common.viewModel
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.cachedIn
-import com.example.common.http.BasePagingSource
 import com.example.common.http.RetrofitFac
 import com.example.common.http.scope.*
 import com.example.common.model.CityModel
@@ -13,7 +9,6 @@ import com.example.common.model.TeachModel
 import com.rain.baselib.viewModel.BaseViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import java.io.IOException
 
 /**
  *  Create by rain
@@ -24,16 +19,16 @@ class MainViewModel : BaseViewModel() {
 		name = "哈哈"
 	}
 	
-	fun pagerTest() = Pager(PagingConfig(pageSize = 10)) {
-		return@Pager object : BasePagingSource<TeachModel>() {
-			override fun loadIndex(): Int? = null
-			override suspend fun loadDataRetrofit(index: Int?): MutableList<TeachModel>? {
-				val data = RetrofitFac.iData.getTeachHomeList(index).resultData()
-				Log.d("testLaunchTag", "startTime-data =-$data")
-				return data?.sufferingList
-			}
-		}
-	}.flow.cachedIn(viewModelScope)
+//	fun pagerTest() = Pager(PagingConfig(pageSize = 10)) {
+//		return@Pager object : BasePagingSource<TeachModel>() {
+//			override fun loadIndex(): Int? = null
+//			override suspend fun loadDataRetrofit(index: Int?): MutableList<TeachModel>? {
+//				val data = RetrofitFac.iData.getTeachHomeList(index).resultData()
+//				Log.d("testLaunchTag", "startTime-data =-$data")
+//				return data?.sufferingList
+//			}
+//		}
+//	}.flow.cachedIn(viewModelScope)
 	
 	private var testScope: CoroutineScope? = null
 		get() {

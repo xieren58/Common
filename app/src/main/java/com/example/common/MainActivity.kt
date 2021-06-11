@@ -1,5 +1,6 @@
 package com.example.common
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -41,8 +42,9 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //            startAc<AddressFlutterActivity>()
 //            viewModel.cityModel.name = "修改"
 //            showScanDialog()
-			viewModel.testBreak(null)
+//			viewModel.testBreak(null)
 //            startAc<StartNavigationActivity>("loginOut" to true)
+			runClazzCatch()
 //            finish()
 //			showScanDialog()
 		}
@@ -142,5 +144,20 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 				stringBuilder.length,
 				Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
 		)
+	}
+	
+	private fun runClazzCatch(){
+		try {
+			val forName = Class.forName("com.example.common.DemoListViewModel")
+			val field = forName.getField("Companion").get(null) as DemoListViewModel.Companion
+			field.test()
+//			val field = forName.getField("INSTANCE").get(null) as NumberUtils
+//			val invoke =	field.getKeepNumberStr(this, "18.022", 2)
+//			Log.d("catchMethodTag","invoke:$invoke")
+//			forName.getDeclaredMethod()
+//			forName.newInstance()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
 	}
 }

@@ -1,17 +1,12 @@
 package com.example.common.fragment
 
-import android.util.Log
 import androidx.fragment.app.viewModels
-import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.common.BR
 import com.example.common.R
-import com.example.common.adapter.PatientLoadStateAdapter
 import com.example.common.databinding.FgDemoBinding
 import com.example.common.viewModel.FgDemoViewModel
 import com.rain.baselib.fragment.BaseDataBindFragment
-import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.scwang.smart.refresh.layout.listener.OnRefreshLoadMoreListener
 
 /**
  *  Create by rain
@@ -43,11 +38,11 @@ class DemoDataBindFragment : BaseDataBindFragment<FgDemoBinding>() {
 	
 	private fun initRec() {
 		viewBind.recPaging.layoutManager = LinearLayoutManager(context)
-		viewModel.adapter.withLoadStateHeaderAndFooter(PatientLoadStateAdapter(viewModel.adapter),PatientLoadStateAdapter(viewModel.adapter))
-		viewBind.recPaging.adapter = viewModel.adapter.withLoadStateFooter(PatientLoadStateAdapter(viewModel.adapter))
-		viewBind.smartRefresh.setEnableLoadMore(false)
-		viewBind.smartRefresh.setOnRefreshListener {
-			viewModel.adapter.refresh()
-		}
+//		viewModel.adapter.withLoadStateHeaderAndFooter(PatientLoadStateAdapter(viewModel.adapter),PatientLoadStateAdapter(viewModel.adapter))
+//		viewBind.recPaging.adapter = viewModel.adapter.withLoadStateFooter(PatientLoadStateAdapter(viewModel.adapter))
+//		viewBind.smartRefresh.setEnableLoadMore(false)
+//		viewBind.smartRefresh.setOnRefreshListener {
+//			viewModel.adapter.refresh()
+//		}
 	}
 }

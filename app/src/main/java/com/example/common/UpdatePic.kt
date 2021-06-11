@@ -1,7 +1,5 @@
 package com.example.common
 
-import androidx.databinding.BaseObservable
-import androidx.databinding.Bindable
 
 /**
  *  Create by rain
