@@ -67,5 +67,12 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
+        <ImageView
+            android:id="@+id/ig_test"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

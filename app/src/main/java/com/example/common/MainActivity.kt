@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.os.Environment
 import android.text.SpannableStringBuilder
 import android.text.Spanned
 import android.util.Log
@@ -14,19 +15,25 @@ import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
+import com.example.common.activity.ExoVideoActivity
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.example.common.weight.EditCodeDialog
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
+import com.rain.baselib.common.startAc
 import com.says.common.ui.ImageUtil
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.io.File
 import java.lang.Exception
+import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+@AndroidEntryPoint
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override val layoutResId = R.layout.activity_main
 	override val viewModel by viewModels<MainViewModel>()
@@ -39,14 +46,16 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override fun initEvent() {
 		super.initEvent()
 		viewBind.tvStart.singleClick {
+			 startAc<ExoVideoActivity>("dataUri" to "asset:///1_x264.mp4")
 //            startAc<AddressFlutterActivity>()
 //            viewModel.cityModel.name = "修改"
 //            showScanDialog()
 //			viewModel.testBreak(null)
 //            startAc<StartNavigationActivity>("loginOut" to true)
-			runClazzCatch()
+//			runClazzCatch()
 //            finish()
 //			showScanDialog()
+//			loadFilePath()
 		}
 		viewBind.tvEnd.singleClick {
 //            viewModel.testLaunchNoLine()
@@ -73,13 +82,13 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 		)
 	}
 	
-	private suspend fun loadBitmap(): Bitmap {
+	private suspend fun loadBitmap(path:String = "https://91trial.oss-cn-shanghai.aliyuncs.com/91trial/file_3cd75d4a-859f-46e0-8e3c-2f9b763041dd.jpeg"): Bitmap? {
 		return suspendCancellableCoroutine { continuation ->
 			continuation.invokeOnCancellation {
 				Log.d("bitmapSuspendTag","it:$it")
 			}
 			Glide.with(this).asBitmap()
-					.load("https://91trial.oss-cn-shanghai.aliyuncs.com/91trial/file_3cd75d4a-859f-46e0-8e3c-2f9b763041dd.jpeg")
+					.load(path)
 					.into(object : CustomTarget<Bitmap>() {
 						override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
 							Log.d("bitmapSuspendTag","resource:$resource")
@@ -97,7 +106,8 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 						override fun onLoadFailed(errorDrawable: Drawable?) {
 							super.onLoadFailed(errorDrawable)
 							Log.d("bitmapSuspendTag","errorDrawable:$errorDrawable")
-							continuation.resumeWithException(Exception("获取图片失败"))
+							continuation.resume(null)
+//							continuation.resumeWithException(Exception("获取图片失败"))
 						}
 					})
 		}
@@ -105,7 +115,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	
 	private fun initMosaic() {
 		lifecycleScope.launch {
-			val loadBitmap = loadBitmap()
+			val loadBitmap = loadBitmap()?:return@launch
 			Log.d("bitmapSuspendTag","loadBitmap:$loadBitmap")
 			ImageUtil.saveBitmap(this@MainActivity, loadBitmap)
 		}
@@ -159,5 +169,21 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 		} catch (e: Exception) {
 			e.printStackTrace()
 		}
+	}
+	
+	private fun loadFilePath(){
+		lifecycleScope.launch {
+			val path =  "${Environment.getExternalStorageDirectory()}/Android/data/${packageName}/files/Pictures/"
+			externalCacheDir
+			val externalFilesDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+			Log.d("loadFileTag","path:$path")
+			Log.d("loadFileTag","externalFilesDir:${externalFilesDir?.path}")
+			val file = File(path,"508426e2-d800-45eb-861f-62e7b1aa84ca.jpg")
+			Log.d("loadFileTag","file:${file.exists()}")
+			val loadBitmap = loadBitmap(file.path)
+			Log.d("loadFileTag","loadBitmap:$loadBitmap")
+			viewBind.igTest.setImageBitmap(loadBitmap)
+		}
+		
 	}
 }

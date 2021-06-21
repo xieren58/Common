@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Common">
+        <activity android:name=".activity.ExoVideoActivity"></activity>
         <activity
             android:name=".activity.SignatureActivity"
             android:screenOrientation="portrait" />

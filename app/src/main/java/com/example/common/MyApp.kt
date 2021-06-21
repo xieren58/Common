@@ -8,12 +8,15 @@ import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
+import dagger.hilt.android.HiltAndroidApp
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 
 /**
  *  Create by rain
  *  Date: 2020/1/16
  */
+@HiltAndroidApp
 class MyApp : Application() {
     companion object {
         lateinit var context: Application
