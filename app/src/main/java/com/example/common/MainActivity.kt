@@ -23,6 +23,7 @@ import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
 import com.says.common.ui.ImageUtil
+import com.says.common.utils.PermissionUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -46,21 +47,16 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override fun initEvent() {
 		super.initEvent()
 		viewBind.tvStart.singleClick {
-			 startAc<ExoVideoActivity>("dataUri" to "asset:///1_x264.mp4")
-//            startAc<AddressFlutterActivity>()
-//            viewModel.cityModel.name = "修改"
-//            showScanDialog()
-//			viewModel.testBreak(null)
-//            startAc<StartNavigationActivity>("loginOut" to true)
-//			runClazzCatch()
-//            finish()
-//			showScanDialog()
-//			loadFilePath()
+			val checkIgnoreBatteryOptimizations =
+				PermissionUtils.checkIgnoreBatteryOptimizations(this)
+			Log.d("batteryTag","checkIgnoreBatteryOptimizations:$checkIgnoreBatteryOptimizations")
+			if (!checkIgnoreBatteryOptimizations){
+				PermissionUtils.requestIgnoreBatteryOptimizations(this)
+			}
 		}
 		viewBind.tvEnd.singleClick {
-//            viewModel.testLaunchNoLine()
-//			startAc<Demo2DataBindActivity>()
-			initMosaic()
+		val isOpen =	PermissionUtils.openBatterySettings(this)
+			Log.d("batteryTag","isOpen:$isOpen")
 		}
 		viewBind.content.singleClick {
 			viewBind.etNumber.clearFocus()
