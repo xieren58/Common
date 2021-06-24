@@ -21,13 +21,26 @@ android {
             abiFilters 'armeabi', "armeabi-v7a", "arm64-v8a", "x86_64", "x86"
         }
     }
+    signingConfigs {
+        common {
+            keyAlias "common_test"
+            keyPassword "123456"
+            storeFile file("common_test.jks")
+            storePassword "123456"
+        }
+    }
+
     buildFeatures {
         dataBinding = true
     }
     buildTypes {
+        debug{
+            signingConfig signingConfigs.common
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.common
         }
     }
     compileOptions {
@@ -36,6 +49,11 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${variant.buildType.name}_v${variant.versionCode}.apk"
+        }
     }
 }
 

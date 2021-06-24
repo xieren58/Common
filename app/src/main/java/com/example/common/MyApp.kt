@@ -8,15 +8,12 @@ import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.ClassicsHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
 import com.scwang.smart.refresh.layout.api.RefreshLayout
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.android.qualifiers.ApplicationContext
 
 
 /**
  *  Create by rain
  *  Date: 2020/1/16
  */
-@HiltAndroidApp
 class MyApp : Application() {
     companion object {
         lateinit var context: Application
@@ -28,18 +25,15 @@ class MyApp : Application() {
         BaseLibContext.context = this
         CommonContext.context = this
         initAsyncSdk()
-        initSmartRefreshLayout()
+     
     }
     private fun initSmartRefreshLayout() {
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context: Context?, _: RefreshLayout? -> ClassicsHeader(context) }
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context: Context?, _: RefreshLayout? -> ClassicsFooter(context) }
     }
     private fun initAsyncSdk() {
-//        GlobalScope.launch {
-//            CommonApi.initStsTokenUrl("")
-//                .initEndPoint("")
-//                .initBucketName("")
-//                .initObjectName("")
-//        }
+        Thread{
+            initSmartRefreshLayout()
+        }.start()
     }
 }
