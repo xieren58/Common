@@ -136,11 +136,13 @@ abstract class BaseRecActivity<T : ViewDataBinding> : BaseDataBindActivity<T>(),
 		smartRefresh?.setLoadRefreshMoreDataListener(refreshBlock = {
 			viewModel.loadStartData(true, isShowLoad = false)
 		}, loadMoreBlock = {
-			viewModel.loadStartData(isRefresh = false, isShowLoad = false)
+			loadMore()
 		})
 		setMoreRefreshEnable()
 	}
-
+	open fun loadMore(){
+		viewModel.loadStartData(isRefresh = false, isShowLoad = false)
+	}
 	/**
 	 * 初始化标题栏
 	 */

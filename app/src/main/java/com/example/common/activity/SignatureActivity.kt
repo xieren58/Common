@@ -1,7 +1,9 @@
 package com.example.common.activity
 
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.common.R
 import com.example.common.databinding.ActivitySignatureBinding
 import com.rain.baselib.activity.BaseDataBindActivity
@@ -13,6 +15,9 @@ import kotlinx.coroutines.launch
 class SignatureActivity : BaseDataBindActivity<ActivitySignatureBinding>() {
     override val layoutResId = R.layout.activity_signature
     override val viewModel: BaseViewModel? = null
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
     override fun initEvent() {
         super.initEvent()
         viewBind.btnClear.singleClick {

@@ -1,11 +1,14 @@
 package com.example.common.model
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 /**
  *  Create by rain
  *  Date: 2021/4/8
  */
+@Parcelize
 data class PatientMainModel(
 		@SerializedName("Id")
 		var id: String?,
@@ -23,4 +26,4 @@ data class PatientMainModel(
 		var patientNumber: String? = null,// ": "Hhh",
 		@SerializedName("DoubtImg")
 		var doubtImg: String? = null,// ": "Hhh",
-){}
+) : Parcelable

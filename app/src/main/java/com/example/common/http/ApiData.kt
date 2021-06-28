@@ -47,7 +47,7 @@ interface ApiData {
     suspend fun loadPatientList(
             @Query("pageIndex") pageIndex: Int,
             @Query("pageSize") pageSize: Int,
-            @Query("searchText") searchText: String?,
+            @Query("searchText") searchText: String? = "",
             @Query("transformStatus") transformStatus: String? = "",
             @Query("groupId") groupId: String? = "",
             @Query("hospital") hospital: String? = "",

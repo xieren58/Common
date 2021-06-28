@@ -1,9 +1,16 @@
-apply plugin: 'com.android.library'
+if (!isNeedLibraryModule){
+    apply plugin:  "com.android.application"
+}else {
+    apply plugin:  "com.android.library"
+}
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
+        if (!isNeedLibraryModule) {
+            applicationId "com.rain.library"
+        }
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

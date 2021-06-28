@@ -126,9 +126,12 @@ abstract class BaseRecFragment<T : ViewDataBinding> : BaseDataBindFragment<T>(),
         smartRefresh?.setLoadRefreshMoreDataListener({
             viewModel.loadStartData(true, isShowLoad = false)
         }, {
-            viewModel.loadStartData(isRefresh = false, isShowLoad = false)
+            loadMore()
         })
         setMoreRefreshEnable()
+    }
+    open fun loadMore(){
+        viewModel.loadStartData(isRefresh = false, isShowLoad = false)
     }
 
 

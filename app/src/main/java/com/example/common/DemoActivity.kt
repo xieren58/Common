@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.common.adapter.PhotoWeightAdapter
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration
 import com.rain.baselib.activity.BaseRecActivity
@@ -20,6 +21,7 @@ import com.says.common.utils.JsonManagerHelper
  *  Create by rain
  *  Date: 2020/11/2
  */
+@Route(path = "/common/demo")
 class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
     override val viewModel by viewModels<DemoListViewModel>()
 

@@ -24,6 +24,7 @@ abstract class BaseRecViewModel<T> : BaseViewModel() {
 	protected var pageIndex = 1
 	private var isMoreLoadEnable = true
 
+	
 	fun setMoreLoadEnable(isMoreLoadEnable: Boolean) {
 		this.isMoreLoadEnable = isMoreLoadEnable
 	}

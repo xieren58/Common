@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
+import com.alibaba.android.arouter.launcher.ARouter
 import com.rain.baselib.R
 import com.rain.baselib.common.conversionViewBind
 import com.rain.baselib.viewModel.BaseViewModel
@@ -36,6 +37,7 @@ abstract class BaseViewBindActivity<VB : ViewBinding> : AppCompatActivity() {
 		super.onCreate(savedInstanceState)
 		stateBarTextColor()
 		viewBind = initContentView()
+		ARouter.getInstance().inject(this)
 		initViewDataBinding()
 		initIntent(savedInstanceState)
 		init()

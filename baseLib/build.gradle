@@ -1,20 +1,30 @@
-plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
+if (!isNeedBaseLibModule){
+    apply plugin:  "com.android.application"
+}else {
+    apply plugin:  "com.android.library"
 }
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
 
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
+        if (!isNeedLibraryModule) {
+            applicationId "com.rain.baseLib"
+        }
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-
+        kapt {
+            arguments {
+                arg("AROUTER_MODULE_NAME", project.getName())
+            }
+        }
         consumerProguardFiles "consumer-rules.pro"
+
     }
 
     buildFeatures {
@@ -49,4 +59,6 @@ dependencies {
     api "android.arch.navigation:navigation-fragment-ktx:1.0.0"
     api "android.arch.navigation:navigation-ui-ktx:1.0.0"
 
+    implementation 'com.alibaba:arouter-api:1.5.2'
+    kapt 'com.alibaba:arouter-compiler:1.5.2'
 }

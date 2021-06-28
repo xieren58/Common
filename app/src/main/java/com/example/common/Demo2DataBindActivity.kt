@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.common.databinding.ActivityDemoBinding
 import com.example.common.viewModel.Demo2ViewModel
 import com.google.android.material.tabs.TabLayout
@@ -15,6 +16,7 @@ import com.rain.baselib.adapter.BasePagerFgAdapter
  *  Create by rain
  *  Date: 2020/11/2
  */
+@Route(path ="/common/list")
 class Demo2DataBindActivity : BaseDataBindActivity<ActivityDemoBinding>() {
 	override val viewModel by viewModels<Demo2ViewModel>()
 	override val variableId = BR.demo2Id

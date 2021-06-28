@@ -12,51 +12,37 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.alibaba.android.arouter.launcher.ARouter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.example.common.activity.ExoVideoActivity
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.example.common.weight.EditCodeDialog
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
-import com.rain.baselib.common.startAc
 import com.says.common.ui.ImageUtil
-import com.says.common.utils.PermissionUtils
-import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.io.File
 import java.lang.Exception
-import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
-@AndroidEntryPoint
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override val layoutResId = R.layout.activity_main
 	override val viewModel by viewModels<MainViewModel>()
 	override val variableId = BR.mainId
 	private var accuracy = 3
-	private val cameraLauncher = registerForActivityResult(ActivityResultContracts.OpenDocument()) {
-	
-	}
 	
 	override fun initEvent() {
 		super.initEvent()
 		viewBind.tvStart.singleClick {
-			val checkIgnoreBatteryOptimizations =
-				PermissionUtils.checkIgnoreBatteryOptimizations(this)
-			Log.d("batteryTag","checkIgnoreBatteryOptimizations:$checkIgnoreBatteryOptimizations")
-			if (!checkIgnoreBatteryOptimizations){
-				PermissionUtils.requestIgnoreBatteryOptimizations(this)
-			}
+			ARouter.getInstance().build("/common/exo").
+					withString("uri","assets/1_x264.mp4")
+					.navigation(this)
 		}
 		viewBind.tvEnd.singleClick {
-		val isOpen =	PermissionUtils.openBatterySettings(this)
-			Log.d("batteryTag","isOpen:$isOpen")
+			ARouter.getInstance().build("/common/list").navigation(this)
 		}
 		viewBind.content.singleClick {
 			viewBind.etNumber.clearFocus()
