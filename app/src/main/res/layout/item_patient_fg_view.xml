@@ -28,7 +28,6 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
@@ -37,7 +36,6 @@
                 android:paddingStart="15dp"
                 android:paddingEnd="0dp"
                 android:singleLine="true"
-                android:transitionName="name"
                 android:textColor="#ff333536"
                 android:textSize="15sp"
                 app:textNormalStr="@{patientMainModelId.patientName}" />
@@ -54,10 +52,12 @@
                 app:textNormalStr="@{patientMainModelId.sex}" />
 
             <TextView
+                android:id="@+id/tv_name"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.5"
                 android:ellipsize="middle"
+                android:transitionName="name"
                 android:gravity="start|center_vertical"
                 android:singleLine="true"
                 android:textColor="#ff333536"
