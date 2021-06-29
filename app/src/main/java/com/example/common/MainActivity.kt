@@ -42,7 +42,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 					.navigation(this)
 		}
 		viewBind.tvEnd.singleClick {
-			ARouter.getInstance().build("/common/list").navigation(this)
+			ARouter.getInstance().build("/main/testBar").navigation(this)
 		}
 		viewBind.content.singleClick {
 			viewBind.etNumber.clearFocus()

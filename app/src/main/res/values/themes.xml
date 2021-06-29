@@ -57,4 +57,12 @@
 <!--        <item name="android:windowFullscreen">true</item>-->
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
+    <style name="Active" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="Inactive" parent="@style/TextAppearance.AppCompat.Caption">
+        <item name="android:textSize">10sp</item>
+    </style>
 </resources>

@@ -9,6 +9,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import androidx.core.content.FileProvider
@@ -19,6 +20,7 @@ import com.says.common.dataStore.PreferenceManager
 import com.says.common.minType.MIMECommon
 import com.says.common.minType.MimTypeConstants
 import java.io.File
+import java.math.BigDecimal
 import java.text.DecimalFormat
 import java.util.*
 import java.util.regex.Pattern
@@ -238,4 +240,78 @@ object Common {
 		}
 		return uuid
 	}
+	
+	/**
+	 * 获取缓存值
+	 */
+	fun getTotalCacheSize(): String {
+		var cacheSize = getFolderSize(CommonContext.context.cacheDir)
+		if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
+			cacheSize += getFolderSize(CommonContext.context.externalCacheDir)
+		}
+		
+		cacheSize += getFileSize()
+		return getFormatSize(cacheSize.toDouble())
+	}
+	
+	private fun getFileSize(): Long {
+		return getFileAudio()?.fold(0L) { acc, file ->
+			acc + file.length()
+		} ?: 0L
+	}
+	private fun getFileAudio(): MutableList<File>? {
+		try {
+			val externalFilesDir = CommonContext.context.getExternalFilesDir(Context.AUDIO_SERVICE)
+				?: return null
+			return externalFilesDir.listFiles()?.filter {
+				it != null && it.exists() && it.isFile
+			}?.toMutableList()
+		} catch (e: Exception) {
+			e.printStackTrace()
+		}
+		return null
+	}
+	/**
+	 * 格式化单位
+	 */
+	private fun getFormatSize(size: Double): String {
+		val kiloByte = size / 1024
+		val megaByte = kiloByte / 1024
+		val gigaByte = megaByte / 1024
+		if (gigaByte < 1) {
+			val result2 = BigDecimal(megaByte.toString())
+			return result2.setScale(2, BigDecimal.ROUND_HALF_UP)
+				.toPlainString() + "MB"
+		}
+		val teraBytes = gigaByte / 1024
+		if (teraBytes < 1) {
+			val result3 = BigDecimal(gigaByte.toString())
+			return result3.setScale(2, BigDecimal.ROUND_HALF_UP)
+				.toPlainString() + "GB"
+		}
+		val result4 = BigDecimal.valueOf(teraBytes)
+		return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB"
+	}
+	
+	/**
+	 * 获取文件
+	 */
+	private fun getFolderSize(file: File?): Long {
+		var size: Long = 0
+		if (file != null) {
+			val fileList = file.listFiles()
+			if (fileList != null && fileList.isNotEmpty()) {
+				for (i in fileList.indices) {
+					// 如果下面还有文件
+					size += if (fileList[i].isDirectory) {
+						getFolderSize(fileList[i])
+					} else {
+						fileList[i].length()
+					}
+				}
+			}
+		}
+		return size
+	}
+	
 }

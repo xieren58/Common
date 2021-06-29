@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Common"
         tools:ignore="LockedOrientationActivity">
-        <activity android:name=".activity.RecyclerListActivity"/>
-        <activity android:name=".activity.RecyclerDemoActivity"/>
+        <activity android:name=".activity.MainBarActivity"></activity>
+        <activity android:name=".activity.RecyclerListActivity" />
+        <activity android:name=".activity.RecyclerDemoActivity" />
         <activity
             android:name=".activity.ExoVideoActivity"
             android:screenOrientation="portrait" />

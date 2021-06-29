@@ -27,3 +27,23 @@ data class PatientMainModel(
 		@SerializedName("DoubtImg")
 		var doubtImg: String? = null,// ": "Hhh",
 ) : Parcelable
+
+
+/**
+ * 拜访记录列表数据
+ */
+data class VisitMainListResultModel(
+	var visitRecords: MutableList<PatientMainModel>? = null,
+	var dataCount: Int = 0,
+	var minId: Long = 0,
+)
+
+data class VisitMainModel(
+	var name: String?, //姓名
+	var id: Long, //表示id
+	var visitRecordState: Int = 0,//进行中状态
+	var number: String? = null,
+	var sex: Int = 0,
+	var sys_CreateTime: String? = null,
+	var age: String? = null,
+)
