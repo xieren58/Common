@@ -63,40 +63,15 @@ class MainBarActivity : BaseDataBindActivity<ActivityMainBarBinding>(), BottomNa
 	private fun initBehavior() {
 		mBehavior = BottomSheetBehavior.from(viewBind.constraintScroll)
 		mBehavior?.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
-			override fun onStateChanged(bottomSheet: View, newState: Int) {
-				when (newState) {
-					//完全展开状态
-					BottomSheetBehavior.STATE_EXPANDED -> {
-						Log.d("bottomSheetTag", "STATE_EXPANDED")
-					}
-					//拖动状态
-					BottomSheetBehavior.STATE_DRAGGING -> {
-						Log.d("bottomSheetTag", "STATE_DRAGGING")
-					}
-					//折叠状态
-					BottomSheetBehavior.STATE_COLLAPSED -> {
-						Log.d("bottomSheetTag", "STATE_COLLAPSED")
-					}
-					BottomSheetBehavior.STATE_HALF_EXPANDED -> {
-						Log.d("bottomSheetTag", "STATE_HALF_EXPANDED")
-					}
-					BottomSheetBehavior.STATE_HIDDEN -> {
-						Log.d("bottomSheetTag", "STATE_HIDDEN")
-					}
-					BottomSheetBehavior.STATE_SETTLING -> {
-						Log.d("bottomSheetTag", "STATE_SETTLING")
-					}
-				}
-			}
+			override fun onStateChanged(bottomSheet: View, newState: Int) = Unit
 			
 			override fun onSlide(bottomSheet: View, slideOffset: Float) {
 				Log.d("bottomSheetTag", "onSlide:$slideOffset")
+				val background = viewBind.constraintScroll.background
 				if (slideOffset>0){
-					val background = viewBind.constraintScroll.background
 					val bgDrawable = ContextCompat.getDrawable(this@MainBarActivity,R.drawable.shape_share_bottom_bg)
 					if (background != bgDrawable)viewBind.constraintScroll.background = bgDrawable
 				}else{
-					val background = viewBind.constraintScroll.background
 					val bgDrawable = ContextCompat.getDrawable(this@MainBarActivity,R.drawable.shape_share_bottom_close_bg)
 					if (background != bgDrawable)viewBind.constraintScroll.background = bgDrawable
 				}
