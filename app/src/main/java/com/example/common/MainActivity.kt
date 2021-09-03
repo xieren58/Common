@@ -19,6 +19,7 @@ import com.bumptech.glide.request.transition.Transition
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.example.common.weight.EditCodeDialog
+import com.example.common.weight.EditCodeFragment
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
 import com.says.common.ui.ImageUtil
@@ -37,11 +38,13 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override fun initEvent() {
 		super.initEvent()
 		viewBind.tvStart.singleClick {
-			ARouter.getInstance().build("/common/exo").
-					withString("uri","assets/1_x264.mp4")
-					.navigation(this)
+			viewModel.testBreak("111")
+//			ARouter.getInstance().build("/common/exo").
+//					withString("uri","assets/1_x264.mp4")
+//					.navigation(this)
 		}
 		viewBind.tvEnd.singleClick {
+//			showScanFragment()
 			ARouter.getInstance().build("/main/testBar").navigation(this)
 		}
 		viewBind.content.singleClick {
@@ -56,12 +59,12 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 				viewBind.etNumber.setText(keepNumberStr)
 			}
 		}
-		setEndLabelStr(
-				view = viewBind.tvTest,
-				"呼吸道合胞病毒（RSV）感染呼吸道合胞病毒 感染呼吸道合胞病毒（RSV）感染呼吸道合胞病毒 感染",
-				haveCh = true,
-				haveEn = true
-		)
+//		setEndLabelStr(
+//				view = viewBind.tvTest,
+//				"呼吸道合胞病毒（RSV）感染呼吸道合胞病毒 感染呼吸道合胞病毒（RSV）感染呼吸道合胞病毒 感染",
+//				haveCh = true,
+//				haveEn = true
+//		)
 	}
 	
 	private suspend fun loadBitmap(path:String = "https://91trial.oss-cn-shanghai.aliyuncs.com/91trial/file_3cd75d4a-859f-46e0-8e3c-2f9b763041dd.jpeg"): Bitmap? {
@@ -103,6 +106,13 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 		}
 	}
 	
+	private fun showScanFragment(){
+		val editCodeFragment = EditCodeFragment()
+		editCodeFragment.addCodeResultListener {
+		
+		}
+		editCodeFragment.show(supportFragmentManager,"scan")
+	}
 	private var editScanDialog: EditCodeDialog? = null
 	private fun showScanDialog() {
 		if (editScanDialog == null) editScanDialog = EditCodeDialog(this)

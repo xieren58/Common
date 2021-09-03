@@ -1,26 +1,24 @@
 package com.example.common.http.scope
 
 import android.util.Log
-import com.example.common.model.BaseResponse
 import com.rain.baselib.common.NetWorkUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import retrofit2.Response
 
 /**
  *  Create by rain
  *  Date: 2020/6/29
  *  网络请求 协程扩展类
  */
-fun <T> launchFlow(block:suspend () -> BaseResponse<T>) = flow {
+
+fun <T> launchFlow(block: suspend () -> BaseResponseBody<T>) = flow {
     if (!NetWorkUtils.isNetConnected()) throw ResultThrowable(-1, "请检查网络连接")
-    val resultBlock = block()
-    if (resultBlock.result != 1) throw ResultThrowable(resultBlock.result, resultBlock.errorMsg)
-    emit(resultBlock.data)
+    emit( block().resultDataBlock())
 }.flowOn(Dispatchers.IO).completionResult()
+
 
 /**
  * 异步转换数据
@@ -30,76 +28,41 @@ fun <T, R> Flow<T>.transformIOFlow(block: (T) -> R) = transform {
 }.flowOn(Dispatchers.IO)
 
 /**
- * 二次请求
+ * 多次请求
  */
-fun <T, R> Flow<T>.transformFlow(block: suspend (T) -> BaseResponse<R>) = transform {
+fun <T, R> Flow<T>.transformFlow(block: suspend (T) -> BaseResponseBody<R>) = transform {
     if (!NetWorkUtils.isNetConnected()) throw ResultThrowable(-1, "请检查网络连接")
-    val resultBlock = block(it)
-    if (resultBlock.result != 1) throw ResultThrowable(resultBlock.result, resultBlock.errorMsg)
-    emit(resultBlock.data)
+    emit( block(it).resultDataBlock())
 }.flowOn(Dispatchers.IO).completionResult()
 
-private fun <T> Flow<T>.completionResult() = onCompletion { cause ->
-//	if (cause == null) return@onCompletion
-//	if (cause !is ResultThrowable) return@onCompletion
-//	when (cause.code) {
-//		10 -> {
-//			Log.d("")
-//		}
-//		11 -> TipsShowUtils.showTipsDialog(cause.message)
-//	}
-}
-
-suspend fun <T> Flow<T>.resultCall(
-    successBlock: (T?) -> Unit,
-    failBlock: (e: ResultThrowable) -> Unit
-) = catch { cause ->
-    when (cause) {
-        is HttpException -> failBlock(ResultThrowable(cause.code(), cause.message))
-        is ResultThrowable -> {
-            when (cause.code) {
-                10, 11 -> failBlock(ResultThrowable(cause.code, ""))
-                else -> failBlock(cause)
-            }
+fun <T>BaseResponseBody<T>.resultDataBlock():T?{
+    val code =  code
+    if (code != HttpCode.CODE_SUCCESS) {
+        when (code) {
+            HttpCode.TOKEN_PARAM_ERROR -> throw ResultThrowable(HttpCode.CODE_RESULT_INVALID, "")
+            HttpCode.CODE_CONNECTION_FAILED, HttpCode.SERVER_ERROR -> throw ResultThrowable(HttpCode.CODE_RESULT_INVALID, "服务器异常")
+            else -> throw ResultThrowable(code, msg)
         }
-        else -> failBlock(ResultThrowable(cause.message))
     }
-}.collectLatest {
-    successBlock(it)
+    return data
 }
-
 /**
  * 数据执行失败
  */
-
 fun <T> Flow<T>.resultFail(failBlock: (e: ResultThrowable) -> Unit) = catch { cause ->
-    Log.d("launchFlowTag", "cause:$cause")
+    Log.e("launchFlowTag", "cause:$cause")
     when (cause) {
         is HttpException -> failBlock(ResultThrowable(cause.code(), cause.message))
-        is ResultThrowable -> {
-            when (cause.code) {
-                10, 11 -> failBlock(ResultThrowable(cause.code, ""))
-                else -> failBlock(cause)
-            }
-        }
+        is ResultThrowable -> failBlock(cause)
         else -> failBlock(ResultThrowable(cause.message))
     }
 }
-
 /**
  * 数据执行失败
  */
 fun <T> Flow<T>.resultMessageFail(failBlock: (message: String?) -> Unit) = catch { cause ->
-    Log.d("launchFlowTag", "cause:$cause")
-    when (cause) {
-        is ResultThrowable -> {
-            when (cause.code) {
-                10, 11 -> failBlock("")
-                else -> failBlock(cause.message)
-            }
-        }
-        else -> failBlock(cause.message)
-    }
+    Log.e("launchFlowTag", "cause:$cause")
+    failBlock(cause.message)
 }
 
 /**
@@ -108,7 +71,18 @@ fun <T> Flow<T>.resultMessageFail(failBlock: (message: String?) -> Unit) = catch
 suspend fun <T> Flow<T>.resultSuccess(successBlock: (T?) -> Unit) = collectLatest {
     successBlock(it)
 }
-fun <T> Flow<T?>.resultScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?, failBlock: ((e: ResultThrowable) -> Unit)?) = scope.launch {
+
+/**
+ * 数据执行成功
+ */
+fun <T> Flow<T?>.resultSuccessScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?) =  scope.launch {
+    this@resultSuccessScope.collectLatest{ successBlock?.invoke(it) }
+}
+
+/**
+ * 数据执行开始，并且获取回调
+ */
+fun <T> Flow<T?>.resultScope(scope: CoroutineScope, successBlock: ((T?) -> Unit)?, failBlock: ((e: ResultThrowable) -> Unit)?) = scope.launch {
     this@resultScope.catch {cause->
         when (cause) {
             is HttpException -> failBlock?.invoke(ResultThrowable(cause.code(), cause.message))
@@ -124,95 +98,47 @@ fun <T> Flow<T?>.resultScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?,
         successBlock?.invoke(it)
     }
 }
-fun <T> Flow<T?>.resultScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?) = scope.launch {
-    this@resultScope.collectLatest{ successBlock?.invoke(it) }
+
+/**
+ *  获取数据结果
+ */
+suspend fun <T> Flow<T>.resultCall(successBlock: (T?) -> Unit, failBlock: (e: ResultThrowable) -> Unit) = catch { cause ->
+    when (cause) {
+        is HttpException -> failBlock(ResultThrowable(cause.code(), cause.message))
+        is ResultThrowable -> failBlock(cause)
+        else -> failBlock(ResultThrowable(cause.message))
+    }
+}.collectLatest {
+    successBlock(it)
 }
 
-fun <T> CoroutineScope.launchCountUI(
-    block: suspend () -> BaseResponse<T>,
-    successBlock: (T?, Int) -> Unit,
-    failBlock: (e: ResultThrowable) -> Unit
-) = launchDataUI(block, { _, t, c ->
-    successBlock(t, c)
-}, failBlock)
-
-fun <T> CoroutineScope.launchUI(
-    block: suspend () -> BaseResponse<T>,
-    successBlock: (T?) -> Unit,
-    failBlock: (e: ResultThrowable) -> Unit
-) = launchDataUI(block, { _, t, _ ->
-    successBlock(t)
-}, failBlock)
-
-fun <T> CoroutineScope.launchMessageUI(
-    block: suspend () -> BaseResponse<T>,
-    successBlock: (String?, T?) -> Unit,
-    failBlock: (e: ResultThrowable) -> Unit
-) = launchDataUI(block, { s, t, _ ->
-    successBlock(s, t)
-}, failBlock)
-
-fun <T> CoroutineScope.launchDataUI(
-    block: suspend () -> BaseResponse<T>,
-    successBlock: (String?, T?, Int) -> Unit,
-    failBlock: (e: ResultThrowable) -> Unit
-) = launch(Dispatchers.Main) {
-    if (!NetWorkUtils.isNetConnected()) {
-        failBlock(ResultThrowable("请检查网络连接"))
-        return@launch
-    }
-
-    kotlin.runCatching {
-        block()
-    }.onSuccess {
-        Log.d("errTag", "onSuccess-it:$it")
-        it.resultData({ message, data, count ->
-            successBlock(message, data, count)
-        }, { failIt ->
-            failBlock(failIt)
-        })
-    }.onFailure {
-        Log.d("errTag", "onFailure-it:$it")
-        if (it is HttpException) failBlock(ResultThrowable(it.code(), it.message)) else failBlock(
-            ResultThrowable(it.message)
-        )
-    }
+/**
+ * 同步接口访问，返回成功值，错误将抛出异常
+ * isCatch: 是否捕获异常，如果捕获，错误时返回null
+ */
+suspend fun <T>resultHttpData(isCatch:Boolean = true,block: suspend () -> BaseResponseBody<T>):T?{
+    if (!NetWorkUtils.isNetConnected())if (isCatch)return null else throw ResultThrowable(-1, "请检查网络连接")
+    return if (isCatch){
+        try {
+            block().resultDataBlock()
+        } catch (e: Exception) {
+            null
+        }
+    }else block().resultDataBlock()
 }
 
+
+/**
+ *  错误拦截，公共处理模块
+ */
+private fun <T> Flow<T>.completionResult() = onCompletion { cause ->
+    Log.e("resultDataTag", "cause:$cause")
+}
+
+
+/**
+ *  异常类
+ */
 class ResultThrowable(val code: Int = -1, resultMessage: String?) : Throwable(resultMessage) {
     constructor(resultMessage: String?) : this(-1, resultMessage)
-}
-
-fun <T> BaseResponse<T>.resultData(
-    block: (String?, T?, Int) -> Unit,
-    failBlock: (e: ResultThrowable) -> Unit
-) {
-    if (result != 1) {
-        failBlock(ResultThrowable(result, errorMsg))
-        return
-    }
-    block(errorMsg, data, totalCount)
-}
-
-fun <T> Response<BaseResponse<T>>?.resultData(): T? {
-    if (this == null) return null
-    val bodyChild = body()
-    Log.d("launchTag", "bodyChild:$bodyChild,isSuccessful:$isSuccessful")
-    if (!isSuccessful || bodyChild == null) {
-        return null
-    }
-    val data = bodyChild.data
-    Log.d("launchTag", "code:${bodyChild.result},data:$data")
-    if (bodyChild.result != 1 || data == null) {
-        return null
-    }
-    return data
-}
-
-fun <T> BaseResponse<T>?.resultData(): T? {
-    if (this == null) return null
-    if (result != 1 || data == null) {
-        return null
-    }
-    return data
 }

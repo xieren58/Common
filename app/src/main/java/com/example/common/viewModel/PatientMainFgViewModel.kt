@@ -1,29 +1,18 @@
 package com.example.common.viewModel
 
-import com.example.common.adapter.PatientMainAdapter
-import com.example.common.model.VisitMainModel
-import com.rain.baselib.viewModel.BaseRecViewModel
+import com.example.common.adapter.VP2ViewAdapter
+import com.rain.baselib.viewModel.BaseViewModel
 
 /**
  *  Create by rain
  *  Date: 2021/5/11
  */
-class PatientMainFgViewModel : BaseRecViewModel<VisitMainModel>() {
-	override val adapter by lazy { PatientMainAdapter() }
-	private var minId: Long = 0
-	override fun resetPageIndex() {
-		super.resetPageIndex()
-		minId = 0
-	}
+class PatientMainFgViewModel : BaseViewModel() {
 	
-	override fun loadSuccess(list: MutableList<VisitMainModel>?) {
-		if (minId <= 0 && pageIndex <= 1) adapter.setData(list) else adapter.addItemData(list)
-		if (!list.isNullOrEmpty()) pageIndex++
-		loadEnd.value = true
-		showDataType()
-	}
+	val adapter by lazy { VP2ViewAdapter() }
 	
-	override fun loadData() {
-		loadFail()
+	override fun initModel() {
+		super.initModel()
+		adapter.setData(mutableListOf("33","3333","#3333","3333333"))
 	}
 }

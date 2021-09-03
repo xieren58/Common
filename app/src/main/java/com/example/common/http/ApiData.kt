@@ -1,5 +1,6 @@
 package com.example.common.http
 
+import com.example.common.http.scope.BaseResponseBody
 import com.example.common.model.*
 import retrofit2.http.*
 
@@ -14,7 +15,7 @@ interface ApiData {
      */
     @FormUrlEncoded
     @POST("apt/api/portal/suffering/list")
-    suspend fun getTeachHomeList(@Field("pageIndex") pageIndex: Int?): BaseResponse<TeachBaseModel>
+    suspend fun getTeachHomeList(@Field("pageIndex") pageIndex: Int?): BaseResponseBody<TeachBaseModel>
     
     @GET("knowledge/category/childlist")
     suspend fun loadDemo(@Query("AppVersion")AppVersion:String,
@@ -38,7 +39,7 @@ interface ApiData {
             @Query("roleId") roleId: String?,
             @Query("contentRange") contentRange: String,
             @Query("contentCode") contentCode: String,
-    ): BaseResponse<ColumnResultModel>
+    ): BaseResponseBody<ColumnResultModel>
     
     /**
      * 获取患者列表
@@ -60,5 +61,5 @@ interface ApiData {
             @Query("treatStatus") treatStatus: String? = "",
             @Query("userId") userId: String = "f7b6387f-42e3-4edd-b9e3-6753b75b500c",
             @Query("projectId") projectId: String = "9bfc78a8-6d2e-47b9-94cb-c3f40dfd9dc7",
-    ): BaseResponse<MutableList<PatientMainModel>>
+    ): BaseResponseBody<MutableList<PatientMainModel>>
 }

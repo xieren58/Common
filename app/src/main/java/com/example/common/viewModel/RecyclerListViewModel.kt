@@ -7,6 +7,7 @@ import com.example.common.http.RetrofitFac
 import com.example.common.http.scope.launchFlow
 import com.example.common.http.scope.resultFail
 import com.example.common.http.scope.resultScope
+import com.example.common.http.scope.resultSuccessScope
 import com.example.common.model.PatientMainModel
 import com.rain.baselib.viewModel.BaseRecViewModel
 
@@ -33,7 +34,7 @@ class RecyclerListViewModel  : BaseRecViewModel<PatientMainModel>() {
 			RetrofitFac.iData.loadPatientList(pageIndex = pageIndex,pageSize = 10,)
 		}.resultFail {
 			loadFail()
-		}.resultScope(viewModelScope){
+		}.resultSuccessScope(viewModelScope){
 			loadSuccess(it)
 		}
 	}

@@ -31,47 +31,26 @@
                 android:layout_marginEnd="10dp"
                 android:src="@drawable/banner" />
 
-            <RelativeLayout
+            <FrameLayout
+                android:id="@+id/fl_container"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="10dp">
+                android:layerType="software"
+                android:clipChildren="false"
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:drawablePadding="8dp"
-                    android:text="进行中列表"
-                    android:textColor="#ff333536"
-                    android:textSize="17sp"
-                    app:drawableStartCompat="@drawable/main_patient_title" />
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_pager_scroll"
+                    android:layout_marginTop="50dp"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="50dp"
+                    android:clipChildren="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp" />
 
-                <TextView
-                    android:id="@+id/tv_confirm_result"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="已完成列表"
-                    android:textColor="#ff959b9f"
-                    android:textSize="14sp"
-                    app:drawableEndCompat="@drawable/arrow_title_right" />
-            </RelativeLayout>
+            </FrameLayout>
 
-            <include layout="@layout/layout_rec_view" />
+
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/ig_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginEnd="11.5dp"
-            android:layout_marginBottom="5.5dp"
-            android:src="@drawable/main_add" />
     </RelativeLayout>
 </layout>

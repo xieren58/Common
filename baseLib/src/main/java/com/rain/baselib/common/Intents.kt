@@ -95,6 +95,41 @@ object AnkoInternals {
 			return@forEach
 		}
 	}
+	
+	@JvmStatic
+	private fun fillBundleArguments(intent: Bundle, params: Array<out Pair<String, Any>>) {
+		params.forEach {
+			when (val value = it.second) {
+				is Int -> intent.putInt(it.first, value)
+				is Long -> intent.putLong(it.first, value)
+				is CharSequence -> intent.putCharSequence(it.first, value)
+				is String -> intent.putString(it.first, value)
+				is Float -> intent.putFloat(it.first, value)
+				is Double -> intent.putDouble(it.first, value)
+				is Char -> intent.putChar(it.first, value)
+				is Short -> intent.putShort(it.first, value)
+				is Boolean -> intent.putBoolean(it.first, value)
+				is Serializable -> intent.putSerializable(it.first, value)
+				is Bundle -> intent.putBundle(it.first, value)
+				is Parcelable -> intent.putParcelable(it.first, value)
+//				is Array<*> -> when {
+//					value.isArrayOf<CharSequence>() -> intent.(it.first, value)
+//					value.isArrayOf<String>() -> intent.putStringArrayList(it.first, value)
+//					value.isArrayOf<Parcelable>() -> intent.putParcelableArray(it.first, value)
+//					else -> throw Throwable("Intent extra ${it.first} has wrong type ${value.javaClass.name}")
+//				}
+				is IntArray -> intent.putIntArray(it.first, value)
+				is LongArray -> intent.putLongArray(it.first, value)
+				is FloatArray -> intent.putFloatArray(it.first, value)
+				is DoubleArray -> intent.putDoubleArray(it.first, value)
+				is CharArray -> intent.putCharArray(it.first, value)
+				is ShortArray -> intent.putShortArray(it.first, value)
+				is BooleanArray -> intent.putBooleanArray(it.first, value)
+				else -> throw Throwable("Intent extra ${it.first} has wrong type ${value.javaClass.name}")
+			}
+			return@forEach
+		}
+	}
 }
 
 class InternalStartContract(private val activity: Class<out Activity>) : ActivityResultContract<Array<out Pair<String, Any?>>, Intent>() {

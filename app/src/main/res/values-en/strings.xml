@@ -2,5 +2,5 @@
     <string name="app_name">Common</string>
 
 
-    <string name="i18n_mrn_02">病历号</string>
+    <string name="i18n_mrn_02">Medical record number (MRN)</string>
 </resources>

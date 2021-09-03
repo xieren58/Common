@@ -1,5 +1,6 @@
 package com.rain.baselib.adapter
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
@@ -28,6 +29,7 @@ abstract class BaseRecAdapter<T> : RecyclerView.Adapter<BaseRecHolder<T, *>>() {
 	/**
 	 * 初始化设置数据
 	 */
+	@SuppressLint("NotifyDataSetChanged")
 	open fun setData(list: MutableList<T>?) {
 		this.adapterList = list
 		notifyDataSetChanged()
