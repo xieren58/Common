@@ -4,7 +4,6 @@ import android.content.Context
 //import android.os.Looper
 //import io.microshow.rxffmpeg.RxFFmpegCommandList
 //import io.microshow.rxffmpeg.RxFFmpegInvoke
-import top.zibin.luban.Luban
 import java.io.File
 
 
@@ -17,7 +16,8 @@ object CompressUtils {
 	 * 同步压缩文件
 	 */
 	fun compressFile(context: Context, originalPath: String): File? {
-		return Luban.with(context).ignoreBy(2048).setCompress(100).get(originalPath)
+//		return Luban.with(context).ignoreBy(2048).setCompress(100).get(originalPath)
+		return File(originalPath)
 	}
 	
 //	fun compressVideo(originalPath: String): File? {

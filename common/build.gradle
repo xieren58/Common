@@ -3,12 +3,11 @@ apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdk 31
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 30
+        minSdk 21
+        targetSdkVersion 31
 
         kapt {
             arguments {
@@ -53,7 +52,6 @@ dependencies {
 
     api "androidx.exifinterface:exifinterface:1.3.2"
 
-    api project(path: ':library')
     //dataStore数据存储
     api "androidx.datastore:datastore-preferences:1.0.0-alpha08"
 

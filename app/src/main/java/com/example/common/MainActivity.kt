@@ -18,8 +18,7 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
-import com.example.common.weight.EditCodeDialog
-import com.example.common.weight.EditCodeFragment
+import com.example.common.weight.*
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
 import com.says.common.ui.ImageUtil
@@ -38,7 +37,8 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 	override fun initEvent() {
 		super.initEvent()
 		viewBind.tvStart.singleClick {
-			viewModel.testBreak("111")
+			showTime()
+//			viewModel.testBreak("111")
 //			ARouter.getInstance().build("/common/exo").
 //					withString("uri","assets/1_x264.mp4")
 //					.navigation(this)
@@ -66,7 +66,16 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //				haveEn = true
 //		)
 	}
-	
+
+	private fun showTime(){
+		TimeSelectDialog.initBuilder().initListener(object : OnTimeBottomSelectListener {
+			override fun resultTime(time: String) {
+			}
+		}).initCancelListener(object : OnRegionCancelListener {
+			override fun cancel() {
+			}
+		}).show(this)
+	}
 	private suspend fun loadBitmap(path:String = "https://91trial.oss-cn-shanghai.aliyuncs.com/91trial/file_3cd75d4a-859f-46e0-8e3c-2f9b763041dd.jpeg"): Bitmap? {
 		return suspendCancellableCoroutine { continuation ->
 			continuation.invokeOnCancellation {

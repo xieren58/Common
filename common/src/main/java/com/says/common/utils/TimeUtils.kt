@@ -102,7 +102,16 @@ object TimeUtils {
 		}
 		return msgTimeStr
 	}
-	
+	@JvmStatic
+	fun strToDate(time: String?, pattern: String): Date?{
+		if (time.isNullOrEmpty()) return null
+		try {
+			@SuppressLint("SimpleDateFormat") val simpleDateFormat =  SimpleDateFormat(pattern)
+			return simpleDateFormat.parse(time)
+		} catch (e: ParseException) {
+		}
+		return null
+	}
 	@JvmStatic
 	fun getLongToTime(time: Long): String {
 		var timeLong = time
