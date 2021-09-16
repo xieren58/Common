@@ -6,7 +6,7 @@ package com.rain.baselib.liveData
  */
 class UnPeekLiveData<T> : ProtectedUnPeekLiveData<T>() {
 	public override fun setValue(value: T?) {
-		super.setValue(value)F
+		super.setValue(value)
 	}
 	
 	public override fun postValue(value: T?) {

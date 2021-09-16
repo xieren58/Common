@@ -48,7 +48,6 @@ class Demo2DataBindActivity : BaseDataBindActivity<ActivityDemoBinding>() {
     private var fgAdapter: BasePagerFgAdapter? = null
     
     private fun initPager() {
-        
         fgAdapter = BasePagerFgAdapter(this)
         viewBind.pgHome.adapter = fgAdapter
         viewBind.pgHome.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
