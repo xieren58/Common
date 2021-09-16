@@ -41,21 +41,21 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
         fun show(fragment: Fragment) {
             show(fragment.childFragmentManager)
         }
-
+        
         fun initListener(block: OnTimeBottomSelectListener?): Builder {
             this.resultListener = block
             return this
         }
-
+        
         fun initCancelListener(block: OnRegionCancelListener?): Builder {
             this.cancelListener = block
             return this
         }
-
+        
         fun show(activity: FragmentActivity) {
             show(activity.supportFragmentManager)
         }
-
+        
         fun initData(title: String?, mode: String?, format: String?, currentDate: String?, maxDate: String?, minDate: String?): Builder {
             this.titleStr = title
             this.format = format
@@ -65,13 +65,13 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
             this.mode = mode
             return this
         }
-
+        
         private fun show(manager: FragmentManager) {
             var timeFragment = manager.findFragmentByTag("timeSelectDialog")
             if (timeFragment == null || timeFragment !is TimeSelectDialog) {
                 timeFragment = TimeSelectDialog()
             }
-
+            
             val bundle = Bundle().apply {
                 putString("maxDate", maxDate)
                 putString("minDate", minDate)
@@ -88,16 +88,15 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
             timeFragment.show(manager, "timeSelectDialog")
         }
     }
-
+    
     companion object {
         @JvmStatic
         fun initBuilder(): Builder {
             return Builder()
         }
     }
-
-
-
+    
+    
     private lateinit var dataBind: LayoutTimeSelectViewBinding
     private var isResultConfirm = false
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -106,30 +105,30 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
             dataBind = this
         }.root
     }
-
+    
     @SuppressLint("PrivateApi")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
         (dialog as? BottomSheetDialog)?.behavior?.isHideable = false
         return dialog
     }
-
+    
     private var formatStr = "yyyy-MM-dd"
     private var timeBuilder: TimePickerView? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         formatStr = arguments?.getString("format") ?: "yyyy-MM-dd"
-
+        
         dataBind.tvTitle.text = arguments?.getString("titleStr") ?: ""
         initEvent()
         initTimePicker()
     }
-
+    
     private fun initEvent() {
         dataBind.tvCancel.singleClick { dismissAllowingStateLoss() }
         dataBind.tvConfirm.singleClick { timeBuilder?.returnData() }
     }
-
+    
     private fun initTimePicker() {
         val maxDate = TimeUtils.strToDate(arguments?.getString("maxDate"), formatStr)
         val minDate = TimeUtils.strToDate(arguments?.getString("minDate"), formatStr)
@@ -142,9 +141,9 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
             "datetime" -> booleanArrayOf(true, true, true, true, true, true) //年月日时分秒
             else -> booleanArrayOf(true, true, true, false, false, false) //默认年月日
         }
-
+        
         val currentCalender = Calendar.getInstance()
-
+        
         val maxCalender = Calendar.getInstance()
         if (maxDate != null) {
             maxCalender.time = maxDate
@@ -187,17 +186,17 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
                 .build()
         timeBuilder?.show(false)
     }
-
+    
     private var timeSelectListener: OnTimeBottomSelectListener? = null
     fun setTimeListener(timeSelectListener: OnTimeBottomSelectListener?) {
         this.timeSelectListener = timeSelectListener
     }
-
+    
     private var timeCancelListener: OnRegionCancelListener? = null
     fun setTimeCancelListener(timeCancelListener: OnRegionCancelListener?) {
         this.timeCancelListener = timeCancelListener
     }
-
+    
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         Log.d("regionTag", "onDismiss:$isResultConfirm")
@@ -208,6 +207,7 @@ class TimeSelectDialog : BottomSheetDialogFragment() {
 interface OnTimeBottomSelectListener {
     fun resultTime(time: String)
 }
+
 interface OnRegionCancelListener {
     fun cancel()
 }

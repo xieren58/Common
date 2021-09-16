@@ -10,11 +10,11 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TeachModel(
-    var ab: String? = null,
-    var classes: String? = null,
-    var docId: String? = null,
-    var titleCh: String? = null,
-    var updateTime: String? = null,
-    var img: String? = null,
-    var type: Int = -1
+        var ab: String? = null,
+        var classes: String? = null,
+        var docId: String? = null,
+        var titleCh: String? = null,
+        var updateTime: String? = null,
+        var img: String? = null,
+        var type: Int = -1,
 ) : Parcelable

@@ -14,22 +14,23 @@ import com.rain.baselib.fragment.BaseDataBindFragment
  * 受试者列表页
  */
 class PatientFragment : BaseDataBindFragment<FgMainPatientBinding>() {
-	override val layoutResId = R.layout.fg_main_patient
-	override val viewModel by viewModels<PatientMainFgViewModel>()
-	override fun initView() {
-		super.initView()
-		viewBind.viewPagerScroll.adapter = viewModel.adapter
+    override val layoutResId = R.layout.fg_main_patient
+    override val viewModel by viewModels<PatientMainFgViewModel>()
+    override fun initView() {
+        super.initView()
+        viewBind.viewPagerScroll.adapter = viewModel.adapter
 //		viewBind.viewPagerScroll.orientation = ViewPager2.ORIENTATION_VERTICAL
-		val compositePageTransformer = CompositePageTransformer().apply {
+        val compositePageTransformer = CompositePageTransformer().apply {
 //			addTransformer(MarginPageTransformer(100))
-			addTransformer(DemoTransformer())
-		}
-		viewBind.flContainer.setLayerType(View.LAYER_TYPE_SOFTWARE,null)
+            addTransformer(DemoTransformer())
+        }
+        viewBind.flContainer.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
 //		compositePageTransformer.addTransformer(ScaleInTransformer())
-		viewBind.viewPagerScroll.setPageTransformer (compositePageTransformer)
-		viewBind.viewPagerScroll.offscreenPageLimit = 3
-	}
-	override fun onStart() {
-		super.onStart()
-	}
+        viewBind.viewPagerScroll.setPageTransformer(compositePageTransformer)
+        viewBind.viewPagerScroll.offscreenPageLimit = 3
+    }
+    
+    override fun onStart() {
+        super.onStart()
+    }
 }

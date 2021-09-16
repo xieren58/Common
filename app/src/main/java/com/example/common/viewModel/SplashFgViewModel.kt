@@ -15,7 +15,7 @@ class SplashFgViewModel : BaseViewModel() {
     override fun initModel() {
         initMainType()
     }
-
+    
     val isMainType = MutableLiveData<Boolean>()
     private fun initMainType() {
         viewModelScope.launch {

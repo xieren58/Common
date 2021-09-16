@@ -16,7 +16,7 @@ import retrofit2.HttpException
 
 fun <T> launchFlow(block: suspend () -> BaseResponseBody<T>) = flow {
     if (!NetWorkUtils.isNetConnected()) throw ResultThrowable(-1, "请检查网络连接")
-    emit( block().resultDataBlock())
+    emit(block().resultDataBlock())
 }.flowOn(Dispatchers.IO).completionResult()
 
 
@@ -32,11 +32,11 @@ fun <T, R> Flow<T>.transformIOFlow(block: (T) -> R) = transform {
  */
 fun <T, R> Flow<T>.transformFlow(block: suspend (T) -> BaseResponseBody<R>) = transform {
     if (!NetWorkUtils.isNetConnected()) throw ResultThrowable(-1, "请检查网络连接")
-    emit( block(it).resultDataBlock())
+    emit(block(it).resultDataBlock())
 }.flowOn(Dispatchers.IO).completionResult()
 
-fun <T>BaseResponseBody<T>.resultDataBlock():T?{
-    val code =  code
+fun <T> BaseResponseBody<T>.resultDataBlock(): T? {
+    val code = code
     if (code != HttpCode.CODE_SUCCESS) {
         when (code) {
             HttpCode.TOKEN_PARAM_ERROR -> throw ResultThrowable(HttpCode.CODE_RESULT_INVALID, "")
@@ -46,6 +46,7 @@ fun <T>BaseResponseBody<T>.resultDataBlock():T?{
     }
     return data
 }
+
 /**
  * 数据执行失败
  */
@@ -57,6 +58,7 @@ fun <T> Flow<T>.resultFail(failBlock: (e: ResultThrowable) -> Unit) = catch { ca
         else -> failBlock(ResultThrowable(cause.message))
     }
 }
+
 /**
  * 数据执行失败
  */
@@ -75,15 +77,15 @@ suspend fun <T> Flow<T>.resultSuccess(successBlock: (T?) -> Unit) = collectLates
 /**
  * 数据执行成功
  */
-fun <T> Flow<T?>.resultSuccessScope(scope:CoroutineScope,successBlock: ((T?) -> Unit)?) =  scope.launch {
-    this@resultSuccessScope.collectLatest{ successBlock?.invoke(it) }
+fun <T> Flow<T?>.resultSuccessScope(scope: CoroutineScope, successBlock: ((T?) -> Unit)?) = scope.launch {
+    this@resultSuccessScope.collectLatest { successBlock?.invoke(it) }
 }
 
 /**
  * 数据执行开始，并且获取回调
  */
 fun <T> Flow<T?>.resultScope(scope: CoroutineScope, successBlock: ((T?) -> Unit)?, failBlock: ((e: ResultThrowable) -> Unit)?) = scope.launch {
-    this@resultScope.catch {cause->
+    this@resultScope.catch { cause ->
         when (cause) {
             is HttpException -> failBlock?.invoke(ResultThrowable(cause.code(), cause.message))
             is ResultThrowable -> {
@@ -94,7 +96,7 @@ fun <T> Flow<T?>.resultScope(scope: CoroutineScope, successBlock: ((T?) -> Unit)
             }
             else -> failBlock?.invoke(ResultThrowable(cause.message))
         }
-    }.collectLatest{
+    }.collectLatest {
         successBlock?.invoke(it)
     }
 }
@@ -116,15 +118,15 @@ suspend fun <T> Flow<T>.resultCall(successBlock: (T?) -> Unit, failBlock: (e: Re
  * 同步接口访问，返回成功值，错误将抛出异常
  * isCatch: 是否捕获异常，如果捕获，错误时返回null
  */
-suspend fun <T>resultHttpData(isCatch:Boolean = true,block: suspend () -> BaseResponseBody<T>):T?{
-    if (!NetWorkUtils.isNetConnected())if (isCatch)return null else throw ResultThrowable(-1, "请检查网络连接")
-    return if (isCatch){
+suspend fun <T> resultHttpData(isCatch: Boolean = true, block: suspend () -> BaseResponseBody<T>): T? {
+    if (!NetWorkUtils.isNetConnected()) if (isCatch) return null else throw ResultThrowable(-1, "请检查网络连接")
+    return if (isCatch) {
         try {
             block().resultDataBlock()
         } catch (e: Exception) {
             null
         }
-    }else block().resultDataBlock()
+    } else block().resultDataBlock()
 }
 
 

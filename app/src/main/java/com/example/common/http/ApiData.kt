@@ -18,13 +18,15 @@ interface ApiData {
     suspend fun getTeachHomeList(@Field("pageIndex") pageIndex: Int?): BaseResponseBody<TeachBaseModel>
     
     @GET("knowledge/category/childlist")
-    suspend fun loadDemo(@Query("AppVersion")AppVersion:String,
-                         @Query("Version")Version:Double,
-                         @Query("self")self:Boolean,
-                         @Query("Platform")Platform:String,
-                         @Query("deviceid")deviceid:Int,
-                         @Query("categoryid")categoryid:Int,
-                         @Query("Timestamp")Timestamp:String):DemoModel
+    suspend fun loadDemo(
+            @Query("AppVersion") AppVersion: String,
+            @Query("Version") Version: Double,
+            @Query("self") self: Boolean,
+            @Query("Platform") Platform: String,
+            @Query("deviceid") deviceid: Int,
+            @Query("categoryid") categoryid: Int,
+            @Query("Timestamp") Timestamp: String,
+    ): DemoModel
     
     /**
      * 拉取配置

@@ -33,7 +33,7 @@ object CleanDataUtils {
             context.deleteDatabase("webview.db")
             context.deleteDatabase("webviewCache.db")
         }
-     
+
     }
 
     /**
@@ -84,13 +84,13 @@ object CleanDataUtils {
         if (gigaByte < 1) {
             val result2 = BigDecimal(megaByte.toString())
             return result2.setScale(2, BigDecimal.ROUND_HALF_UP)
-                    .toPlainString() + "MB"
+                .toPlainString() + "MB"
         }
         val teraBytes = gigaByte / 1024
         if (teraBytes < 1) {
             val result3 = BigDecimal(gigaByte.toString())
             return result3.setScale(2, BigDecimal.ROUND_HALF_UP)
-                    .toPlainString() + "GB"
+                .toPlainString() + "GB"
         }
         val result4 = BigDecimal.valueOf(teraBytes)
         return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB"

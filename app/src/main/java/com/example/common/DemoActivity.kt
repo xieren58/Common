@@ -24,22 +24,22 @@ import com.says.common.utils.JsonManagerHelper
 @Route(path = "/common/demo")
 class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
     override val viewModel by viewModels<DemoListViewModel>()
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         setBarColor(R.color.white)
         super.onCreate(savedInstanceState)
     }
-
+    
     override fun getRecLayoutManager() = GridLayoutManager(this, 2)
     override val loadRefreshEnable: Boolean
         get() = false
     override val loadMoreEnable: Boolean
         get() = false
-
+    
     override fun loadRecItemDecoration(): RecyclerView.ItemDecoration {
         return GridSpacingItemDecoration(2, UICommon.dip2px(MyApp.context, 15F), false)
     }
-
+    
     override fun clickRecItem(position: Int) {
         val cityModel = viewModel.getItemData(position) ?: return
         if (cityModel.itemType == PhotoWeightAdapter.ADD_TYPE) {
@@ -52,7 +52,7 @@ class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
             viewModel.adapter.notifyItemChanged(position, "itemRefresh")
         }
     }
-
+    
     private fun pushFileData(list: MutableList<String>?) {
         if (list.isNullOrEmpty()) return
         val picList: MutableList<UpdatePic> = mutableListOf()
@@ -65,7 +65,7 @@ class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
         viewModel.adapter.addItemData(picList)
 //		pushFile()
     }
-
+    
     private fun pushFile() {
         viewModel.getLists()?.forEach {
             if (it.itemType == PhotoWeightAdapter.ADD_TYPE) return@forEach
@@ -73,7 +73,7 @@ class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
             it.status = 1
             it.process = 0
             viewModel.adapter.updateItemData(it)
-
+            
             FilePushManager.uploadFile(this, it.url, object : FilePushResultListener {
                 override fun pushSuccess(path: String) {
                     it.url = path
@@ -81,13 +81,13 @@ class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
                     it.process = 100
                     viewModel.adapter.updateItemData(it)
                 }
-
+                
                 override fun pushFail() {
                     it.status = 3
                     it.process = 0
                     viewModel.adapter.updateItemData(it)
                 }
-
+                
                 override fun pushProgress(progress: Int) {
                     it.status = 1
                     it.process = progress
@@ -96,21 +96,21 @@ class DemoActivity : BaseRecActivity<ActivityBaseRecBinding>() {
             }, false, PushFromTypeEnum.PUSH_FILE_TO_ALI)
         }
     }
-
+    
     override fun init() {
         setBarColor(R.color.white)
         super.init()
     }
-
+    
     override val rightStr = "确认"
-
+    
     override fun rightTvClick() {
         setResult(RESULT_OK, Intent().apply {
             putExtra("demo", JsonManagerHelper.getHelper().objToStr(viewModel.getLists()))
         })
         finish()
     }
-
+    
     override fun initIntent(savedInstanceState: Bundle?) {
         super.initIntent(savedInstanceState)
         val requestData = intent?.getStringExtra("requestData")

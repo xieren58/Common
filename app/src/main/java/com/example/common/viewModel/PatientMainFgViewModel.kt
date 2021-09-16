@@ -8,11 +8,11 @@ import com.rain.baselib.viewModel.BaseViewModel
  *  Date: 2021/5/11
  */
 class PatientMainFgViewModel : BaseViewModel() {
-	
-	val adapter by lazy { VP2ViewAdapter() }
-	
-	override fun initModel() {
-		super.initModel()
-		adapter.setData(mutableListOf("33","3333","#3333","3333333"))
-	}
+    
+    val adapter by lazy { VP2ViewAdapter() }
+    
+    override fun initModel() {
+        super.initModel()
+        adapter.setData(mutableListOf("33", "3333", "#3333", "3333333"))
+    }
 }

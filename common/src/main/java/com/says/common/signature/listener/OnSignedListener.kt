@@ -5,9 +5,9 @@ package com.says.common.signature.listener
  *  Date: 2021/4/2
  */
 interface OnSignedListener {
-	fun onStartSigning()
-	
-	fun onSigned()
-	
-	fun onClear()
+    fun onStartSigning()
+
+    fun onSigned()
+
+    fun onClear()
 }

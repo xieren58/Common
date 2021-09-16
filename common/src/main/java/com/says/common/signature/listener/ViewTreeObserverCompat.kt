@@ -11,13 +11,13 @@ import android.view.ViewTreeObserver.OnGlobalLayoutListener
  *  Date: 2021/4/2
  */
 object ViewTreeObserverCompat {
-	@JvmStatic
-	fun removeOnGlobalLayoutListener(observer: ViewTreeObserver, victim: OnGlobalLayoutListener?) {
-		// Future (API16+)...
-		if (Build.VERSION.SDK_INT >= 16) {
-			observer.removeOnGlobalLayoutListener(victim)
-		} else {
-			observer.removeGlobalOnLayoutListener(victim)
-		}
-	}
+    @JvmStatic
+    fun removeOnGlobalLayoutListener(observer: ViewTreeObserver, victim: OnGlobalLayoutListener?) {
+        // Future (API16+)...
+        if (Build.VERSION.SDK_INT >= 16) {
+            observer.removeOnGlobalLayoutListener(victim)
+        } else {
+            observer.removeGlobalOnLayoutListener(victim)
+        }
+    }
 }

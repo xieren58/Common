@@ -130,7 +130,8 @@ abstract class BaseRecFragment<T : ViewDataBinding> : BaseDataBindFragment<T>(),
         })
         setMoreRefreshEnable()
     }
-    open fun loadMore(){
+
+    open fun loadMore() {
         viewModel.loadStartData(isRefresh = false, isShowLoad = false)
     }
 

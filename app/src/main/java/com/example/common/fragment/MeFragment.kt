@@ -11,11 +11,11 @@ import com.rain.baselib.fragment.BaseDataBindFragment
  * 我的页面
  */
 class MeFragment : BaseDataBindFragment<FgMainMeBinding>() {
-	override val layoutResId = R.layout.fg_main_me
-	override val viewModel by viewModels<PatientMeFgViewModel>()
-	override val variableId = BR.patientMeFgViewModelId
-	override fun onStart() {
-		super.onStart()
-		viewModel.initCache()
-	}
+    override val layoutResId = R.layout.fg_main_me
+    override val viewModel by viewModels<PatientMeFgViewModel>()
+    override val variableId = BR.patientMeFgViewModelId
+    override fun onStart() {
+        super.onStart()
+        viewModel.initCache()
+    }
 }

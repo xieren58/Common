@@ -9,6 +9,6 @@ import com.rain.baselib.adapter.BaseRecAdapter
  *  Date: 2021/8/31
  */
 class VP2ViewAdapter : BaseRecAdapter<String>() {
-	override fun getLayoutResId(viewType: Int) = R.layout.item_pager_scroll_view
-	override fun getVariableId(viewType: Int) = BR.vp2ViewId
+    override fun getLayoutResId(viewType: Int) = R.layout.item_pager_scroll_view
+    override fun getVariableId(viewType: Int) = BR.vp2ViewId
 }

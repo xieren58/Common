@@ -5,7 +5,7 @@ package com.example.common;
  * Date: 2021/6/7
  */
 public class TestJava {
-    public void test(){
+    public void test() {
 //        DemoListViewModel.Companion
     }
 }

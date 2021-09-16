@@ -109,18 +109,19 @@ public class IconTextSpan extends ReplacementSpan {
 
     /**
      * draw
-     * @param text 完整文本
-     * @param start setSpan里设置的start
-     * @param end setSpan里设置的start
+     *
+     * @param text   完整文本
+     * @param start  setSpan里设置的start
+     * @param end    setSpan里设置的start
      * @param x
-     * @param top 当前span所在行的上方y
-     * @param y y其实就是metric里baseline的位置
+     * @param top    当前span所在行的上方y
+     * @param y      y其实就是metric里baseline的位置
      * @param bottom 当前span所在行的下方y(包含了行间距)，会和下一行的top重合
-     * @param paint 使用此span的画笔
+     * @param paint  使用此span的画笔
      */
     @Override
     public void draw(@NonNull Canvas canvas, CharSequence text, int start, int end, float x, int top, int y, int bottom, Paint paint) {
-        Log.d("RoundedBackgroundSpan", "draw-mBgHeight:"+mBgHeight+",mBgWidth:"+mBgWidth);
+        Log.d("RoundedBackgroundSpan", "draw-mBgHeight:" + mBgHeight + ",mBgWidth:" + mBgWidth);
         //画背景
         Paint bgPaint = new Paint();
         bgPaint.setColor(color);

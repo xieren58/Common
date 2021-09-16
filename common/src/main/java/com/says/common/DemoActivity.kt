@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
  *  Create by rain
  *  Date: 2020/11/2
  */
-class DemoActivity :AppCompatActivity(){
-	
-	override fun onCreate(savedInstanceState: Bundle?) {
-		super.onCreate(savedInstanceState)
-	}
+class DemoActivity : AppCompatActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 }

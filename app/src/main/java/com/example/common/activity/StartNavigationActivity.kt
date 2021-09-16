@@ -15,20 +15,20 @@ import com.rain.baselib.viewModel.BaseViewModel
  *  Date: 2021/3/9
  */
 class StartNavigationActivity : BaseDataBindActivity<ActivityStartNavigationBinding>() {
-	override val layoutResId = R.layout.activity_start_navigation
-	override val viewModel: BaseViewModel? = null
-	private var isLoginOut: Boolean = false
-	override fun initIntent(savedInstanceState: Bundle?) {
-		super.initIntent(savedInstanceState)
-		isLoginOut = intent.getBooleanExtra("loginOut", false)
-	}
-	
-	override fun initData() {
-		super.initData()
-		if (isLoginOut)navigationPopUpTo(R.id.nav_start_home_fragment,R.id.fg_login_id)
-	}
-	
-	override fun onSupportNavigateUp(): Boolean {
-		return Navigation.findNavController(this, R.id.nav_start_home_fragment).navigateUp()
-	}
+    override val layoutResId = R.layout.activity_start_navigation
+    override val viewModel: BaseViewModel? = null
+    private var isLoginOut: Boolean = false
+    override fun initIntent(savedInstanceState: Bundle?) {
+        super.initIntent(savedInstanceState)
+        isLoginOut = intent.getBooleanExtra("loginOut", false)
+    }
+    
+    override fun initData() {
+        super.initData()
+        if (isLoginOut) navigationPopUpTo(R.id.nav_start_home_fragment, R.id.fg_login_id)
+    }
+    
+    override fun onSupportNavigateUp(): Boolean {
+        return Navigation.findNavController(this, R.id.nav_start_home_fragment).navigateUp()
+    }
 }

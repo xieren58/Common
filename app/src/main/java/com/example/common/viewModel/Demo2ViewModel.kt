@@ -15,17 +15,17 @@ import kotlinx.coroutines.withContext
  *  Date: 2020/12/1
  */
 class Demo2ViewModel : BaseViewModel() {
-	val mTitleDataList = MutableLiveData<MutableList<String>>()
-	val mPgDataList = MutableLiveData<MutableList<Fragment>>()
-	override fun initModel() {
-		super.initModel()
-		val titleList = mutableListOf<String>()
-		val titleFgList = mutableListOf<Fragment>()
-		for (i in 0..3) {
-			titleList.add("$i$i$i")
-			titleFgList.add(DemoDataBindFragment.getInstance())
-		}
-		mTitleDataList.value = titleList
-		mPgDataList.value = titleFgList
-	}
+    val mTitleDataList = MutableLiveData<MutableList<String>>()
+    val mPgDataList = MutableLiveData<MutableList<Fragment>>()
+    override fun initModel() {
+        super.initModel()
+        val titleList = mutableListOf<String>()
+        val titleFgList = mutableListOf<Fragment>()
+        for (i in 0..3) {
+            titleList.add("$i$i$i")
+            titleFgList.add(DemoDataBindFragment.getInstance())
+        }
+        mTitleDataList.value = titleList
+        mPgDataList.value = titleFgList
+    }
 }

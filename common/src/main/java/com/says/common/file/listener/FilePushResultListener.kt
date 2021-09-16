@@ -6,7 +6,7 @@ package com.says.common.file.listener
  *  Date: 2020/1/20
  */
 interface FilePushResultListener {
-	fun pushSuccess(path: String)
-	fun pushFail()
-	fun pushProgress(progress: Int)
+    fun pushSuccess(path: String)
+    fun pushFail()
+    fun pushProgress(progress: Int)
 }

@@ -9,6 +9,6 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class TeachBaseModel(
-    val pageIndex: Int = 0,
-    var sufferingList: MutableList<TeachModel>? = null
+        val pageIndex: Int = 0,
+        var sufferingList: MutableList<TeachModel>? = null,
 ) : Parcelable

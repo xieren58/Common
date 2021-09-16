@@ -14,14 +14,14 @@ import com.rain.baselib.adapter.BaseRecAdapter
  *  Date: 2021/2/26
  */
 class TestViewGroup(context: Context) : BaseView(context) {
-	private val adapter by lazy { "test" }
-	
-	init {
-		addView(TextView(context).apply {
-			text = "测试"
-			setTextColor(Color.parseColor("#666666"))
-			textSize = 27F
-		})
-		Log.d("testTag", "adapter:$adapter")
-	}
+    private val adapter by lazy { "test" }
+    
+    init {
+        addView(TextView(context).apply {
+            text = "测试"
+            setTextColor(Color.parseColor("#666666"))
+            textSize = 27F
+        })
+        Log.d("testTag", "adapter:$adapter")
+    }
 }

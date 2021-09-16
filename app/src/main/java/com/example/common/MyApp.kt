@@ -19,7 +19,7 @@ class MyApp : Application() {
     companion object {
         lateinit var context: Application
     }
-
+    
     override fun onCreate() {
         super.onCreate()
         context = this
@@ -31,14 +31,16 @@ class MyApp : Application() {
         }
         ARouter.init(this) // 尽可能早，推荐在Application中初始化
         initAsyncSdk()
-     
+        
     }
+    
     private fun initSmartRefreshLayout() {
         SmartRefreshLayout.setDefaultRefreshHeaderCreator { context: Context?, _: RefreshLayout? -> ClassicsHeader(context) }
         SmartRefreshLayout.setDefaultRefreshFooterCreator { context: Context?, _: RefreshLayout? -> ClassicsFooter(context) }
     }
+    
     private fun initAsyncSdk() {
-        Thread{
+        Thread {
             initSmartRefreshLayout()
         }.start()
     }

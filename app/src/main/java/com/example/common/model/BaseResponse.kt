@@ -7,12 +7,12 @@ import com.google.gson.annotations.SerializedName
  *  Date: 2020/12/14
  */
 data class BaseResponse<T>(
-		@SerializedName("Result")
-		var result: Int = 0,
-		@SerializedName("ErrorMsg")
-		var errorMsg: String = "",
-		@SerializedName("Data")
-		var data: T? = null,
-		@SerializedName("TotalCount")
-		var totalCount: Int = 0,
+        @SerializedName("Result")
+        var result: Int = 0,
+        @SerializedName("ErrorMsg")
+        var errorMsg: String = "",
+        @SerializedName("Data")
+        var data: T? = null,
+        @SerializedName("TotalCount")
+        var totalCount: Int = 0,
 )

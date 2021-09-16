@@ -15,15 +15,15 @@ import com.rain.baselib.viewModel.BaseRecViewModel
  *  Date: 2020/12/1
  */
 class FgDemoViewModel : BaseRecViewModel<PatientMainModel>() {
-	override val adapter by lazy { PatientLoadStateAdapter() }
-	
-	override fun loadData() {
-		launchFlow {
-			RetrofitFac.iData.loadPatientList(pageIndex = pageIndex,pageSize = 10,)
-		}.resultFail {
-			loadFail()
-		}.resultSuccessScope(viewModelScope){
-			loadSuccess(it)
-		}
-	}
+    override val adapter by lazy { PatientLoadStateAdapter() }
+    
+    override fun loadData() {
+        launchFlow {
+            RetrofitFac.iData.loadPatientList(pageIndex = pageIndex, pageSize = 10)
+        }.resultFail {
+            loadFail()
+        }.resultSuccessScope(viewModelScope) {
+            loadSuccess(it)
+        }
+    }
 }

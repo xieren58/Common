@@ -12,10 +12,10 @@ import com.rain.baselib.adapter.BaseRecAdapter
  *  Date: 2021/2/26
  */
 class TestView constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : View(context, attrs, defStyleAttr) {
-	constructor(context: Context) : this(context, null)
-	constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
-	
-	
-	init {
-	}
+    constructor(context: Context) : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
+    
+    
+    init {
+    }
 }

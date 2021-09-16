@@ -15,33 +15,33 @@ import com.rain.baselib.liveData.UnPeekLiveData
  *  Date: 2020/11/6
  */
 open class BaseViewModel : ViewModel() {
-	open fun initModel() = Unit
-	private val loadDialogType by lazy { UnPeekLiveData<Boolean>() }
-	
-	/**
-	 * 显示load
-	 */
-	fun showLoadDialog() {
-		loadDialogType.postValue(true)
-	}
-	
-	override fun onCleared() {
-		super.onCleared()
-		Log.d("viewModelTag", "onCleared")
-	}
-	
-	/**
-	 * 隐藏load
-	 */
-	fun dismissDialog() {
-		loadDialogType.postValue(false)
-	}
-	
-	fun setLoadDialogObserve(activity: AppCompatActivity, observer: Observer<Boolean?>) {
-		loadDialogType.observeInActivity(activity, observer)
-	}
-	
-	fun setLoadDialogObserve(fragment: Fragment, observer: Observer<Boolean?>) {
-		loadDialogType.observeInFragment(fragment, observer)
-	}
+    open fun initModel() = Unit
+    private val loadDialogType by lazy { UnPeekLiveData<Boolean>() }
+
+    /**
+     * 显示load
+     */
+    fun showLoadDialog() {
+        loadDialogType.postValue(true)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d("viewModelTag", "onCleared")
+    }
+
+    /**
+     * 隐藏load
+     */
+    fun dismissDialog() {
+        loadDialogType.postValue(false)
+    }
+
+    fun setLoadDialogObserve(activity: AppCompatActivity, observer: Observer<Boolean?>) {
+        loadDialogType.observeInActivity(activity, observer)
+    }
+
+    fun setLoadDialogObserve(fragment: Fragment, observer: Observer<Boolean?>) {
+        loadDialogType.observeInFragment(fragment, observer)
+    }
 }

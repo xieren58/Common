@@ -15,9 +15,6 @@ import kotlinx.coroutines.launch
 class SignatureActivity : BaseDataBindActivity<ActivitySignatureBinding>() {
     override val layoutResId = R.layout.activity_signature
     override val viewModel: BaseViewModel? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
     override fun initEvent() {
         super.initEvent()
         viewBind.btnClear.singleClick {
@@ -30,7 +27,7 @@ class SignatureActivity : BaseDataBindActivity<ActivitySignatureBinding>() {
             viewBind.signature.setIsShowTextAdd(!viewBind.signature.getIsShowTextAdd())
         }
     }
-
+    
     private fun saveBitmap() {
         lifecycleScope.launch {
             val signatureBitmap = viewBind.signature.getSignatureBitmap()

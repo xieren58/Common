@@ -11,13 +11,13 @@ import android.view.View
  *  生成控件类
  */
 object CreateChildView {
-	
-	fun getChildView(context: Context, isGroup: Boolean): View {
-		val view = SocialItemShareView(context)
-		view.setTitle("哈哈哈哈")
-		view.addFgView(TestViewGroup(context))
-		Log.d("testTag", "view:$view")
-		return view
-	}
-	
+    
+    fun getChildView(context: Context, isGroup: Boolean): View {
+        val view = SocialItemShareView(context)
+        view.setTitle("哈哈哈哈")
+        view.addFgView(TestViewGroup(context))
+        Log.d("testTag", "view:$view")
+        return view
+    }
+    
 }

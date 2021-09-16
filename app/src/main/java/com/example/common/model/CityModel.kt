@@ -14,18 +14,17 @@ import kotlinx.parcelize.Parcelize
  */
 @Parcelize
 data class CityModel(
-
-    val value: String? = null, //":"1003002",
-    val level: Int = 0, //":2,
-    val parent: String? = null, // ":"1003"
-    val isOpen: Boolean = false,
-    val childCityList: MutableList<CityModel>? = null
+        val value: String? = null, //":"1003002",
+        val level: Int = 0, //":2,
+        val parent: String? = null, // ":"1003"
+        val isOpen: Boolean = false,
+        val childCityList: MutableList<CityModel>? = null,
 ) : Parcelable, BaseObservable() {
     @IgnoredOnParcel
     @Bindable
     var name: String = ""
-      set(value) {
-          Log.d("cityModelTag","value:$value")
+        set(value) {
+            Log.d("cityModelTag", "value:$value")
             field = value
             notifyPropertyChanged(BR.name)
         }

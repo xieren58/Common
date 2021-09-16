@@ -24,27 +24,29 @@ import java.util.concurrent.Executors
  *  Date: 2021/1/4
  */
 class FilePushUtils(lifecycle: LifecycleOwner) : LifecycleObserver {
-	private var lifecycle: LifecycleOwner? = null
+    private var lifecycle: LifecycleOwner? = null
 
-	init {
-		this.lifecycle = lifecycle
-		lifecycle.lifecycle.removeObserver(this)
-		lifecycle.lifecycle.addObserver(this)
-	}
+    init {
+        this.lifecycle = lifecycle
+        lifecycle.lifecycle.removeObserver(this)
+        lifecycle.lifecycle.addObserver(this)
+    }
 
-	/**
-	 * 阿里云上传对象
-	 */
-	private val client by lazy {
-		OSSClient(CommonContext.context, CommonApi.END_POINT, OSSAuthCredentialsProvider(CommonApi.STS_TOKEN_URL),
-			ClientConfiguration().apply {
-				connectionTimeout = 60 * 1000 // 连接超时，默认15秒
-				socketTimeout = 60 * 1000 // socket超时，默认15秒
-				maxConcurrentRequest = 1 // 最大并发请求数，默认5个
-				maxErrorRetry = 2 // 失败后最大重试次数，默认2次
-			})
-	}
-	private var runPushPool: ExecutorService? = null
+    /**
+     * 阿里云上传对象
+     */
+    private val client by lazy {
+        OSSClient(CommonContext.context,
+            CommonApi.END_POINT,
+            OSSAuthCredentialsProvider(CommonApi.STS_TOKEN_URL),
+            ClientConfiguration().apply {
+                connectionTimeout = 60 * 1000 // 连接超时，默认15秒
+                socketTimeout = 60 * 1000 // socket超时，默认15秒
+                maxConcurrentRequest = 1 // 最大并发请求数，默认5个
+                maxErrorRetry = 2 // 失败后最大重试次数，默认2次
+            })
+    }
+    private var runPushPool: ExecutorService? = null
 
 //	/**
 //	 * 上传到腾讯
@@ -62,71 +64,88 @@ class FilePushUtils(lifecycle: LifecycleOwner) : LifecycleObserver {
 //			))
 //	}
 
-	fun pushFile(initLiveData: PushFileLiveData, imagePath: String?, isOriginal: Boolean, pushFromType: PushFromTypeEnum) {
-		if (!Common.isNetConnected(CommonContext.context)) {
-			initLiveData.postFail()
-			return
-		}
-		getRunPool()?.execute {
-			try {
-				FilePushCommon.saveLog(1,null)
-				if (imagePath.isNullOrEmpty()) {
-					initLiveData.postFail()
-					return@execute
-				}
+    fun pushFile(
+        initLiveData: PushFileLiveData,
+        imagePath: String?,
+        isOriginal: Boolean,
+        pushFromType: PushFromTypeEnum
+    ) {
+        if (!Common.isNetConnected(CommonContext.context)) {
+            initLiveData.postFail()
+            return
+        }
+        getRunPool()?.execute {
+            try {
+                FilePushCommon.saveLog(1, null)
+                if (imagePath.isNullOrEmpty()) {
+                    initLiveData.postFail()
+                    return@execute
+                }
 
-				val file = if (!isOriginal && !Common.isVideoUrlStr(imagePath)) CompressUtils.compressFile(CommonContext.context, imagePath) else File(imagePath)
-				if (file == null || !file.exists()) {
-					initLiveData.postFail()
-					return@execute
-				}
-				val fileToMd5 = file.fileToMd5()
-				if (fileToMd5.isNullOrEmpty()) {
-					initLiveData.postFail()
-					return@execute
-				}
-				when (pushFromType) {
-					PushFromTypeEnum.PUSH_FILE_TO_NET ->pushFileToIntent(file, fileToMd5, initLiveData)
-					PushFromTypeEnum.PUSH_FILE_TO_TEN ->	pushFileToTen(file, initLiveData)
-					else -> pushFileToAli(file, fileToMd5, initLiveData)
-				}
-			} catch (e: Exception) {
-				initLiveData.postFail()
-			}
-		}
-	}
+                val file =
+                    if (!isOriginal && !Common.isVideoUrlStr(imagePath)) CompressUtils.compressFile(
+                        CommonContext.context,
+                        imagePath
+                    ) else File(imagePath)
+                if (file == null || !file.exists()) {
+                    initLiveData.postFail()
+                    return@execute
+                }
+                val fileToMd5 = file.fileToMd5()
+                if (fileToMd5.isNullOrEmpty()) {
+                    initLiveData.postFail()
+                    return@execute
+                }
+                when (pushFromType) {
+                    PushFromTypeEnum.PUSH_FILE_TO_NET -> pushFileToIntent(
+                        file,
+                        fileToMd5,
+                        initLiveData
+                    )
+                    PushFromTypeEnum.PUSH_FILE_TO_TEN -> pushFileToTen(file, initLiveData)
+                    else -> pushFileToAli(file, fileToMd5, initLiveData)
+                }
+            } catch (e: Exception) {
+                initLiveData.postFail()
+            }
+        }
+    }
 
-	/**
-	 * 上传到阿里
-	 */
-	private fun pushFileToAli(file: File, fileToMd5: String, liveData: PushFileLiveData) {
-		try {
-			val fileName = file.name.getRandomFileName()
-			val put = com.alibaba.sdk.android.oss.model.PutObjectRequest("91trial", "91trial/$fileName", file.path)
-			put.progressCallback = OSSProgressCallback { _, currentSize, totalSize ->
-				liveData.postProcess((currentSize * 100 / totalSize).toInt())
-			}
+    /**
+     * 上传到阿里
+     */
+    private fun pushFileToAli(file: File, fileToMd5: String, liveData: PushFileLiveData) {
+        try {
+            val fileName = file.name.getRandomFileName()
+            val put = com.alibaba.sdk.android.oss.model.PutObjectRequest(
+                "91trial",
+                "91trial/$fileName",
+                file.path
+            )
+            put.progressCallback = OSSProgressCallback { _, currentSize, totalSize ->
+                liveData.postProcess((currentSize * 100 / totalSize).toInt())
+            }
 
-			val putObject = client.putObject(put)
-			if (putObject == null) {
-				liveData.postFail()
-				return
-			}
-			val eTag = putObject.eTag
-			if (!fileToMd5.equals(eTag, true)) {
-				liveData.postFail()
-				return
-			}
-			liveData.postNetworkPath(client.presignPublicObjectURL(put.bucketName, put.objectKey))
-		} catch (e: Exception) {
-			liveData.postFail()
-		}
-	}
+            val putObject = client.putObject(put)
+            if (putObject == null) {
+                liveData.postFail()
+                return
+            }
+            val eTag = putObject.eTag
+            if (!fileToMd5.equals(eTag, true)) {
+                liveData.postFail()
+                return
+            }
+            liveData.postNetworkPath(client.presignPublicObjectURL(put.bucketName, put.objectKey))
+        } catch (e: Exception) {
+            liveData.postFail()
+        }
+    }
 
-	/**
-	 * 上传到自己服务器
-	 */
-	private fun pushFileToIntent(file: File, fileToMd5: String, liveData: PushFileLiveData) {
+    /**
+     * 上传到自己服务器
+     */
+    private fun pushFileToIntent(file: File, fileToMd5: String, liveData: PushFileLiveData) {
 //		val id = Constants.UserCommon.getProjectBean()?.id
 //		val userId = Constants.UserCommon.getUserInfo()?.userId
 //		try {
@@ -149,12 +168,12 @@ class FilePushUtils(lifecycle: LifecycleOwner) : LifecycleObserver {
 //		} catch (e: Exception) {
 //			liveData.postFail()
 //		}
-	}
+    }
 
-	/**
-	 * 上传视频到腾讯
-	 */
-	private fun pushFileToTen(file: File, liveData: PushFileLiveData) {
+    /**
+     * 上传视频到腾讯
+     */
+    private fun pushFileToTen(file: File, liveData: PushFileLiveData) {
 //		try {
 //			val putObjectRequest = com.tencent.cos.xml.model.`object`.PutObjectRequest(
 //				"91trial-1258666593",
@@ -178,39 +197,40 @@ class FilePushUtils(lifecycle: LifecycleOwner) : LifecycleObserver {
 //			liveData.postFail()
 //		}
 
-	}
+    }
 
 
-	/**
-	 * 清空所有正在运行的腾讯云上传服务
-	 */
-	private fun cancelTenRun() {
+    /**
+     * 清空所有正在运行的腾讯云上传服务
+     */
+    private fun cancelTenRun() {
 //		try {
 //			transferManager.cancelAll()
 //		} catch (e: Exception) {
 //		}
-	}
+    }
 
-	private fun getRunPool(): ExecutorService? {
-		if (runPushPool?.isShutdown != false) {
-			runPushPool = Executors.newSingleThreadExecutor()
-		}
-		return runPushPool
-	}
+    private fun getRunPool(): ExecutorService? {
+        if (runPushPool?.isShutdown != false) {
+            runPushPool = Executors.newSingleThreadExecutor()
+        }
+        return runPushPool
+    }
 
-	@OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-	fun onDestroy() {
-		cancelTenRun()
-		cancel()
-		cancelLife()
-	}
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() {
+        cancelTenRun()
+        cancel()
+        cancelLife()
+    }
 
-	private fun cancelLife(){
-		FilePushCommon.onLifeCancel(lifecycle)
-		lifecycle = null
-	}
-	fun cancel() {
-		runPushPool?.shutdownNow()
-		runPushPool = null
-	}
+    private fun cancelLife() {
+        FilePushCommon.onLifeCancel(lifecycle)
+        lifecycle = null
+    }
+
+    fun cancel() {
+        runPushPool?.shutdownNow()
+        runPushPool = null
+    }
 }

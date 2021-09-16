@@ -10,8 +10,8 @@ import com.rain.baselib.adapter.BaseRecAdapter
  *  Date: 2021/4/21
  */
 class PatientLoadStateAdapter : BaseRecAdapter<PatientMainModel>() {
-	override fun getLayoutResId(viewType: Int) = R.layout.item_patient_fg_view
-	override fun getVariableId(viewType: Int) = BR.patientMainModelId
+    override fun getLayoutResId(viewType: Int) = R.layout.item_patient_fg_view
+    override fun getVariableId(viewType: Int) = BR.patientMainModelId
 }
 
 

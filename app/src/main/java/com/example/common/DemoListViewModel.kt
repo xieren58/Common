@@ -10,17 +10,18 @@ import com.rain.baselib.viewModel.BaseRecViewModel
  */
 class DemoListViewModel : BaseRecViewModel<UpdatePic>() {
     override val adapter by lazy { PhotoWeightAdapter() }
-    companion object{
-        fun test(){
-            Log.d("catchMethodTag","test")
+    
+    companion object {
+        fun test() {
+            Log.d("catchMethodTag", "test")
         }
     }
-
+    
     override fun loadData() {
         adapter.addItemData(UpdatePic().apply {
             itemType = PhotoWeightAdapter.ADD_TYPE
         })
         showDataType()
     }
-
+    
 }

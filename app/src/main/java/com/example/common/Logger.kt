@@ -21,7 +21,7 @@ object Logger {
     private val dateFormat = SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.CHINA)
     private const val SEPARATOR = ","
     private val NEW_LINE = System.getProperty("line.separator")
-
+    
     fun log(priority: Int, tag: String, value: String) {
         val builder = StringBuilder()
         builder.append(NEW_LINE)
@@ -40,19 +40,19 @@ object Logger {
         builder.append(NEW_LINE)
         log(builder.toString())
     }
-
+    
     fun d(tag: String, o: Any?) {
-        log(DEBUG, tag, (o?:"").toString())
+        log(DEBUG, tag, (o ?: "").toString())
     }
-
+    
     fun e(tag: String, o: Any?) {
-        log(ERROR, tag, (o?:"").toString())
+        log(ERROR, tag, (o ?: "").toString())
     }
-
+    
     fun i(tag: String, o: Any?) {
-        log(INFO, tag, (o?:"").toString())
+        log(INFO, tag, (o ?: "").toString())
     }
-
+    
     private fun log(message: String) {
         synchronized(this) {
             val logFile = getLogFile()
@@ -72,10 +72,10 @@ object Logger {
                 }
             }
         }
-
+        
     }
-
-
+    
+    
     private fun logLevel(value: Int): String? {
         return when (value) {
             VERBOSE -> "VERBOSE"
@@ -87,11 +87,10 @@ object Logger {
             else -> "UNKNOWN"
         }
     }
-
+    
     fun getLogFile(): File {
         return File(MyApp.context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)?.absolutePath + File.separatorChar + "logger.txt")
     }
-
 
 
 //    fun getFileLastModifiedTime(): Long? {
