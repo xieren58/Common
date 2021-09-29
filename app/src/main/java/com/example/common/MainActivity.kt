@@ -33,7 +33,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val viewModel by viewModels<MainViewModel>()
     override val variableId = BR.mainId
     private var accuracy = 3
-    
+
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
@@ -43,10 +43,14 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //					withString("uri","assets/1_x264.mp4")
 //					.navigation(this)
         }
-        viewBind.tvEnd.singleClick {
-//			showScanFragment()
+        NumberUtils.singViewClick(viewBind.tvEnd){
             ARouter.getInstance().build("/main/testBar").navigation(this)
         }
+
+//        viewBind.tvEnd.singleClick {
+////			showScanFragment()
+//            ARouter.getInstance().build("/main/testBar").navigation(this)
+//        }
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()
         }
@@ -66,8 +70,9 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //				haveEn = true
 //		)
     }
-    
+
     private fun showTime() {
+        Log.d("packageTag", "packageName:$packageName,packageCodePath:${packageCodePath}")
         TimeSelectDialog.initBuilder().initListener(object : OnTimeBottomSelectListener {
             override fun resultTime(time: String) {
             }
@@ -76,7 +81,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
             }
         }).show(this)
     }
-    
+
     private suspend fun loadBitmap(path: String = "https://91trial.oss-cn-shanghai.aliyuncs.com/91trial/file_3cd75d4a-859f-46e0-8e3c-2f9b763041dd.jpeg"): Bitmap? {
         return suspendCancellableCoroutine { continuation ->
             continuation.invokeOnCancellation {
@@ -103,10 +108,10 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
                             )
                         )
                     }
-                    
+
                     override fun onLoadCleared(placeholder: Drawable?) {
                     }
-                    
+
                     override fun onLoadFailed(errorDrawable: Drawable?) {
                         super.onLoadFailed(errorDrawable)
                         Log.d("bitmapSuspendTag", "errorDrawable:$errorDrawable")
@@ -116,7 +121,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
                 })
         }
     }
-    
+
     private fun initMosaic() {
         lifecycleScope.launch {
             val loadBitmap = loadBitmap() ?: return@launch
@@ -124,15 +129,15 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
             ImageUtil.saveBitmap(this@MainActivity, loadBitmap)
         }
     }
-    
+
     private fun showScanFragment() {
         val editCodeFragment = EditCodeFragment()
         editCodeFragment.addCodeResultListener {
-        
+
         }
         editCodeFragment.show(supportFragmentManager, "scan")
     }
-    
+
     private var editScanDialog: EditCodeDialog? = null
     private fun showScanDialog() {
         if (editScanDialog == null) editScanDialog = EditCodeDialog(this)
@@ -147,16 +152,16 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         editScanDialog?.setOnDismissListener { editScanDialog = null }
         editScanDialog?.show()
     }
-    
+
     private fun setEndLabelStr(view: TextView, str: String?, haveCh: Boolean, haveEn: Boolean) {
         val content = str ?: ""
         val stringBuilder = SpannableStringBuilder(content)
         if (haveCh) appendTextSpan("中", Color.parseColor("#005FA2"), stringBuilder)
         if (haveEn) appendTextSpan("英", Color.parseColor("#FF9F00"), stringBuilder)
         view.text = stringBuilder
-        
+
     }
-    
+
     private fun appendTextSpan(str: String, color: Int, stringBuilder: SpannableStringBuilder) {
         stringBuilder.append(" ")
         stringBuilder.append(str)
@@ -167,7 +172,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
         )
     }
-    
+
     private fun runClazzCatch() {
         try {
             val forName = Class.forName("com.example.common.DemoListViewModel")
@@ -182,7 +187,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
             e.printStackTrace()
         }
     }
-    
+
     private fun loadFilePath() {
         lifecycleScope.launch {
             val path =
@@ -197,6 +202,6 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
             Log.d("loadFileTag", "loadBitmap:$loadBitmap")
             viewBind.igTest.setImageBitmap(loadBitmap)
         }
-        
+
     }
 }

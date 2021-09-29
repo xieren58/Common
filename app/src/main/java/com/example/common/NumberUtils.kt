@@ -2,7 +2,9 @@ package com.example.common
 
 import android.content.Context
 import android.util.Log
+import android.view.View
 import android.widget.Toast
+import com.rain.baselib.common.singleClick
 import java.math.BigDecimal
 import java.text.NumberFormat
 
@@ -72,6 +74,11 @@ object NumberUtils {
             Toast.makeText(context, "格式错误", Toast.LENGTH_SHORT).show()
         }
         return format
+    }
+
+    @JvmStatic
+    fun singViewClick(view: View, onClickListener: View.OnClickListener){
+        view.singleClick(onClickListener)
     }
     
 }

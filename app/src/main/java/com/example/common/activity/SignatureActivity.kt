@@ -1,9 +1,7 @@
 package com.example.common.activity
 
-import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.lifecycleScope
-import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.common.R
 import com.example.common.databinding.ActivitySignatureBinding
 import com.rain.baselib.activity.BaseDataBindActivity

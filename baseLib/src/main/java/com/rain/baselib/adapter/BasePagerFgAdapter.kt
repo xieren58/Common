@@ -1,5 +1,6 @@
 package com.rain.baselib.adapter
 
+import android.annotation.SuppressLint
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -15,9 +16,10 @@ class BasePagerFgAdapter : FragmentStateAdapter {
 
     private val lists: MutableList<Fragment> = mutableListOf()
 
-    fun setData(list: MutableList<Fragment>) {
+    @SuppressLint("NotifyDataSetChanged")
+    fun setData(list: MutableList<Fragment>?) {
         lists.clear()
-        lists.addAll(list)
+       if (!list.isNullOrEmpty()) lists.addAll(list)
         notifyDataSetChanged()
 
     }

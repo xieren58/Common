@@ -24,6 +24,11 @@ android {
                 arg("AROUTER_MODULE_NAME", project.getName())
             }
         }
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                "JPUSH_APPKEY": "",
+                JPUSH_CHANNEL : "developer-default", //暂时填写默认值即可.
+        ]
     }
     signingConfigs {
         common {
@@ -37,14 +42,41 @@ android {
     buildFeatures {
         dataBinding = true
     }
+    productFlavors {
+        trail {
+            flavorDimensions "trail"
+            applicationId "com.ashermed.ysedc.old"
+            //个推应用参数，请填写您申请的 GETUI_APP_ID，GETUI_APP_KEY，GETUI_APP_SECRET 值
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "Vo1XOXC5lo8sM85bnpzrm2",
+                    GETUI_APP_KEY   : "e3zAQxUa6y5THy2z9TfB4A",
+                    GETUI_APP_SECRET: "ABXyI2RSLp8DCIUqHJ2or5",
+                    PACKAGE_NAME    : applicationId
+            ]
+        }
+        xinchen {
+            flavorDimensions "xinchen"
+            applicationId "com.ashermed.xc"
+            //个推应用参数，请填写您申请的 GETUI_APP_ID，GETUI_APP_KEY，GETUI_APP_SECRET 值
+            manifestPlaceholders = [
+                    GETUI_APP_ID    : "lPwPdfRB907zI9OOCXprA1",
+                    GETUI_APP_KEY   : "FmbYc2ygPI68PWwKrAXMp2",
+                    GETUI_APP_SECRET: "msAi8nuYzUAEY7SzF2L9I4",
+                    PACKAGE_NAME    : applicationId
+            ]
+        }
+
+    }
     buildTypes {
         debug{
             signingConfig signingConfigs.common
         }
         release {
+//            applicationIdSuffix ".release"
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.common
+
         }
     }
     compileOptions {
@@ -62,8 +94,6 @@ android {
 }
 
 dependencies {
-
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation project(path: ':baseLib')
 
     implementation "com.github.LuckSiege.PictureSelector:picture_library:v2.5.9"

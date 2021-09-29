@@ -7,7 +7,7 @@ import android.widget.Checkable
  *  Create by rain
  *  Date: 2020/3/12
  */
-inline fun <T : View> T.singleClick(time: Long = 300, crossinline block: (T) -> Unit) {
+inline fun <T : View> T.singleClick(time: Long = 800, crossinline block: (T) -> Unit) {
     setOnClickListener {
         val currentTimeMillis = System.currentTimeMillis()
         if (currentTimeMillis - lastClickTime > time || this is Checkable) {
@@ -18,7 +18,7 @@ inline fun <T : View> T.singleClick(time: Long = 300, crossinline block: (T) -> 
 }
 
 //兼容点击事件设置为this的情况
-fun <T : View> T.singleClick(onClickListener: View.OnClickListener, time: Long = 300) {
+fun <T : View> T.singleClick(onClickListener: View.OnClickListener, time: Long = 800) {
     setOnClickListener {
         val currentTimeMillis = System.currentTimeMillis()
         if (currentTimeMillis - lastClickTime > time || this is Checkable) {

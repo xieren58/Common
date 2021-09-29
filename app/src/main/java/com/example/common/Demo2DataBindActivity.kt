@@ -3,7 +3,6 @@ package com.example.common
 import android.graphics.Color
 import android.util.Log
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.alibaba.android.arouter.facade.annotation.Route
 import com.example.common.databinding.ActivityDemoBinding
@@ -69,7 +68,7 @@ class Demo2DataBindActivity : BaseDataBindActivity<ActivityDemoBinding>() {
             override fun onTabReselected(tab: TabLayout.Tab) {
             }
         })
-    };
+    }
     
     override val layoutResId = R.layout.activity_demo
     
