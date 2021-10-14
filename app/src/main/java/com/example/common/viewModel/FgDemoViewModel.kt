@@ -5,7 +5,6 @@ import com.example.common.adapter.PatientLoadStateAdapter
 import com.example.common.http.RetrofitFac
 import com.example.common.http.scope.launchFlow
 import com.example.common.http.scope.resultFail
-import com.example.common.http.scope.resultScope
 import com.example.common.http.scope.resultSuccessScope
 import com.example.common.model.PatientMainModel
 import com.rain.baselib.viewModel.BaseRecViewModel

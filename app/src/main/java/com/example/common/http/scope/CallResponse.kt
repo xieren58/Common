@@ -23,7 +23,7 @@ fun <T> launchFlow(block: suspend () -> BaseResponseBody<T>) = flow {
 /**
  * 异步转换数据
  */
-fun <T, R> Flow<T>.transformIOFlow(block: (T) -> R) = transform {
+fun <T, R> Flow<T>.transformIOFlow(block: suspend(T) -> R) = transform {
     emit(block(it))
 }.flowOn(Dispatchers.IO)
 
