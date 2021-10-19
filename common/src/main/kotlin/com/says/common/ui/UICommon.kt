@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.TypedValue
 import android.view.inputmethod.InputMethodManager
+import com.says.common.CommonContext
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileOutputStream

@@ -12,6 +12,6 @@ dependencyResolutionManagement {
 }
 
 
-include(":app",":library",":baseLib",":common")
+include(":app",":baseLib",":common")
 rootProject.name = "Common"
 
