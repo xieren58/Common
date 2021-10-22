@@ -1,7 +1,3 @@
-import com.android.build.gradle.internal.errors.DeprecationReporterImpl.Companion.clean
-import org.jetbrains.kotlin.contracts.model.structure.UNKNOWN_COMPUTATION.type
-
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     val kotlinVersion = "1.5.31"
     repositories {
