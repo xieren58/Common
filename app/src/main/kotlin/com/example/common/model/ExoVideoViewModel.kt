@@ -24,50 +24,54 @@ class ExoVideoViewModel : BaseViewModel(), AnalyticsListener, LifecycleObserver 
         this.player = player
         Log.d("videoPlayTag", "videoUrl:$videoUrl,player:$player")
     }
-    
-    override fun onRenderedFirstFrame(eventTime: AnalyticsListener.EventTime, output: Any, renderTimeMs: Long) {
+
+    override fun onRenderedFirstFrame(
+        eventTime: AnalyticsListener.EventTime,
+        output: Any,
+        renderTimeMs: Long
+    ) {
         super.onRenderedFirstFrame(eventTime, output, renderTimeMs)
         Log.e("videoPlayTag", "onRenderedFirstFrame: 在渲染的第一帧上")
         viewLoadShow.postValue(false)
     }
-    
+
     override fun initModel() {
         player?.addAnalyticsListener(this)
         playVideo()
     }
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun pausePlayer() {
         Log.d("videoPlayTag", "pausePlayer:$player")
         try {
-            if (player != null && player!!.isPlaying) {
+            if (player?.isPlaying == true) {
                 player?.pause()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun resumePlayer() {
         Log.d("videoPlayTag", "resumePlayer:$player")
         try {
-            if (player != null && !player!!.isPlaying) {
+            if (player?.isPlaying != true) {
                 player?.play()
             }
         } catch (e: Exception) {
             e.printStackTrace()
         }
     }
-    
+
     private fun playVideo() {
         val url = videoUrl
         if (url.isNullOrEmpty()) return
         player?.setMediaItem(MediaItem.fromUri(url))
         player?.prepare()
     }
-    
-    
+
+
     override fun onCleared() {
         super.onCleared()
         Log.d("videoPlayTag", "onCleared:$player")
@@ -79,5 +83,5 @@ class ExoVideoViewModel : BaseViewModel(), AnalyticsListener, LifecycleObserver 
         }
         Log.d("videoPlayTag", "onCleared-end:$player")
     }
-    
+
 }

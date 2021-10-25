@@ -20,7 +20,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //            showTime()
 //			viewModel.testBreak("111")
 			ARouter.getInstance().build("/common/exo").
-					withString("uri","assets/1_x264.mp4")
+					withString("uri","file:///android_asset/1_x264.mp4")
 					.navigation(this)
         }
         viewBind.tvEnd.singleClick {

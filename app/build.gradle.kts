@@ -125,7 +125,7 @@ dependencies {
 //    implementation "com.google.dagger:hilt-android:2.28-alpha"
 //    kapt "com.google.dagger:hilt-android-compiler:2.28-alpha"
 
-    implementation("com.google.android.exoplayer:exoplayer:2.14.0")
+    implementation("com.google.android.exoplayer:exoplayer:2.15.1")
 
     implementation("com.alibaba:arouter-api:1.5.2")
     kapt("com.alibaba:arouter-compiler:1.5.2")
