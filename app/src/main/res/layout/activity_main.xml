@@ -2,7 +2,9 @@
 <layout>
 
     <data>
-        <import type="com.says.common.utils.StringUtils"/>
+
+        <import type="com.says.common.utils.StringUtils" />
+
         <variable
             name="mainId"
             type="com.example.common.viewModel.MainViewModel" />
@@ -68,12 +70,65 @@
                 android:textColor="@color/white"
                 android:textSize="18sp" />
         </LinearLayout>
-        <ImageView
-            android:id="@+id/ig_test"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+
+        <androidx.constraintlayout.utils.widget.ImageFilterView
+            android:id="@+id/ig_1"
             android:layout_width="100dp"
-            android:layout_height="100dp"/>
+            app:round="60dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_height="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/ig_2"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintTop_toTopOf="parent" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/ig_2"
+            android:layout_width="100dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:layout_height="100dp"
+            android:padding="2dp"
+            android:src="@mipmap/ic_launcher"
+            app:strokeColor="@color/red_color"
+            app:strokeWidth="2dp"
+            app:shapeAppearanceOverlay="@style/imageViewAppearanceStyle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ig_1"
+            app:layout_constraintTop_toTopOf="parent" />
+        <View
+            android:id="@+id/view_1"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/view_2"
+            android:background="@color/black"
+            app:layout_constraintDimensionRatio="85:95"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_number" />
+
+        <View
+            android:id="@+id/view_2"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            app:layout_constraintEnd_toStartOf="@+id/view_3"
+            android:background="@color/red_color"
+            app:layout_constraintBottom_toBottomOf="@+id/view_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_1"
+            app:layout_constraintTop_toTopOf="@+id/view_1" />
+
+        <View
+            android:id="@+id/view_3"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/blue_00"
+            app:layout_constraintBottom_toBottomOf="@+id/view_1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/view_2"
+            app:layout_constraintTop_toTopOf="@+id/view_1" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

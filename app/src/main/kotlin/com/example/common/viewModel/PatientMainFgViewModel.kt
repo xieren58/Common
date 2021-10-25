@@ -13,6 +13,6 @@ class PatientMainFgViewModel : BaseViewModel() {
     
     override fun initModel() {
         super.initModel()
-        adapter.setData(mutableListOf("33", "3333", "#3333", "3333333"))
+        adapter.setData(mutableListOf("33", "3333"))
     }
 }

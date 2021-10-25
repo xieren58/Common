@@ -25,7 +25,9 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         }
         viewBind.tvEnd.singleClick {
 //			showScanFragment()
-            ARouter.getInstance().build("/main/testBar").navigation(this)
+            Log.d("testTag","name:${javaClass.name},isContains:${  this.javaClass.name.contains("")}")
+
+//            ARouter.getInstance().build("/main/testBar").navigation(this)
         }
         viewBind.content.singleClick {
             viewBind.etNumber.clearFocus()
