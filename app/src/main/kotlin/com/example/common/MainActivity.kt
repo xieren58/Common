@@ -14,6 +14,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val viewModel by viewModels<MainViewModel>()
     override val variableId = BR.mainId
     private var accuracy = 3
+
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
