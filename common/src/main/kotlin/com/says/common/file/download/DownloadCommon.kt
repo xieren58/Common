@@ -1,6 +1,5 @@
 package com.says.common.file.download
 
-import android.content.Context
 import android.os.Environment
 import android.util.Log
 import com.says.common.file.utils.fileToMd5
@@ -12,11 +11,15 @@ import java.io.*
 /**
  * 文件下载
  */
-class DownloadCommon(val context: Context, val builder: DownloadBuilder) {
+class DownloadCommon(val builder: DownloadBuilder) {
     var downLoadTag: String? = null
 
     private var retryCount: Int = 0 //重试次数
     private var job: Job? = null
+
+    /**
+     * 开始下载
+     */
     fun download(lifeScope: CoroutineScope) {
         job = lifeScope.launch(Dispatchers.IO) {
             val url = builder.getUrl()
@@ -25,29 +28,35 @@ class DownloadCommon(val context: Context, val builder: DownloadBuilder) {
             }
             downloadFile(url)
         }
+
     }
-
+    /**
+     * 文件下载，写入
+     */
     private suspend fun downloadFile(url: String) {
-//        var byteStream: InputStream? = null
-//        var fos: FileOutputStream? = null
-
+        withContext(Dispatchers.Main) {
+            builder.getListener()?.onBefore()
+        }
         var inputBuffer: BufferedSource? = null
         var sink: BufferedSink? = null
         try {
-            val response = OkHttpUtils.mOkHttp.newCall(Request.Builder().url(url = url).get().build()).execute()
+            val response = OkHttpUtils.mOkHttp.newCall(Request.Builder().url(url = url).get().build()).execute() //请求接口获取下载数据
             val body = response.body
             Log.d("downloadTag", "body:$body,isSuccessful:${response.isSuccessful},")
+            //当下载不成功时调用重试机制
             if (!response.isSuccessful || body == null) {
                 retryDownload(url, response.message)
                 return
             }
             val saveDir = File(getSavePath())
+            //如果文件夹不存在则创建
             if (!saveDir.exists()) {
                 saveDir.mkdirs()
             }
             Log.d("downloadTag", "saveDir:${saveDir.path}")
             val saveFile = File(saveDir, getApkNameByDownloadUrl(url))
-            if (saveFile.exists()){
+            //如果下載的文件存在則刪除
+            if (saveFile.exists()) {
                 saveFile.delete()
             }
             Log.d("downloadTag", "saveFile:${saveFile.path}")
@@ -57,7 +66,7 @@ class DownloadCommon(val context: Context, val builder: DownloadBuilder) {
             val contentLength = body.contentLength()
 
             val bufferSize = 200 * 1024L
-
+            //使用okio來读写文件
             sink = saveFile.sink().buffer()
             val buffer = sink.buffer
 
@@ -78,6 +87,7 @@ class DownloadCommon(val context: Context, val builder: DownloadBuilder) {
 
             Log.d("downloadTag", "saveFile:${saveFile.path}")
             Log.d("downloadTag", "md5Str:${builder.getMd5()}")
+            //最终结果回调
             if (!builder.getMd5().isNullOrEmpty()) {
                 val fileToMd5 = saveFile.fileToMd5()
                 Log.d("downloadTag", "fileToMd5:$fileToMd5")
@@ -132,9 +142,9 @@ class DownloadCommon(val context: Context, val builder: DownloadBuilder) {
 
     private fun getSavePath(): String {
         val savePath = builder.getSavePath()
-        return if (savePath.isNullOrEmpty()) context.externalCacheDir?.absolutePath
-                ?: context.getExternalFilesDir("download")?.absolutePath
-                ?: Environment.getExternalStorageState() + File.separator + context.packageName else savePath
+        return if (savePath.isNullOrEmpty()) builder.context.externalCacheDir?.absolutePath
+                ?: builder.context.getExternalFilesDir("download")?.absolutePath
+                ?: Environment.getExternalStorageState() + File.separator + builder.context.packageName else savePath
     }
 
     private fun successCall(path: String) {

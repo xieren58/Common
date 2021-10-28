@@ -16,15 +16,22 @@ import kotlinx.coroutines.GlobalScope
  */
 object DownloadFileManager {
     private val downloadList = mutableListOf<DownloadCommon>()
-
+    /**
+     * 获取所有下载任务
+     */
     @JvmStatic
     fun getList() = downloadList
 
+    /**
+     * 新增下载任务
+     */
     @JvmStatic
     fun addList(common: DownloadCommon) {
         downloadList.add(common)
     }
-
+    /**
+     * 删除缓存的下载任务
+     */
     @JvmStatic
     fun removeList(common: DownloadCommon) {
         downloadList.remove(common)

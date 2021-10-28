@@ -5,10 +5,9 @@ import kotlinx.coroutines.CoroutineScope
 
 
 /**
- *  Create by rain
- *  Date: 2021/10/28
+ * 文件下载参数构建器
  */
-class DownloadBuilder(private val scope: CoroutineScope,private val context: Context) {
+class DownloadBuilder(private val scope: CoroutineScope, val context: Context) {
     private var mUrl: String? = null //下载地址
     private var mListener: DownloadFileListener? = null //下载监听
     private var mSavePath: String? = null // 保存的路徑
@@ -21,6 +20,9 @@ class DownloadBuilder(private val scope: CoroutineScope,private val context: Con
         return this
     }
 
+    /**
+     * 地址
+     */
     fun url(url: String): DownloadBuilder {
         this.mUrl = url
         return this
@@ -56,12 +58,12 @@ class DownloadBuilder(private val scope: CoroutineScope,private val context: Con
             val list = DownloadFileManager.getList().filter {
                 it.builder.getUrl() == mUrl
             }
-            if (!list.isNullOrEmpty()){
+            if (!list.isNullOrEmpty()) {
                 this.mListener?.onRepeat()
                 return
             }
         }
-        val downloadCommon = DownloadCommon(context, this)
+        val downloadCommon = DownloadCommon(this)
         DownloadFileManager.addList(downloadCommon)
         downloadCommon.download(scope)
     }

@@ -20,6 +20,7 @@ class DownloadFileViewModel : BaseViewModel() {
         DownloadFileManager.cancelJob("https://app.distribution.medcloud.cn/upload/5de65d0e24a6c8001d798c8b/android/com.jiahui.health.app_2.0.1_221102705.apk")
     }
     fun download() {
+
         Log.d("downloadFileTag","download")
         DownloadFileManager.initBuilder(this, MyApp.context)
                 .url("https://app.distribution.medcloud.cn/upload/5de65d0e24a6c8001d798c8b/android/com.jiahui.health.app_2.0.1_221102705.apk")
