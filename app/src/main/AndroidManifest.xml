@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Common"
         tools:ignore="AllowBackup,LockedOrientationActivity">
-        <activity android:name=".activity.MainBarActivity"/>
+        <activity
+            android:name=".DownloadFileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.MainBarActivity" />
         <activity android:name=".activity.RecyclerListActivity" />
         <activity android:name=".activity.RecyclerDemoActivity" />
         <activity
@@ -30,13 +34,13 @@
         <activity
             android:name=".Demo2DataBindActivity"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".activity.StartNavigationActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

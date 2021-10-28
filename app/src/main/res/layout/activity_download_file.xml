@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="downloadFileViewModelId"
+            type="com.example.common.viewModel.DownloadFileViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        tools:context=".DownloadFileActivity">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/myprogressbar"
+            android:indeterminateDrawable="@android:drawable/progress_indeterminate_horizontal"
+            android:indeterminateOnly="false"
+            android:max="100"
+            android:progress="@{downloadFileViewModelId.processLiveData}"
+            android:progressDrawable="@drawable/myprogressbar"
+            app:layout_constraintBottom_toTopOf="@+id/tv_download" />
+
+        <TextView
+            android:id="@+id/tv_download"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:background="@color/red_color"
+            android:gravity="center"
+            android:text="下载"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:singClick="@{()->downloadFileViewModelId.download()}" />
+
+        <TextView
+            android:id="@+id/tv_download_cancel"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/red_color"
+            android:gravity="center"
+            android:text="取消"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_download"
+            app:singClick="@{()->downloadFileViewModelId.cancel()}" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

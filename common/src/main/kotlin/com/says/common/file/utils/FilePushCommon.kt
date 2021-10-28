@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import com.says.common.file.enum.PushFromTypeEnum
 import com.says.common.file.listener.FilePushResultListener
 import com.says.common.file.model.PushFileLiveData
+import java.io.File
 
 /**
  *  Create by rain
@@ -38,7 +39,6 @@ object FilePushCommon {
         }
 
     }
-
     fun onLifeCancel(lifecycle: LifecycleOwner?) {
         if (lifecycle == null) return
         fileLifeMap.remove(lifecycle)

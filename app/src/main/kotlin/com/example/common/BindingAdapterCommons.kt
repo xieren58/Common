@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.rain.baselib.common.singleClick
 
 /**
  *  Create by rain
@@ -72,4 +73,9 @@ fun setSexImageStr(view: ImageView, str: Int?) {
 @BindingAdapter("visitStateArrow")
 fun setVisitStateArrow(view: ImageView, visitStateArrow: Int?) {
     view.setImageResource(if (visitStateArrow != null && visitStateArrow == 1) R.drawable.arrow_right_next else R.drawable.arrow_title_right)
+}
+
+@BindingAdapter("singClick")
+fun setSingClick(view: View, clickListener: View.OnClickListener) {
+    view.singleClick(clickListener)
 }

@@ -8,21 +8,22 @@ import com.example.common.viewModel.MainViewModel
 import com.example.common.weight.*
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
+import com.rain.baselib.common.startAc
 
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val layoutResId = R.layout.activity_main
     override val viewModel by viewModels<MainViewModel>()
     override val variableId = BR.mainId
     private var accuracy = 3
-
     override fun initEvent() {
         super.initEvent()
         viewBind.tvStart.singleClick {
 //            showTime()
 //			viewModel.testBreak("111")
-			ARouter.getInstance().build("/common/exo").
-					withString("uri","file:///android_asset/1_x264.mp4")
-					.navigation(this)
+            startAc<DownloadFileActivity>()
+//			ARouter.getInstance().build("/common/exo").
+//					withString("uri","file:///android_asset/1_x264.mp4")
+//					.navigation(this)
         }
         viewBind.tvEnd.singleClick {
 //			showScanFragment()
