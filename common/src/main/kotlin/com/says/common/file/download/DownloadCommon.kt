@@ -2,21 +2,24 @@ package com.says.common.file.download
 
 import android.os.Environment
 import android.util.Log
+import com.says.common.CommonContext
 import com.says.common.file.utils.fileToMd5
+import com.says.common.utils.PermissionUtils
 import kotlinx.coroutines.*
 import okhttp3.Request
 import okio.*
 import java.io.*
+import java.security.Permission
+import java.security.Permissions
 
 /**
  * 文件下载
  */
 class DownloadCommon(val builder: DownloadBuilder) {
-    var downLoadTag: String? = null
-
+    
     private var retryCount: Int = 0 //重试次数
     private var job: Job? = null
-
+    
     /**
      * 开始下载
      */
@@ -26,10 +29,20 @@ class DownloadCommon(val builder: DownloadBuilder) {
             if (url.isNullOrEmpty()) {
                 throw Exception("下载地址为空")
             }
+            if (!PermissionUtils.checkPermissionPermission(CommonContext.context,
+                            android.Manifest.permission.INTERNET,
+                            android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                withContext(Dispatchers.Main) {
+                    errorCall("获取权限失败")
+                }
+                return@launch
+            }
             downloadFile(url)
         }
-
+        
     }
+    
     /**
      * 文件下载，写入
      */
@@ -64,12 +77,12 @@ class DownloadCommon(val builder: DownloadBuilder) {
             var currentLength = 0L
             //读取缓冲区
             val contentLength = body.contentLength()
-
+            
             val bufferSize = 200 * 1024L
             //使用okio來读写文件
             sink = saveFile.sink().buffer()
             val buffer = sink.buffer
-
+            
             inputBuffer = body.byteStream().source().buffer()
             var percent = 0
             while (inputBuffer.read(buffer, bufferSize).also { len = it } != -1L) {
@@ -84,7 +97,7 @@ class DownloadCommon(val builder: DownloadBuilder) {
                     }
                 }
             }
-
+            
             Log.d("downloadTag", "saveFile:${saveFile.path}")
             Log.d("downloadTag", "md5Str:${builder.getMd5()}")
             //最终结果回调
@@ -113,14 +126,14 @@ class DownloadCommon(val builder: DownloadBuilder) {
             } else {
                 retryDownload(url, e.message ?: "文件读写错误")
             }
-
+            
         } finally {
             inputBuffer?.close()
             sink?.close()
         }
-
+        
     }
-
+    
     private suspend fun retryDownload(url: String, message: String) {
         Log.d("downloadTag", "retryCount:$retryCount,maxCount:${builder.getRetryMaxCount()}")
         if (retryCount >= builder.getRetryMaxCount()) {
@@ -135,38 +148,38 @@ class DownloadCommon(val builder: DownloadBuilder) {
             downloadFile(url)
         }
     }
-
+    
     fun cancel() {
         job?.cancel()
     }
-
+    
     private fun getSavePath(): String {
         val savePath = builder.getSavePath()
-        return if (savePath.isNullOrEmpty()) builder.context.externalCacheDir?.absolutePath
-                ?: builder.context.getExternalFilesDir("download")?.absolutePath
-                ?: Environment.getExternalStorageState() + File.separator + builder.context.packageName else savePath
+        return if (savePath.isNullOrEmpty()) CommonContext.context.externalCacheDir?.absolutePath
+                ?: CommonContext.context.getExternalFilesDir("download")?.absolutePath
+                ?: Environment.getExternalStorageState() + File.separator + CommonContext.context.packageName else savePath
     }
-
+    
     private fun successCall(path: String) {
         builder.getListener()?.onSuccess(path)
         DownloadFileManager.removeList(this)
 //        listener.remove(urlTag)
     }
-
+    
     private fun errorCall(message: String) {
         builder.getListener()?.onError(message)
         DownloadFileManager.removeList(this)
 //        listener.remove(urlTag)
     }
-
+    
     private fun retryCall(count: Int) {
         builder.getListener()?.onRetry(count)
     }
-
+    
     private fun processCall(process: Int) {
         builder.getListener()?.onProcess(process)
     }
-
+    
     /**
      * 根据下载地址获取文件名
      *

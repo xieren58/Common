@@ -7,7 +7,7 @@ import kotlinx.coroutines.CoroutineScope
 /**
  * 文件下载参数构建器
  */
-class DownloadBuilder(private val scope: CoroutineScope, val context: Context) {
+class DownloadBuilder(private val scope: CoroutineScope) {
     private var mUrl: String? = null //下载地址
     private var mListener: DownloadFileListener? = null //下载监听
     private var mSavePath: String? = null // 保存的路徑
