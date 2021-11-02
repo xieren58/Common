@@ -1,6 +1,8 @@
-package com.example.common
+package com.example.common.activity
 
 import androidx.activity.viewModels
+import com.example.common.BR
+import com.example.common.R
 import com.example.common.databinding.ActivityDownloadFileBinding
 import com.example.common.viewModel.DownloadFileViewModel
 import com.rain.baselib.activity.BaseDataBindActivity

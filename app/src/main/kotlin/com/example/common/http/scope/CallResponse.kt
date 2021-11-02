@@ -7,6 +7,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import kotlin.jvm.Throws
 
 /**
  *  Create by rain
@@ -23,7 +24,7 @@ fun <T> launchFlow(block: suspend () -> BaseResponseBody<T>) = flow {
 /**
  * 异步转换数据
  */
-fun <T, R> Flow<T>.transformIOFlow(block: suspend(T) -> R) = transform {
+fun <T, R> Flow<T>.transformIOFlow(block: suspend (T) -> R) = transform {
     emit(block(it))
 }.flowOn(Dispatchers.IO)
 
@@ -35,10 +36,11 @@ fun <T, R> Flow<T>.transformFlow(block: suspend (T) -> BaseResponseBody<R>) = tr
     emit(block(it).resultDataBlock())
 }.flowOn(Dispatchers.IO).completionResult()
 
-fun <T> BaseResponseBody<T>.resultDataBlock(): T? {
+fun <T> BaseResponseBody<T>.resultDataBlock(isCatch: Boolean = false): T? {
     val code = code
     if (code != HttpCode.CODE_SUCCESS) {
-        when (code) {
+        if (isCatch)return null
+        else when (code) {
             HttpCode.TOKEN_PARAM_ERROR -> throw ResultThrowable(HttpCode.CODE_RESULT_INVALID, "")
             HttpCode.CODE_CONNECTION_FAILED, HttpCode.SERVER_ERROR -> throw ResultThrowable(HttpCode.CODE_RESULT_INVALID, "服务器异常")
             else -> throw ResultThrowable(code, msg)
@@ -122,7 +124,8 @@ suspend fun <T> resultHttpData(isCatch: Boolean = true, block: suspend () -> Bas
     if (!NetWorkUtils.isNetConnected()) if (isCatch) return null else throw ResultThrowable(-1, "请检查网络连接")
     return if (isCatch) {
         try {
-            block().resultDataBlock()
+          val result =  block()
+            result.resultDataBlock()
         } catch (e: Exception) {
             null
         }
@@ -141,6 +144,6 @@ private fun <T> Flow<T>.completionResult() = onCompletion { cause ->
 /**
  *  异常类
  */
-class ResultThrowable(val code: Int = -1, resultMessage: String?) : Throwable(resultMessage) {
+class ResultThrowable(val code: Int = -1, resultMessage: String?) : Exception(resultMessage) {
     constructor(resultMessage: String?) : this(-1, resultMessage)
 }

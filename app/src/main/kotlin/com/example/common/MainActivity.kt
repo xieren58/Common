@@ -2,7 +2,7 @@ package com.example.common
 
 import android.util.Log
 import androidx.activity.viewModels
-import com.alibaba.android.arouter.launcher.ARouter
+import com.example.common.activity.DownloadFileActivity
 import com.example.common.databinding.ActivityMainBinding
 import com.example.common.viewModel.MainViewModel
 import com.example.common.weight.*
@@ -28,7 +28,7 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         viewBind.tvEnd.singleClick {
 //			showScanFragment()
             Log.d("testTag","name:${javaClass.name},isContains:${  this.javaClass.name.contains("")}")
-
+            viewModel.testBreak("")
 //            ARouter.getInstance().build("/main/testBar").navigation(this)
         }
         viewBind.content.singleClick {

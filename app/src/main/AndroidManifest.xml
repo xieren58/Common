@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Common"
         tools:ignore="AllowBackup,LockedOrientationActivity">
         <activity
-            android:name=".DownloadFileActivity"
+            android:name=".activity.DownloadFileActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.MainBarActivity" />

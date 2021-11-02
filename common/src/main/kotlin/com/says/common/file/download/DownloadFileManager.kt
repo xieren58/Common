@@ -53,22 +53,22 @@ object DownloadFileManager {
 
     @JvmStatic
     fun initBuilder(activity: FragmentActivity): DownloadBuilder {
-        return DownloadBuilder(activity.lifecycleScope, activity)
+        return DownloadBuilder(activity.lifecycleScope)
     }
 
     @JvmStatic
     @DelicateCoroutinesApi
     fun initBuilder(context: Context): DownloadBuilder {
-        return DownloadBuilder(if (context is FragmentActivity) context.lifecycleScope else GlobalScope, context)
+        return DownloadBuilder(if (context is FragmentActivity) context.lifecycleScope else GlobalScope)
     }
 
     @JvmStatic
     fun initBuilder(viewModel: ViewModel, context: Context): DownloadBuilder {
-        return DownloadBuilder(viewModel.viewModelScope, context)
+        return DownloadBuilder(viewModel.viewModelScope)
     }
 
     @JvmStatic
     fun initBuilder(fragment: Fragment): DownloadBuilder {
-        return DownloadBuilder(fragment.lifecycleScope, fragment.requireContext())
+        return DownloadBuilder(fragment.lifecycleScope)
     }
 }
