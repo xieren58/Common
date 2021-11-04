@@ -63,7 +63,7 @@ object DownloadFileManager {
     }
 
     @JvmStatic
-    fun initBuilder(viewModel: ViewModel, context: Context): DownloadBuilder {
+    fun initBuilder(viewModel: ViewModel): DownloadBuilder {
         return DownloadBuilder(viewModel.viewModelScope)
     }
 
