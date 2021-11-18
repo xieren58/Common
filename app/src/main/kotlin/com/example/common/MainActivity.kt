@@ -9,6 +9,7 @@ import com.example.common.weight.*
 import com.rain.baselib.activity.BaseDataBindActivity
 import com.rain.baselib.common.singleClick
 import com.rain.baselib.common.startAc
+import com.says.common.utils.TimeUtils
 
 class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
     override val layoutResId = R.layout.activity_main
@@ -20,7 +21,8 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
         viewBind.tvStart.singleClick {
 //            showTime()
 //			viewModel.testBreak("111")
-            startAc<DownloadFileActivity>()
+            getOfMonth()
+//            startAc<DownloadFileActivity>()
 //			ARouter.getInstance().build("/common/exo").
 //					withString("uri","file:///android_asset/1_x264.mp4")
 //					.navigation(this)
@@ -184,4 +186,12 @@ class MainActivity : BaseDataBindActivity<ActivityMainBinding>() {
 //        }
 //    }
 
+    private fun getOfMonth(){
+        val cal = java.util.Calendar.getInstance()
+        cal.set(2021,2,30)
+        Log.d("timeTag","start-time:${ TimeUtils.dataToStr(cal.time,"yyyy-MM-dd")}")
+        cal.add(java.util.Calendar.MONTH,-1)
+        Log.d("timeTag","end-time:${ TimeUtils.dataToStr(cal.time,"yyyy-MM-dd")}")
+
+    }
 }
